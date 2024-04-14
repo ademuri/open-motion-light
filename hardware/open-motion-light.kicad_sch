@@ -202,178 +202,6 @@
 				)
 			)
 		)
-		(symbol "Device:Battery_Cell"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "BT"
-				(at 2.54 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "Battery_Cell"
-				(at 2.54 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 1.524 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 1.524 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Single-cell battery"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "battery cell"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Battery_Cell_0_1"
-				(rectangle
-					(start -2.286 1.778)
-					(end 2.286 1.524)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(rectangle
-					(start -1.524 1.016)
-					(end 1.524 0.508)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 0.762) (xy 0 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 1.778) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 3.048) (xy 1.778 3.048)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 3.556) (xy 1.27 2.54)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "Battery_Cell_1_1"
-				(pin passive line
-					(at 0 5.08 270)
-					(length 2.54)
-					(name "+"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -2.54 90)
-					(length 2.54)
-					(name "-"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "Device:C"
 			(pin_numbers hide)
 			(pin_names
@@ -1492,6 +1320,167 @@
 					(at 0 -3.81 90)
 					(length 1.27)
 					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Homebrew:BH-18650-A1AJ005"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "BT"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "BH-18650-A1AJ005"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "easyeda2kicad:BAT-TH_BH-18650-A1AJ005"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part" "C5290176"
+				(at 0 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "BH-18650-A1AJ005_0_1"
+				(polyline
+					(pts
+						(xy -1.27 2.29) (xy -1.27 -1.78)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.51 1.27) (xy -0.51 -1.02)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.25 2.29) (xy 0.25 -1.78)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.02 1.27) (xy 1.02 -1.02)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin input line
+					(at 5.08 0 180)
+					(length 3.81)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "BH-18650-A1AJ005_1_1"
+				(text "+"
+					(at -5.08 1.524 0)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(text "-"
+					(at 5.08 1.524 0)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(pin input line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5595,6 +5584,12 @@
 		(uuid "d347afee-712f-4328-af61-69aa295d7b1e")
 	)
 	(junction
+		(at 119.38 177.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d4471a96-d27f-4443-81b3-0f5858fb2c24")
+	)
+	(junction
 		(at 300.99 43.18)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5647,12 +5642,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "f8393ae9-80e0-4479-bf9b-104fe1bcadb4")
-	)
-	(junction
-		(at 119.38 177.8)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "f85d2af7-78ca-4a5f-bc0a-7dadc509df59")
 	)
 	(junction
 		(at 167.64 189.23)
@@ -5722,16 +5711,6 @@
 	)
 	(wire
 		(pts
-			(xy 119.38 177.8) (xy 134.62 177.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "07968ad5-1766-4fe2-a064-5c7810b59c2c")
-	)
-	(wire
-		(pts
 			(xy 297.18 31.75) (xy 298.45 31.75)
 		)
 		(stroke
@@ -5742,6 +5721,16 @@
 	)
 	(wire
 		(pts
+			(xy 133.35 170.18) (xy 130.81 170.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "09170425-a74e-47cd-ad13-058d44e47e9a")
+	)
+	(wire
+		(pts
 			(xy 73.66 176.53) (xy 80.01 176.53)
 		)
 		(stroke
@@ -5749,6 +5738,16 @@
 			(type default)
 		)
 		(uuid "097e4ee7-cb4c-4595-9014-91e07843ecce")
+	)
+	(wire
+		(pts
+			(xy 133.35 168.91) (xy 133.35 170.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0c5f5421-bfa8-46be-884b-3da681a482c3")
 	)
 	(wire
 		(pts
@@ -6042,6 +6041,16 @@
 	)
 	(wire
 		(pts
+			(xy 137.16 168.91) (xy 133.35 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3bb83e8e-eda3-4ca6-bc5f-0b5c9c4e77fc")
+	)
+	(wire
+		(pts
 			(xy 361.95 133.35) (xy 361.95 96.52)
 		)
 		(stroke
@@ -6109,16 +6118,6 @@
 			(type default)
 		)
 		(uuid "459bc8ca-4b28-40d9-b256-882c7eeff30d")
-	)
-	(wire
-		(pts
-			(xy 130.81 170.18) (xy 134.62 170.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "45dcb3de-2fc3-4169-b51b-ddcdb3fdcf43")
 	)
 	(polyline
 		(pts
@@ -6319,6 +6318,16 @@
 			(type default)
 		)
 		(uuid "60efce6a-62c0-4744-81b0-2441dc42b4a7")
+	)
+	(wire
+		(pts
+			(xy 133.35 177.8) (xy 119.38 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "61ab6731-680e-4952-bed5-1ebf4214c7e1")
 	)
 	(wire
 		(pts
@@ -7212,6 +7221,16 @@
 	)
 	(wire
 		(pts
+			(xy 133.35 179.07) (xy 133.35 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e8c37050-269a-454a-8770-0780321b06f8")
+	)
+	(wire
+		(pts
 			(xy 355.6 140.97) (xy 355.6 142.24)
 		)
 		(stroke
@@ -7269,6 +7288,16 @@
 			(type default)
 		)
 		(uuid "efdfb3cc-69c5-4cc7-8e2c-ecdcd0229c1a")
+	)
+	(wire
+		(pts
+			(xy 137.16 179.07) (xy 133.35 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f55fa6ee-33b6-464c-9907-7449ebdd7e18")
 	)
 	(wire
 		(pts
@@ -8166,7 +8195,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 84.7852 177.8 0)
 			(effects
 				(font
@@ -8185,6 +8214,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 83.82 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96446"
 			(at 83.82 173.99 0)
 			(effects
 				(font
@@ -8329,6 +8367,15 @@
 		)
 		(property "LCSC Part" "C98335"
 			(at 332.74 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C98335"
+			(at 332.74 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8577,7 +8624,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 96.012 203.2 90)
 			(effects
 				(font
@@ -8596,6 +8643,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 97.79 203.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25744"
 			(at 97.79 203.2 0)
 			(effects
 				(font
@@ -8645,7 +8701,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 101.6 199.898 90)
 			(effects
 				(font
@@ -8664,6 +8720,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 101.6 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25076"
 			(at 101.6 198.12 0)
 			(effects
 				(font
@@ -8715,7 +8780,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 73.152 189.23 90)
 			(effects
 				(font
@@ -8734,6 +8799,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 74.93 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C13167"
 			(at 74.93 189.23 0)
 			(effects
 				(font
@@ -8785,7 +8859,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 235.712 81.28 90)
 			(effects
 				(font
@@ -8804,6 +8878,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 237.49 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C270613"
 			(at 237.49 81.28 0)
 			(effects
 				(font
@@ -8855,7 +8938,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 100.0252 177.8 0)
 			(effects
 				(font
@@ -8874,6 +8957,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 99.06 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96446"
 			(at 99.06 173.99 0)
 			(effects
 				(font
@@ -8925,7 +9017,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 165.862 170.18 90)
 			(effects
 				(font
@@ -8944,6 +9036,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 167.64 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25768"
 			(at 167.64 170.18 0)
 			(effects
 				(font
@@ -9061,7 +9162,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 144.018 22.86 90)
 			(effects
 				(font
@@ -9080,6 +9181,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 142.24 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 142.24 22.86 0)
 			(effects
 				(font
@@ -9367,7 +9477,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 69.5452 27.94 0)
 			(effects
 				(font
@@ -9386,6 +9496,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 68.58 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 68.58 24.13 0)
 			(effects
 				(font
@@ -9435,7 +9554,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 87.63 253.238 90)
 			(effects
 				(font
@@ -9454,6 +9573,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 87.63 251.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 87.63 251.46 0)
 			(effects
 				(font
@@ -9568,7 +9696,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 36.83 163.068 90)
 			(effects
 				(font
@@ -9587,6 +9715,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 36.83 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 36.83 161.29 0)
 			(effects
 				(font
@@ -9636,7 +9773,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 229.87 103.632 90)
 			(effects
 				(font
@@ -9655,6 +9792,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 229.87 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 229.87 105.41 0)
 			(effects
 				(font
@@ -9706,7 +9852,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
 			(at 142.24 30.48 0)
 			(effects
 				(font
@@ -9725,6 +9871,15 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
+			(at 142.24 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2286"
 			(at 142.24 30.48 0)
 			(effects
 				(font
@@ -9839,7 +9994,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 358.14 47.498 90)
 			(effects
 				(font
@@ -9858,6 +10013,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 358.14 45.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 358.14 45.72 0)
 			(effects
 				(font
@@ -10087,6 +10251,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C492375"
+			(at 284.48 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "8"
 			(uuid "9855266e-087d-43e3-94e3-cc80fbca6ab4")
 		)
@@ -10148,7 +10321,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 305.562 25.4 90)
 			(effects
 				(font
@@ -10167,6 +10340,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 307.34 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25900"
 			(at 307.34 25.4 0)
 			(effects
 				(font
@@ -10218,7 +10400,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 107.6452 27.94 0)
 			(effects
 				(font
@@ -10237,6 +10419,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 106.68 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96446"
 			(at 106.68 24.13 0)
 			(effects
 				(font
@@ -10288,7 +10479,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 50.4952 166.37 0)
 			(effects
 				(font
@@ -10307,6 +10498,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 49.53 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96446"
 			(at 49.53 162.56 0)
 			(effects
 				(font
@@ -10527,6 +10727,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C210315"
+			(at 367.03 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "dc6e5609-d435-4e02-904e-39c27ed7a076")
 		)
@@ -10570,7 +10779,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 22.352 247.65 90)
 			(effects
 				(font
@@ -10589,6 +10798,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 24.13 247.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25905"
 			(at 24.13 247.65 0)
 			(effects
 				(font
@@ -10640,7 +10858,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 32.512 176.53 90)
 			(effects
 				(font
@@ -10659,6 +10877,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 34.29 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25744"
 			(at 34.29 176.53 0)
 			(effects
 				(font
@@ -10710,7 +10937,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 314.452 25.4 90)
 			(effects
 				(font
@@ -10729,6 +10956,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 316.23 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25900"
 			(at 316.23 25.4 0)
 			(effects
 				(font
@@ -11081,7 +11317,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 256.54 245.618 90)
 			(effects
 				(font
@@ -11100,6 +11336,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 256.54 243.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25091"
 			(at 256.54 243.84 0)
 			(effects
 				(font
@@ -11149,7 +11394,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 30.48 37.338 90)
 			(effects
 				(font
@@ -11168,6 +11413,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 30.48 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 30.48 35.56 0)
 			(effects
 				(font
@@ -11219,7 +11473,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 22.352 240.03 90)
 			(effects
 				(font
@@ -11238,6 +11492,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 24.13 240.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 24.13 240.03 0)
 			(effects
 				(font
@@ -11355,7 +11618,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 169.418 22.86 90)
 			(effects
 				(font
@@ -11374,6 +11637,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 167.64 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 167.64 22.86 0)
 			(effects
 				(font
@@ -11425,7 +11697,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 82.2452 27.94 0)
 			(effects
 				(font
@@ -11444,6 +11716,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 81.28 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 81.28 24.13 0)
 			(effects
 				(font
@@ -11558,7 +11839,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 325.12 38.608 90)
 			(effects
 				(font
@@ -11577,6 +11858,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 325.12 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 325.12 36.83 0)
 			(effects
 				(font
@@ -11694,7 +11984,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 291.7952 144.78 0)
 			(effects
 				(font
@@ -11713,6 +12003,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 290.83 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96446"
 			(at 290.83 140.97 0)
 			(effects
 				(font
@@ -11886,7 +12185,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "~"
+		(property "Value" "PIR223D-S0"
 			(at 367.665 29.7872 0)
 			(effects
 				(font
@@ -12015,6 +12314,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C210315"
+			(at 367.03 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "6c807e5d-c00b-44c0-b73b-727c45143753")
 		)
@@ -12095,6 +12403,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C210315"
+			(at 367.03 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d106b3d5-61c3-4955-bfe1-da9ab304cfd1")
 		)
@@ -12138,7 +12455,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 40.132 176.53 90)
 			(effects
 				(font
@@ -12157,6 +12474,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 41.91 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25744"
 			(at 41.91 176.53 0)
 			(effects
 				(font
@@ -12273,7 +12599,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 87.122 189.23 90)
 			(effects
 				(font
@@ -12292,6 +12618,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 88.9 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C13167"
 			(at 88.9 189.23 0)
 			(effects
 				(font
@@ -12409,7 +12744,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
 			(at 152.4 30.48 0)
 			(effects
 				(font
@@ -12428,6 +12763,15 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
+			(at 152.4 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2286"
 			(at 152.4 30.48 0)
 			(effects
 				(font
@@ -12667,6 +13011,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C210315"
+			(at 367.03 121.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "a70008d7-2915-4822-baeb-db7c0dbe6d10")
 		)
@@ -12710,7 +13063,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 258.572 265.43 90)
 			(effects
 				(font
@@ -12729,6 +13082,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 260.35 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25900"
 			(at 260.35 265.43 0)
 			(effects
 				(font
@@ -12780,7 +13142,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 247.3452 234.95 0)
 			(effects
 				(font
@@ -12799,6 +13161,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 246.38 231.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 246.38 231.14 0)
 			(effects
 				(font
@@ -12850,7 +13221,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 94.9452 27.94 0)
 			(effects
 				(font
@@ -12869,6 +13240,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 93.98 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 93.98 24.13 0)
 			(effects
 				(font
@@ -12920,7 +13300,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 165.862 185.42 90)
 			(effects
 				(font
@@ -12939,6 +13319,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 167.64 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C45956"
 			(at 167.64 185.42 0)
 			(effects
 				(font
@@ -12987,7 +13376,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 232.41 83.312 90)
 			(effects
 				(font
@@ -13006,6 +13395,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 232.41 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 232.41 85.09 0)
 			(effects
 				(font
@@ -13453,7 +13851,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 154.178 22.86 90)
 			(effects
 				(font
@@ -13472,6 +13870,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 152.4 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 152.4 22.86 0)
 			(effects
 				(font
@@ -13589,7 +13996,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
 			(at 132.08 30.48 0)
 			(effects
 				(font
@@ -13608,6 +14015,15 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
+			(at 132.08 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2286"
 			(at 132.08 30.48 0)
 			(effects
 				(font
@@ -13659,7 +14075,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 133.858 22.86 90)
 			(effects
 				(font
@@ -13678,6 +14094,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 132.08 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 132.08 22.86 0)
 			(effects
 				(font
@@ -13992,7 +14417,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 76.962 255.27 90)
 			(effects
 				(font
@@ -14011,6 +14436,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 78.74 255.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25905"
 			(at 78.74 255.27 0)
 			(effects
 				(font
@@ -14062,7 +14496,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 301.9552 50.8 0)
 			(effects
 				(font
@@ -14081,6 +14515,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 300.99 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 300.99 46.99 0)
 			(effects
 				(font
@@ -14132,7 +14575,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 262.5852 36.83 0)
 			(effects
 				(font
@@ -14151,6 +14594,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 261.62 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 261.62 33.02 0)
 			(effects
 				(font
@@ -14232,6 +14684,15 @@
 		)
 		(property "LCSC Part" "C210315"
 			(at 379.73 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C210315"
+			(at 367.03 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14321,8 +14782,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:Battery_Cell")
-		(at 134.62 175.26 0)
+		(lib_id "Homebrew:BH-18650-A1AJ005")
+		(at 137.16 173.99 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14331,7 +14792,7 @@
 		(fields_autoplaced yes)
 		(uuid "af0f29a2-b912-4e3b-83e0-a0da7d4020f9")
 		(property "Reference" "BT1"
-			(at 137.541 172.2063 0)
+			(at 140.3406 172.7778 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14340,7 +14801,7 @@
 			)
 		)
 		(property "Value" "Battery_Cell"
-			(at 137.541 174.6306 0)
+			(at 140.3406 175.2021 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14348,8 +14809,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
-			(at 134.62 173.736 90)
+		(property "Footprint" "easyeda2kicad:BAT-TH_BH-18650-A1AJ005"
+			(at 129.54 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14358,7 +14819,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 134.62 173.736 90)
+			(at 137.16 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14367,7 +14828,25 @@
 			)
 		)
 		(property "Description" "Single-cell battery"
-			(at 134.62 175.26 0)
+			(at 137.16 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C5290176"
+			(at 127 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C5290176"
+			(at 137.16 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14513,7 +14992,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 303.2252 144.78 0)
 			(effects
 				(font
@@ -14532,6 +15011,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 302.26 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 302.26 140.97 0)
 			(effects
 				(font
@@ -14650,6 +15138,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C165948"
+			(at 57.15 248.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "B8"
 			(uuid "fe4394b0-a972-405b-9faf-3db572bc8451")
 		)
@@ -14735,7 +15232,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 365.252 161.29 90)
 			(effects
 				(font
@@ -14754,6 +15251,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 367.03 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C23161"
 			(at 367.03 161.29 0)
 			(effects
 				(font
@@ -14803,7 +15309,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 270.51 263.398 90)
 			(effects
 				(font
@@ -14822,6 +15328,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 270.51 261.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25768"
 			(at 270.51 261.62 0)
 			(effects
 				(font
@@ -14936,7 +15451,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 29.21 173.228 90)
 			(effects
 				(font
@@ -14955,6 +15470,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 29.21 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
 			(at 29.21 171.45 0)
 			(effects
 				(font
@@ -15042,6 +15566,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C361168"
+			(at 240.03 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "42c32563-74a5-420c-b4a3-d83c995e2d75")
 		)
@@ -15091,7 +15624,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 356.5652 140.97 0)
 			(effects
 				(font
@@ -15110,6 +15643,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 355.6 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96446"
 			(at 355.6 137.16 0)
 			(effects
 				(font
@@ -15161,7 +15703,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 230.8352 234.95 0)
 			(effects
 				(font
@@ -15180,6 +15722,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 229.87 231.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 229.87 231.14 0)
 			(effects
 				(font
@@ -15372,7 +15923,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 229.87 94.742 90)
 			(effects
 				(font
@@ -15391,6 +15942,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 229.87 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C270613"
 			(at 229.87 96.52 0)
 			(effects
 				(font
@@ -15442,7 +16002,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 37.7952 35.56 0)
 			(effects
 				(font
@@ -15461,6 +16021,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 36.83 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 36.83 31.75 0)
 			(effects
 				(font
@@ -15492,7 +16061,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "ceb2c3ec-42b7-44a3-be5f-6f00056396ba")
 		(property "Reference" "J2"
 			(at 236.982 26.6122 0)
@@ -15512,7 +16081,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
 			(at 234.95 26.67 0)
 			(effects
 				(font
@@ -15615,6 +16184,15 @@
 		)
 		(property "LCSC Part" "C181740"
 			(at 337.312 145.796 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C181740"
+			(at 332.74 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15743,7 +16321,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 314.6552 50.8 0)
 			(effects
 				(font
@@ -15762,6 +16340,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 313.69 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96446"
 			(at 313.69 46.99 0)
 			(effects
 				(font
@@ -15910,7 +16497,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 296.672 25.4 90)
 			(effects
 				(font
@@ -15929,6 +16516,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 298.45 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25900"
 			(at 298.45 25.4 0)
 			(effects
 				(font
@@ -16044,7 +16640,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 274.32 248.158 90)
 			(effects
 				(font
@@ -16063,6 +16659,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 274.32 246.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25091"
 			(at 274.32 246.38 0)
 			(effects
 				(font
@@ -16144,6 +16749,15 @@
 		)
 		(property "LCSC Part" "C210315"
 			(at 379.73 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C210315"
+			(at 367.03 152.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16581,7 +17195,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 84.7852 234.95 0)
 			(effects
 				(font
@@ -16600,6 +17214,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 83.82 231.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 83.82 231.14 0)
 			(effects
 				(font
@@ -16783,7 +17406,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_SMD:SW_Push_1P1T_XKB_TS-1187A"
 			(at 162.56 31.75 0)
 			(effects
 				(font
@@ -16802,6 +17425,15 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
+			(at 167.64 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C318884"
 			(at 167.64 31.75 0)
 			(effects
 				(font
@@ -16983,7 +17615,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_SMD:SW_Push_1P1T_XKB_TS-1187A"
 			(at 21.59 30.48 0)
 			(effects
 				(font
@@ -17002,6 +17634,15 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
+			(at 21.59 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C318884"
 			(at 21.59 35.56 0)
 			(effects
 				(font
