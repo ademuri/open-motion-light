@@ -29,3 +29,7 @@ gps-tracker-backups/
 
 # Exported BOM files
 *.xml
+
+# Plugin logs
+place_footprints.log
+

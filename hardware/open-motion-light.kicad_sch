@@ -15069,7 +15069,7 @@
 				)
 			)
 		)
-		(property "Footprint" "homebrew:HRO_TYPE-C-31-M-12"
+		(property "Footprint" "Homebrew:HRO_TYPE-C-31-M-12"
 			(at 57.15 248.92 0)
 			(effects
 				(font
@@ -16400,7 +16400,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "homebrew:SOP-8_3.9x4.9mm_P1.27mm_Thermal"
+		(property "Footprint" "Homebrew:SOP-8_3.9x4.9mm_P1.27mm_Thermal"
 			(at 59.69 190.5 0)
 			(effects
 				(font
@@ -17406,7 +17406,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_Push_1P1T_XKB_TS-1187A"
+		(property "Footprint" "Homebrew:SW_TACTILE_5.1MM_TS-1187A-C-D-B"
 			(at 162.56 31.75 0)
 			(effects
 				(font
@@ -17615,7 +17615,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_Push_1P1T_XKB_TS-1187A"
+		(property "Footprint" "Homebrew:SW_TACTILE_5.1MM_TS-1187A-C-D-B"
 			(at 21.59 30.48 0)
 			(effects
 				(font
