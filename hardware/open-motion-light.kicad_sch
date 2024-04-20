@@ -5781,7 +5781,7 @@
 	)
 	(polyline
 		(pts
-			(xy 259.08 71.12) (xy 259.08 121.92)
+			(xy 259.08 63.5) (xy 259.08 121.92)
 		)
 		(stroke
 			(width 0)
@@ -6111,7 +6111,7 @@
 	)
 	(polyline
 		(pts
-			(xy 214.63 71.12) (xy 259.08 71.12)
+			(xy 212.09 63.5) (xy 259.08 63.5)
 		)
 		(stroke
 			(width 0)
@@ -6331,7 +6331,7 @@
 	)
 	(wire
 		(pts
-			(xy 223.52 96.52) (xy 223.52 95.25)
+			(xy 217.17 96.52) (xy 217.17 95.25)
 		)
 		(stroke
 			(width 0)
@@ -6441,7 +6441,7 @@
 	)
 	(polyline
 		(pts
-			(xy 259.08 121.92) (xy 214.63 121.92)
+			(xy 259.08 121.92) (xy 212.09 121.92)
 		)
 		(stroke
 			(width 0)
@@ -6501,16 +6501,6 @@
 	)
 	(wire
 		(pts
-			(xy 226.06 96.52) (xy 223.52 96.52)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "82f405a5-6101-4123-ada2-fc2654488056")
-	)
-	(wire
-		(pts
 			(xy 316.23 36.83) (xy 321.31 36.83)
 		)
 		(stroke
@@ -6541,7 +6531,7 @@
 	)
 	(polyline
 		(pts
-			(xy 214.63 121.92) (xy 214.63 71.12)
+			(xy 212.09 121.92) (xy 212.09 63.5)
 		)
 		(stroke
 			(width 0)
@@ -6561,7 +6551,7 @@
 	)
 	(polyline
 		(pts
-			(xy 287.02 93.98) (xy 378.46 93.98)
+			(xy 287.02 93.98) (xy 375.92 93.98)
 		)
 		(stroke
 			(width 0)
@@ -6771,6 +6761,16 @@
 	)
 	(wire
 		(pts
+			(xy 218.44 96.52) (xy 217.17 96.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a2c33a84-e324-4b39-999c-7a9aab7a3598")
+	)
+	(wire
+		(pts
 			(xy 300.99 43.18) (xy 313.69 43.18)
 		)
 		(stroke
@@ -6951,7 +6951,7 @@
 	)
 	(polyline
 		(pts
-			(xy 287.02 173.99) (xy 378.46 173.99)
+			(xy 287.02 179.07) (xy 375.92 179.07)
 		)
 		(stroke
 			(width 0)
@@ -7071,7 +7071,7 @@
 	)
 	(polyline
 		(pts
-			(xy 287.02 173.99) (xy 287.02 93.98)
+			(xy 287.02 179.07) (xy 287.02 93.98)
 		)
 		(stroke
 			(width 0)
@@ -7091,7 +7091,7 @@
 	)
 	(polyline
 		(pts
-			(xy 378.46 93.98) (xy 378.46 173.99)
+			(xy 375.92 93.98) (xy 375.92 179.07)
 		)
 		(stroke
 			(width 0)
@@ -7369,7 +7369,7 @@
 		)
 		(uuid "fe56039a-49e0-425b-8f04-a20a5d4f8c4e")
 	)
-	(text "V_{FB}=250mV\nR_{CS}=.25V / 0.06A=4.2Ω -> 4.3Ω\nPower: .25V * 0.06A = 15mW"
+	(text "V_{FB}=250mV\nR_{CS}=.25V / 0.06A=4.2Ω -> 2x 2Ω, 62.5mA\nPower: .25V * 0.0625A = 15.6mW"
 		(exclude_from_sim no)
 		(at 319.532 164.084 0)
 		(effects
@@ -7481,7 +7481,7 @@
 	)
 	(text "Mode switch"
 		(exclude_from_sim no)
-		(at 221.488 73.406 0)
+		(at 218.694 65.532 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8780,7 +8780,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 73.152 189.23 90)
 			(effects
 				(font
@@ -8850,7 +8850,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "3M3"
+		(property "Value" "2M"
 			(at 239.268 82.4921 0)
 			(effects
 				(font
@@ -8859,7 +8859,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 235.712 81.28 90)
 			(effects
 				(font
@@ -8886,7 +8886,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C270613"
+		(property "LCSC" "C22976"
 			(at 237.49 81.28 0)
 			(effects
 				(font
@@ -11892,7 +11892,7 @@
 	)
 	(symbol
 		(lib_id "power:VCC")
-		(at 237.49 77.47 0)
+		(at 237.49 69.85 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11901,7 +11901,7 @@
 		(fields_autoplaced yes)
 		(uuid "64ef7952-8f55-493d-99e6-6a1616a72ffd")
 		(property "Reference" "#PWR040"
-			(at 237.49 81.28 0)
+			(at 237.49 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11910,7 +11910,7 @@
 			)
 		)
 		(property "Value" "VCC"
-			(at 237.49 73.3369 0)
+			(at 237.49 65.7169 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11918,7 +11918,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 237.49 77.47 0)
+			(at 237.49 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11927,7 +11927,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 237.49 77.47 0)
+			(at 237.49 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11936,7 +11936,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VCC\""
-			(at 237.49 77.47 0)
+			(at 237.49 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12599,7 +12599,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 87.122 189.23 90)
 			(effects
 				(font
@@ -13291,7 +13291,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "360k"
+		(property "Value" "330k"
 			(at 169.418 186.6321 0)
 			(effects
 				(font
@@ -13300,7 +13300,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 165.862 185.42 90)
 			(effects
 				(font
@@ -13327,7 +13327,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C45956"
+		(property "LCSC" "C23137"
 			(at 167.64 185.42 0)
 			(effects
 				(font
@@ -13346,6 +13346,85 @@
 			(project "open-motion-light"
 				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
 					(reference "R33")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 367.03 168.91 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8f479aef-08f1-4ab5-b870-b8aaf70abf0b")
+		(property "Reference" "R34"
+			(at 368.808 167.6978 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "2Ω "
+			(at 368.808 170.1221 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 365.252 168.91 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 367.03 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 367.03 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22977"
+			(at 367.03 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "cef691b6-3f34-4895-8016-8d4762111d0e")
+		)
+		(pin "1"
+			(uuid "091eb388-59b5-414b-9ea1-4b618fd3915a")
+		)
+		(instances
+			(project "open-motion-light"
+				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
+					(reference "R34")
 					(unit 1)
 				)
 			)
@@ -13561,7 +13640,7 @@
 	)
 	(symbol
 		(lib_id "power:VCC")
-		(at 223.52 95.25 0)
+		(at 217.17 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -13570,7 +13649,7 @@
 		(fields_autoplaced yes)
 		(uuid "984a94e7-a739-4b09-8d23-0888cfe038b3")
 		(property "Reference" "#PWR041"
-			(at 223.52 99.06 0)
+			(at 217.17 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13579,7 +13658,7 @@
 			)
 		)
 		(property "Value" "VCC"
-			(at 223.52 91.1169 0)
+			(at 217.17 91.1169 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13587,7 +13666,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 223.52 95.25 0)
+			(at 217.17 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13596,7 +13675,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 223.52 95.25 0)
+			(at 217.17 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13605,7 +13684,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VCC\""
-			(at 223.52 95.25 0)
+			(at 217.17 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15223,7 +15302,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "4.3Ω "
+		(property "Value" "2Ω "
 			(at 368.808 162.5021 0)
 			(effects
 				(font
@@ -15259,7 +15338,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C23161"
+		(property "LCSC" "C22977"
 			(at 367.03 161.29 0)
 			(effects
 				(font
@@ -15755,6 +15834,83 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 222.25 96.52 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "be49cc5c-d235-4e6a-b084-704b4cf9ece3")
+		(property "Reference" "R35"
+			(at 222.25 91.3595 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2M"
+			(at 222.25 93.7838 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 222.25 94.742 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 222.25 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22976"
+			(at 222.25 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "10729ee6-fbf9-4b28-908e-311ba1127dd2")
+		)
+		(pin "2"
+			(uuid "a12cde14-f6a5-45a7-a97f-ff87b1ba0b74")
+		)
+		(instances
+			(project "open-motion-light"
+				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
+					(reference "R35")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:Thermistor_NTC")
 		(at 180.34 177.8 90)
 		(unit 1)
@@ -15833,7 +15989,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 367.03 165.1 0)
+		(at 367.03 172.72 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -15842,7 +15998,7 @@
 		(fields_autoplaced yes)
 		(uuid "c634f821-f784-4fbd-aa74-a410f7f9dd01")
 		(property "Reference" "#PWR035"
-			(at 367.03 171.45 0)
+			(at 367.03 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15851,7 +16007,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 367.03 169.2331 0)
+			(at 367.03 176.8531 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15859,7 +16015,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 367.03 165.1 0)
+			(at 367.03 172.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15868,7 +16024,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 367.03 165.1 0)
+			(at 367.03 172.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15877,7 +16033,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 367.03 165.1 0)
+			(at 367.03 172.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15915,7 +16071,7 @@
 				)
 			)
 		)
-		(property "Value" "3M3"
+		(property "Value" "2M"
 			(at 229.87 93.7838 90)
 			(effects
 				(font
@@ -15923,7 +16079,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 229.87 94.742 90)
 			(effects
 				(font
@@ -15950,7 +16106,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C270613"
+		(property "LCSC" "C22976"
 			(at 229.87 96.52 0)
 			(effects
 				(font
@@ -16164,7 +16320,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://lcsc.com/product-detail/LED-Drivers_MT9284BS6_C181740.html"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_1806141217_XI-AN-Aerosemi-Tech-MT9284BS6_C181740.pdf"
 			(at 332.486 130.048 0)
 			(effects
 				(font
@@ -16373,6 +16529,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 237.49 73.66 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d9baf016-6f5e-4754-8799-2bc52f4e7143")
+		(property "Reference" "R36"
+			(at 239.268 72.4478 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "2M"
+			(at 239.268 74.8721 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 235.712 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 237.49 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 237.49 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22976"
+			(at 237.49 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0e0a025a-5f33-4ecc-b92c-374199c31d81")
+		)
+		(pin "2"
+			(uuid "78ce6992-8248-43f3-90a6-9d85a365a533")
+		)
+		(instances
+			(project "open-motion-light"
+				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
+					(reference "R36")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Homebrew:CN3058E")
 		(at 59.69 182.88 0)
 		(unit 1)
@@ -16409,7 +16644,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "http://www.consonance-elec.com/pdf/datasheet/DSE-CN3058E.pdf"
+		(property "Datasheet" "https://www.mikrocontroller.net/attachment/519010/DSE-CN3058E.pdf"
 			(at 59.69 190.5 0)
 			(effects
 				(font

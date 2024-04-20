@@ -33,3 +33,6 @@ gps-tracker-backups/
 # Plugin logs
 place_footprints.log
 
+# Output of Fabrication Tools plugin
+production
+
