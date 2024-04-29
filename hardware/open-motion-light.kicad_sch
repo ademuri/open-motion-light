@@ -1616,7 +1616,7 @@
 					)
 				)
 				(pin power_in line
-					(at 0 -8.89 90)
+					(at -1.27 -8.89 90)
 					(length 5.08)
 					(name "GND"
 						(effects
@@ -1716,6 +1716,24 @@
 						)
 					)
 					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 1.27 -8.89 90)
+					(length 5.08)
+					(name "EP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5720,6 +5738,12 @@
 		(uuid "7eeb6842-0c8e-41fa-a11a-5f4ea883577d")
 	)
 	(junction
+		(at 59.69 191.77)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "82083b7a-49bb-43b0-b2d2-008b30bf6c98")
+	)
+	(junction
 		(at 59.69 158.75)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5760,6 +5784,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9a50095b-94f1-42d3-9c9c-ae963bebd471")
+	)
+	(junction
+		(at 152.4 76.2)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a1ee4b21-ecf3-4be6-b70a-aafabf382a9a")
 	)
 	(junction
 		(at 350.52 46.99)
@@ -6101,6 +6131,16 @@
 	)
 	(wire
 		(pts
+			(xy 59.69 191.77) (xy 60.96 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1bb97309-3c49-4c4c-b21e-5a8f56fada01")
+	)
+	(wire
+		(pts
 			(xy 93.98 27.94) (xy 106.68 27.94)
 		)
 		(stroke
@@ -6291,6 +6331,16 @@
 	)
 	(wire
 		(pts
+			(xy 163.83 76.2) (xy 163.83 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "35875e87-eb89-4d9b-8438-bdfbc24f00e1")
+	)
+	(wire
+		(pts
 			(xy 302.26 144.78) (xy 302.26 147.32)
 		)
 		(stroke
@@ -6351,7 +6401,7 @@
 	)
 	(polyline
 		(pts
-			(xy 182.88 93.98) (xy 158.75 93.98)
+			(xy 182.88 93.98) (xy 149.86 93.98)
 		)
 		(stroke
 			(width 0)
@@ -6541,7 +6591,7 @@
 	)
 	(polyline
 		(pts
-			(xy 158.75 63.5) (xy 182.88 63.5)
+			(xy 149.86 63.5) (xy 182.88 63.5)
 		)
 		(stroke
 			(width 0)
@@ -6971,6 +7021,16 @@
 	)
 	(wire
 		(pts
+			(xy 152.4 76.2) (xy 163.83 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9b4b2c89-f745-4e21-8cbd-e3206c291293")
+	)
+	(wire
+		(pts
 			(xy 185.42 189.23) (xy 185.42 177.8)
 		)
 		(stroke
@@ -7161,7 +7221,7 @@
 	)
 	(polyline
 		(pts
-			(xy 158.75 63.5) (xy 158.75 93.98)
+			(xy 149.86 63.5) (xy 149.86 93.98)
 		)
 		(stroke
 			(width 0)
@@ -7608,6 +7668,16 @@
 			(type default)
 		)
 		(uuid "f7d73b18-299c-4d75-bf00-7d4b03efae25")
+	)
+	(wire
+		(pts
+			(xy 58.42 191.77) (xy 59.69 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f825102e-cf92-4beb-bc4c-dc2eb217dfd9")
 	)
 	(wire
 		(pts
@@ -8617,6 +8687,85 @@
 			(project "open-motion-light"
 				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
 					(reference "#PWR023")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 152.4 80.01 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "01eec05c-2a74-49b2-acbb-08d5c8a43fa9")
+		(property "Reference" "C14"
+			(at 155.321 78.7978 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 155.321 81.2221 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 153.3652 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 152.4 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 152.4 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
+			(at 152.4 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "4064d119-7e3a-4fdb-b8b6-63faf196dbed")
+		)
+		(pin "1"
+			(uuid "ec01b7c0-4031-463c-85d6-99684470329f")
+		)
+		(instances
+			(project "open-motion-light"
+				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
+					(reference "C14")
 					(unit 1)
 				)
 			)
@@ -14275,6 +14424,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 152.4 83.82 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "951388c8-c0c4-4c11-bc40-8ce2faaf3616")
+		(property "Reference" "#PWR028"
+			(at 152.4 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 152.4 87.9531 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 152.4 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 152.4 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 152.4 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b5d324f0-f7a9-4df4-ad8a-eb1507e9d8ca")
+		)
+		(instances
+			(project "open-motion-light"
+				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
+					(reference "#PWR028")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:VCC")
 		(at 217.17 95.25 0)
 		(unit 1)
@@ -17265,7 +17480,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.mikrocontroller.net/attachment/519010/DSE-CN3058E.pdf"
+		(property "Datasheet" "http://www.consonance-elec.com/pdf/datasheet/DSE-CN3058E.pdf"
 			(at 59.69 190.5 0)
 			(effects
 				(font
@@ -17315,6 +17530,9 @@
 		)
 		(pin "3"
 			(uuid "a7aa6a92-1ca2-4f0e-bd04-6ebf053a0296")
+		)
+		(pin "9"
+			(uuid "60ede604-7337-4f6c-9355-64e1cbcf0560")
 		)
 		(instances
 			(project "open-motion-light"
@@ -18424,7 +18642,7 @@
 	)
 	(symbol
 		(lib_id "power:VCC")
-		(at 163.83 83.82 0)
+		(at 152.4 76.2 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18433,7 +18651,7 @@
 		(fields_autoplaced yes)
 		(uuid "fabdb523-824a-43ce-80ae-7366daf6e8c7")
 		(property "Reference" "#PWR024"
-			(at 163.83 87.63 0)
+			(at 152.4 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18442,7 +18660,7 @@
 			)
 		)
 		(property "Value" "VCC"
-			(at 163.83 79.6869 0)
+			(at 152.4 72.0669 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18450,7 +18668,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 163.83 83.82 0)
+			(at 152.4 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18459,7 +18677,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 163.83 83.82 0)
+			(at 152.4 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18468,7 +18686,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VCC\""
-			(at 163.83 83.82 0)
+			(at 152.4 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
