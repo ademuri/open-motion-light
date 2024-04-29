@@ -8648,7 +8648,7 @@
 				)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:L0806"
+		(property "Footprint" "Homebrew:L0806"
 			(at 332.74 134.62 0)
 			(effects
 				(font
@@ -11106,7 +11106,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:LED-SMD_L3.3-W2.8-RD"
+		(property "Footprint" "Homebrew:LED-SMD_L3.3-W2.8-RD"
 			(at 378.46 101.6 0)
 			(effects
 				(font
@@ -12836,7 +12836,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:LED-SMD_L3.3-W2.8-RD"
+		(property "Footprint" "Homebrew:LED-SMD_L3.3-W2.8-RD"
 			(at 378.46 111.76 0)
 			(effects
 				(font
@@ -12925,7 +12925,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:LED-SMD_L3.3-W2.8-RD"
+		(property "Footprint" "Homebrew:LED-SMD_L3.3-W2.8-RD"
 			(at 378.46 142.24 0)
 			(effects
 				(font
@@ -13677,7 +13677,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:LED-SMD_L3.3-W2.8-RD"
+		(property "Footprint" "Homebrew:LED-SMD_L3.3-W2.8-RD"
 			(at 378.46 121.92 0)
 			(effects
 				(font
@@ -15225,7 +15225,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:LED-SMD_L3.3-W2.8-RD"
+		(property "Footprint" "Homebrew:LED-SMD_L3.3-W2.8-RD"
 			(at 378.46 132.08 0)
 			(effects
 				(font
@@ -16166,7 +16166,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:SW-SMD_SSSS213800"
+		(property "Footprint" "Homebrew:SW-SMD_SSSS213800"
 			(at 240.03 99.06 0)
 			(effects
 				(font
@@ -17011,7 +17011,7 @@
 				)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR"
+		(property "Footprint" "Homebrew:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR"
 			(at 332.994 128.016 0)
 			(effects
 				(font
@@ -17576,7 +17576,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:LED-SMD_L3.3-W2.8-RD"
+		(property "Footprint" "Homebrew:LED-SMD_L3.3-W2.8-RD"
 			(at 378.46 152.4 0)
 			(effects
 				(font
@@ -17969,7 +17969,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "easyeda2kicad:SENSORS-SMD_VCNL4010-GS08"
+		(property "Footprint" "Homebrew:SENSORS-SMD_VCNL4010-GS08"
 			(at 315.722 29.21 0)
 			(effects
 				(font
