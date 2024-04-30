@@ -1,0 +1,47 @@
+{
+  "build": {
+    "core": "stm32",
+    "cpu": "cortex-m0plus",
+    "extra_flags": "-DSTM32L0xx -DSTM32L031xx",
+    "f_cpu": "32000000L",
+    "framework_extra_flags": {
+      "arduino": "-D__CORTEX_SC=0"
+    },
+    "hwids": [
+      [
+        "0x1A86",
+        "0x7523"
+      ]
+    ],
+    "mcu": "stm32l031g6ux",
+    "product_line": "STM32L031xx",
+    "variant": "STM32L0xx/L031G(4-6)U_L041G6U"
+  },
+  "debug": {
+    "jlink_device": "STM32L031G6",
+    "openocd_target": "stm32l0x",
+    "svd_path": "STM32l031.svd"
+  },
+  "frameworks": [
+    "arduino",
+    "cmsis",
+    "stm32cube"
+  ],
+  "name": "generic_stm32l031g6u",
+  "upload": {
+    "maximum_ram_size": 8192,
+    "maximum_size": 32768,
+    "protocol": "mbed",
+    "protocols": [
+      "blackmagic",
+      "cmsis-dap",
+      "dfu",
+      "jlink",
+      "serial",
+      "stlink",
+      "mbed"
+    ]
+  },
+  "url": "https://www.github.com/ademuri/open-motion-light",
+  "vendor": "ST"
+}
