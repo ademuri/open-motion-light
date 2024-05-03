@@ -31,3 +31,7 @@ constexpr int kPinPowerOn = PA6;
 constexpr int kPinBatteryCharge = PC14;
 constexpr int kPinBatteryDone = PC15;
 constexpr int kPinChargeHighCurrentEnable = PB1;
+
+// The output of the internal voltage reference for the ADC. Since this is a
+// fixed voltage, we can use this to indirectly measure the battery voltage.
+constexpr int kPinAdcReference = AVREF;

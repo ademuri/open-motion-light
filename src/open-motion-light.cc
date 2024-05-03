@@ -1,11 +1,10 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include <arduino-timer.h>
 
 #include "pins.h"
+#include "controller.h"
 
-PowerMode power_mode = PowerMode::kOff;
-CountDownTimer power_mode_read_timer{10};
+Controller controller;
 
 void setup() {
   // USB pins
@@ -43,8 +42,11 @@ void setup() {
   // From the datasheet for the MT9284BS6 LED driver, its recommended PWM frequency is 20kHz < n < 1MHz.
   analogWriteFrequency(50 * 1000);
   analogWriteResolution(8);
+
+  // TODO: handle failure
+  controller.Init();
 }
 
 void loop() {
-
+  controller.Step();
 }
