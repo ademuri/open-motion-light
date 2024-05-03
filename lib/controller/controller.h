@@ -39,6 +39,11 @@ class Controller {
   // testing.
   static uint16_t ReadBatteryVoltageMillivolts();
 
+  // Tuning constants - visible for testing
+  static constexpr uint8_t kBatteryFilterAlpha = 64;
+  static constexpr uint8_t kBatteryMedianFilterSize = 5;
+  static constexpr uint32_t kBatteryFilterRunIntervalMillis = 10;
+
  private:
   // Reads the state of the power mode switch.
   static PowerMode ReadPowerMode();
@@ -50,8 +55,6 @@ class Controller {
   CountUpTimer motion_timer_;
   bool light_is_on_ = false;
 
-  static constexpr uint8_t kBatteryFilterAlpha = 8;
-  static constexpr uint8_t kBatteryMedianFilterSize = 5;
   MedianFilter<uint16_t, uint16_t, kBatteryMedianFilterSize>
       battery_median_filter_{Controller::ReadBatteryVoltageMillivolts};
   ExponentialMovingAverageFilter<uint16_t> battery_average_filter_{
@@ -59,7 +62,12 @@ class Controller {
       kBatteryFilterAlpha};
 
   // The V_DDA value that the reference calibration was measured using.
-  static constexpr uint16_t kReferenceSupplyVoltageMillivolts = 3000;
+  static constexpr uint16_t kReferenceSupplyMillivolts = 3000;
+  // The max value for the ADC during the reference measurement, which uses the
+  // full 12 bits of the ADC.
+  static constexpr uint32_t kAdcMaxCount = 4096;
+  // The current configured max value for the ADC, which is 2^<number of bits>.
+  static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
 
   // TODO: make these configurable and store it in EEPROM
   static constexpr uint32_t kMotionTimeoutSeconds = 30;

@@ -7,6 +7,16 @@ using PowerMode = Controller::PowerMode;
 bool Controller::Init() {
   // TODO: read power mode switch
   analogWrite(kPinWhiteLed, 0);
+
+  // Initialize the battery filter
+  for (uint32_t i = 0; i < kBatteryMedianFilterSize; i++) {
+    battery_median_filter_.Run();
+  }
+  battery_average_filter_.Initialize(battery_median_filter_.GetFilteredValue());
+  battery_average_filter_.Run();
+  battery_median_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
+  battery_average_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
+
   return true;
 }
 
@@ -23,19 +33,37 @@ PowerMode Controller::ReadPowerMode() {
 }
 
 uint16_t Controller::ReadBatteryVoltageMillivolts() {
+  // Note: while the ADC (and cal) are 12-bit values, these use uint32_t to
+  // avoid overflow.
+
   // Read the factory-calibrated voltage of the reference.
   static const uint32_t vrefint_cal = *kAdcReferencePointer;
-  // The supply (VDDA) voltage during the calibration measurement.
-  static constexpr uint32_t kVrefMeasMillivolts = 3000;
-  // The max value for the ADC, which is 2^(number of ADC bits).
-  static constexpr uint32_t kMaxCount = 4096;
+
   // Read the current value of the reference
   uint32_t vrefint_raw = analogRead(kPinAdcReference);
-  // Battery voltage (Vcc) is the max value - for the default resolution of 10 bits, this is 1023.
-  return (vrefint_cal * kVrefMeasMillivolts) / vrefint_raw;
+
+  // Avoid divide-by-zero
+  if (vrefint_raw == 0) {
+    return 0;
+  }
+
+  // VREF = CAL / kMaxCount * 3000mV
+  // VCC = VREF / VAL * kConfiguredMaxCount
+  // This is arranged to avoid losing precision.
+  return ((vrefint_cal * kReferenceSupplyMillivolts) /
+          (kAdcMaxCount / kAdcConfiguredMaxCount)) /
+         vrefint_raw;
 }
 
 void Controller::Step() {
+#ifndef ARDUINO
+  battery_median_filter_.SetMillis(millis());
+  battery_average_filter_.SetMillis(millis());
+#endif  // ifndef ARDUINO
+
+  battery_median_filter_.Run();
+  battery_average_filter_.Run();
+
   const PowerMode previous_power_mode = power_mode_;
 
   if (!power_mode_read_timer_.Running() || power_mode_read_timer_.Expired()) {
