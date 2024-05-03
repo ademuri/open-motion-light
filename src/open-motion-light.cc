@@ -1,34 +1,11 @@
 #include <Arduino.h>
+#include <Wire.h>
+#include <arduino-timer.h>
 
-// USB pins
-constexpr int kPinCc1 = PA0;
-constexpr int kPinCc2 = PA1;
-constexpr int kPinSerialTx = PA9;
-constexpr int kPinSerialRx = PA10;
+#include "pins.h"
 
-// UI pins
-constexpr int kPinBatteryLed1 = PA2;
-constexpr int kPinBatteryLed2 = PA3;
-constexpr int kPinBatteryLed3 = PA5;
-constexpr int kPinSw1 = PB3;
-constexpr int kPinWhiteLed = PA15;
-
-// Sensors
-constexpr int kPinMotionSensor = PA8;
-constexpr int kPinLightSensorInterrupt = PA7;
-
-// I2C - used for light sensor
-constexpr int kPinScl = PB6;
-constexpr int kPinSda = PB7;
-
-// Power switch
-constexpr int kPinPowerAuto = PA4;
-constexpr int kPinPowerOn = PA6;
-
-// Battery management
-constexpr int kPinBatteryCharge = PC14;
-constexpr int kPinBatteryDone = PC15;
-constexpr int kPinChargeHighCurrentEnable = PB1;
+PowerMode power_mode = PowerMode::kOff;
+CountDownTimer power_mode_read_timer{10};
 
 void setup() {
   // USB pins
@@ -48,8 +25,6 @@ void setup() {
   pinMode(kPinMotionSensor, INPUT);
   pinMode(kPinLightSensorInterrupt, INPUT);
 
-  // I2C - used for light sensor
-
   // Power switch
   pinMode(kPinPowerAuto, INPUT);
   pinMode(kPinPowerOn, INPUT);
@@ -58,6 +33,16 @@ void setup() {
   pinMode(kPinBatteryCharge, INPUT);
   pinMode(kPinBatteryDone, INPUT);
   pinMode(kPinChargeHighCurrentEnable, OUTPUT);
+
+  // I2C - used for light sensor
+  Wire.setSCL(kPinScl);
+  Wire.setSDA(kPinSda);
+  Wire.begin();
+  Wire.setClock(400 * 1000);
+
+  
 }
 
-void loop() {}
+void loop() {
+
+}
