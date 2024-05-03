@@ -15,6 +15,9 @@
 int digitalRead(uint32_t ulPin);
 void setDigitalRead(uint32_t ulPin, bool value);
 
+void analogWrite(uint32_t ulPin, uint32_t ulValue);
+uint32_t getAnalogWrite(uint32_t ulPin);
+
 uint32_t millis();
 void setMillis(uint32_t millis);
 void advanceMillis(uint32_t millis);

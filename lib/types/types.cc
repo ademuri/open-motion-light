@@ -6,19 +6,30 @@
 
 #include <array>
 
-static constexpr uint32_t kDigitalReadMax = PC15;
-static std::array<bool, kDigitalReadMax> digital_read_data;
+static constexpr uint32_t kPinMax = PC15;
+static std::array<bool, kPinMax> digital_read_data;
+static std::array<uint32_t, kPinMax> analog_write_data;
 
 static uint32_t millis_ = 0;
 
 int digitalRead(uint32_t ulPin) {
-  EXPECT_LE(ulPin, kDigitalReadMax);
+  EXPECT_LE(ulPin, kPinMax);
   return digital_read_data[ulPin];
 }
 
 void setDigitalRead(uint32_t ulPin, bool value) {
-  ASSERT_LE(ulPin, kDigitalReadMax);
+  ASSERT_LE(ulPin, kPinMax);
   digital_read_data[ulPin] = value;
+}
+
+void analogWrite(uint32_t ulPin, uint32_t ulValue) {
+  ASSERT_LE(ulPin, kPinMax);
+  analog_write_data[ulPin] = ulValue;
+}
+
+uint32_t getAnalogWrite(uint32_t ulPin) {
+  EXPECT_LE(ulPin, kPinMax);
+  return analog_write_data[ulPin];
 }
 
 uint32_t millis() { return millis_; }

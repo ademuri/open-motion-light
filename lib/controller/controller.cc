@@ -30,4 +30,15 @@ void Controller::Step() {
       power_mode_read_timer_.Reset();
     }
   }
+
+  if (digitalRead(kPinMotionSensor)) {
+    if (!light_is_on_) {
+      analogWrite(kPinWhiteLed, GetLedDutyCycle());
+    }
+    motion_timer_.Reset();
+  } else if (motion_timer_.Running() &&
+             motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
+    // TODO: check that this actually turns off the LED
+    analogWrite(kPinWhiteLed, 0);
+  }
 }

@@ -40,7 +40,9 @@ void setup() {
   Wire.begin();
   Wire.setClock(400 * 1000);
 
-  
+  // From the datasheet for the MT9284BS6 LED driver, its recommended PWM frequency is 20kHz < n < 1MHz.
+  analogWriteFrequency(50 * 1000);
+  analogWriteResolution(8);
 }
 
 void loop() {
