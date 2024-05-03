@@ -6,7 +6,6 @@
 
 #include <array>
 
-static constexpr uint32_t kPinMax = PC15;
 static std::array<bool, kPinMax> digital_read_data;
 static std::array<uint32_t, kPinMax> analog_write_data;
 

@@ -58,3 +58,5 @@ static constexpr uint32_t PC12 = kPortC + 12;
 static constexpr uint32_t PC13 = kPortC + 13;
 static constexpr uint32_t PC14 = kPortC + 14;
 static constexpr uint32_t PC15 = kPortC + 15;
+
+static constexpr uint32_t kPinMax = PC15;

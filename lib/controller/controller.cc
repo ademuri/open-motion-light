@@ -6,6 +6,7 @@ using PowerMode = Controller::PowerMode;
 
 bool Controller::Init() {
   // TODO: read power mode switch
+  analogWrite(kPinWhiteLed, 0);
   return true;
 }
 
@@ -28,17 +29,32 @@ void Controller::Step() {
     power_mode_ = ReadPowerMode();
     if (previous_power_mode != power_mode_) {
       power_mode_read_timer_.Reset();
+      if (power_mode_ == PowerMode::kOff) {
+        analogWrite(kPinWhiteLed, 0);
+      } else if (power_mode_ == PowerMode::kAuto) {
+        analogWrite(kPinWhiteLed, GetLedDutyCycle());
+        motion_timer_.Reset();
+      } else if (power_mode_ == PowerMode::kOn) {
+        analogWrite(kPinWhiteLed, GetLedDutyCycle());
+      }
     }
-  }
 
-  if (digitalRead(kPinMotionSensor)) {
-    if (!light_is_on_) {
-      analogWrite(kPinWhiteLed, GetLedDutyCycle());
+    bool motion_detected = digitalRead(kPinMotionSensor);
+    if (motion_detected) {
+      motion_timer_.Reset();
     }
-    motion_timer_.Reset();
-  } else if (motion_timer_.Running() &&
-             motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
-    // TODO: check that this actually turns off the LED
-    analogWrite(kPinWhiteLed, 0);
+
+    if (power_mode_ == PowerMode::kAuto) {
+      if (motion_detected) {
+        if (!light_is_on_) {
+          analogWrite(kPinWhiteLed, GetLedDutyCycle());
+        }
+        motion_timer_.Reset();
+      } else if (motion_timer_.Running() &&
+                 motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
+        // TODO: check that this actually turns off the LED
+        analogWrite(kPinWhiteLed, 0);
+      }
+    }
   }
 }
