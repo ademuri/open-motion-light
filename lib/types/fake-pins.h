@@ -59,4 +59,8 @@ static constexpr uint32_t PC13 = kPortC + 13;
 static constexpr uint32_t PC14 = kPortC + 14;
 static constexpr uint32_t PC15 = kPortC + 15;
 
-static constexpr uint32_t kPinMax = PC15;
+static constexpr uint16_t kFakeVrefintCal = 1600;
+extern const uint16_t *const VREFINT_CAL_ADDR;
+static constexpr int AVREF = PC15 + 1;
+
+static constexpr uint32_t kPinMax = PC15 + 2;

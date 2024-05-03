@@ -215,3 +215,17 @@ TEST(ControllerTest, ContinuedMotionKeepsLedOn) {
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
+
+TEST(ControllerTest, ReadsBatteryVoltage) {
+  Controller controller;
+  ASSERT_TRUE(controller.Init());
+
+  setAnalogRead(AVREF, kFakeVrefintCal);
+  EXPECT_EQ(Controller::ReadBatteryVoltageMillivolts(), 3000);
+
+  setAnalogRead(AVREF, kFakeVrefintCal * 0.75);
+  EXPECT_EQ(Controller::ReadBatteryVoltageMillivolts(), 4000);
+
+  setAnalogRead(AVREF, kFakeVrefintCal * 1.5);
+  EXPECT_EQ(Controller::ReadBatteryVoltageMillivolts(), 2000);
+}

@@ -35,3 +35,8 @@ constexpr int kPinChargeHighCurrentEnable = PB1;
 // The output of the internal voltage reference for the ADC. Since this is a
 // fixed voltage, we can use this to indirectly measure the battery voltage.
 constexpr int kPinAdcReference = AVREF;
+
+// This is a pointer to the factory-calibrated reference voltage value for the
+// ADC. Since this points to memory, the value is not known at compile time, so
+// it can't be constexpr. The typical reference voltage is 1.224v.
+extern const uint16_t *const kAdcReferencePointer;
