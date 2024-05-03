@@ -31,13 +31,13 @@ class Controller {
   uint32_t GetLedDutyCycle() { return kLedDutyCycle; }
 
   // Returns the battery voltage, filtered for stability.
-  uint16_t GetBatteryVoltage() {
+  uint16_t GetFilteredBatteryMillivolts() {
     return battery_average_filter_.GetFilteredValue();
   }
 
   // Reads the raw (unfiltered) battery voltage, in millivolts. Visible for
   // testing.
-  static uint16_t ReadBatteryVoltageMillivolts();
+  static uint16_t ReadRawBatteryMillivolts();
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
@@ -53,10 +53,9 @@ class Controller {
   CountDownTimer power_mode_read_timer_{10};
 
   CountUpTimer motion_timer_;
-  bool light_is_on_ = false;
 
   MedianFilter<uint16_t, uint16_t, kBatteryMedianFilterSize>
-      battery_median_filter_{Controller::ReadBatteryVoltageMillivolts};
+      battery_median_filter_{Controller::ReadRawBatteryMillivolts};
   ExponentialMovingAverageFilter<uint16_t> battery_average_filter_{
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};

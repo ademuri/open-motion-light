@@ -221,13 +221,13 @@ TEST(ControllerTest, ReadsBatteryVoltage) {
   ASSERT_TRUE(controller.Init());
 
   setAnalogRead(AVREF, kFakeVrefintCal / 4);
-  EXPECT_EQ(Controller::ReadBatteryVoltageMillivolts(), 3000);
+  EXPECT_EQ(Controller::ReadRawBatteryMillivolts(), 3000);
 
   setAnalogRead(AVREF, kFakeVrefintCal * 0.75 / 4);
-  EXPECT_EQ(Controller::ReadBatteryVoltageMillivolts(), 4000);
+  EXPECT_EQ(Controller::ReadRawBatteryMillivolts(), 4000);
 
   setAnalogRead(AVREF, kFakeVrefintCal * 1.5 / 4);
-  EXPECT_EQ(Controller::ReadBatteryVoltageMillivolts(), 2000);
+  EXPECT_EQ(Controller::ReadRawBatteryMillivolts(), 2000);
 }
 
 TEST(ControllerTest, FiltersBatteryVoltage) {
@@ -235,25 +235,25 @@ TEST(ControllerTest, FiltersBatteryVoltage) {
 
   Controller controller;
   ASSERT_TRUE(controller.Init());
-  ASSERT_EQ(Controller::ReadBatteryVoltageMillivolts(), 3000);
-  EXPECT_EQ(controller.GetBatteryVoltage(), 3000);
+  ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3000);
+  EXPECT_EQ(controller.GetFilteredBatteryMillivolts(), 3000);
 
   advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
   controller.Step();
-  EXPECT_EQ(controller.GetBatteryVoltage(), 3000);
+  EXPECT_EQ(controller.GetFilteredBatteryMillivolts(), 3000);
 
   advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
   setAnalogRead(AVREF, kFakeVrefintCal * 0.75 / 4);
-  ASSERT_EQ(Controller::ReadBatteryVoltageMillivolts(), 4000);
+  ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 4000);
   controller.Step();
-  EXPECT_GE(controller.GetBatteryVoltage(), 3000);
-  EXPECT_LT(controller.GetBatteryVoltage(), 4000);
+  EXPECT_GE(controller.GetFilteredBatteryMillivolts(), 3000);
+  EXPECT_LT(controller.GetFilteredBatteryMillivolts(), 4000);
 
   for (uint32_t n = 0; n < (256 / Controller::kBatteryFilterAlpha) * 2; n++) {
     advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
     controller.Step();
-    EXPECT_GE(controller.GetBatteryVoltage(), 3000) << "step " << n;
-    EXPECT_LT(controller.GetBatteryVoltage(), 4000) << "step " << n;
+    EXPECT_GE(controller.GetFilteredBatteryMillivolts(), 3000) << "step " << n;
+    EXPECT_LT(controller.GetFilteredBatteryMillivolts(), 4000) << "step " << n;
   }
-  EXPECT_GT(controller.GetBatteryVoltage(), 3800);
+  EXPECT_GT(controller.GetFilteredBatteryMillivolts(), 3800);
 }

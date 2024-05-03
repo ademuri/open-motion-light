@@ -32,7 +32,7 @@ PowerMode Controller::ReadPowerMode() {
   return PowerMode::kOff;
 }
 
-uint16_t Controller::ReadBatteryVoltageMillivolts() {
+uint16_t Controller::ReadRawBatteryMillivolts() {
   // Note: while the ADC (and cal) are 12-bit values, these use uint32_t to
   // avoid overflow.
 
@@ -87,9 +87,9 @@ void Controller::Step() {
 
     if (power_mode_ == PowerMode::kAuto) {
       if (motion_detected) {
-        if (!light_is_on_) {
-          analogWrite(kPinWhiteLed, GetLedDutyCycle());
-        }
+        // TODO: check whether calling this repeatedly when not necessary causes
+        // issues.
+        analogWrite(kPinWhiteLed, GetLedDutyCycle());
         motion_timer_.Reset();
       } else if (motion_timer_.Running() &&
                  motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
