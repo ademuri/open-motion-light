@@ -8,6 +8,8 @@
 #include <exponential-moving-average-filter.h>
 #include <median-filter.h>
 
+#include "vcnl4010.h"
+
 class Controller {
  public:
   enum class PowerMode {
@@ -15,6 +17,8 @@ class Controller {
     kAuto,
     kOn,
   };
+
+  Controller(VCNL4010* vcnl4010) : vcnl4010_(vcnl4010) {}
 
   // Initializes this object. Returns whether this was successful.
   bool Init();
@@ -59,6 +63,8 @@ class Controller {
   ExponentialMovingAverageFilter<uint16_t> battery_average_filter_{
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};
+
+  VCNL4010* vcnl4010_;
 
   // The V_DDA value that the reference calibration was measured using.
   static constexpr uint16_t kReferenceSupplyMillivolts = 3000;

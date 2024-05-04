@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "fake-vcnl4010.h"
 #include "pins.h"
 #include "test-lib.h"
 #include "types.h"
@@ -9,24 +10,24 @@
 using PowerMode = Controller::PowerMode;
 
 class ControllerTest : public LightTest {
+ protected:
   void SetUp() override {
     LightTest::SetUp();
     setDigitalRead(kPinPowerAuto, true);
     setDigitalRead(kPinPowerOn, true);
   }
+
+  FakeVCNL4010 vcnl4010;
+  Controller controller{&vcnl4010};
 };
 
-TEST(ControllerTest, Initializes) {
-  Controller controller;
-  EXPECT_TRUE(controller.Init());
-}
+TEST_F(ControllerTest, Initializes) { EXPECT_TRUE(controller.Init()); }
 
-TEST(ControllerTest, SetsPowerModeFromSwitch) {
+TEST_F(ControllerTest, SetsPowerModeFromSwitch) {
   // These pins are inverted
   setDigitalRead(kPinPowerAuto, true);
   setDigitalRead(kPinPowerOn, true);
 
-  Controller controller;
   ASSERT_TRUE(controller.Init());
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
 
@@ -51,11 +52,10 @@ TEST(ControllerTest, SetsPowerModeFromSwitch) {
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
 }
 
-TEST(ControllerTest, UpdatesLedWhenSwitchingModes) {
+TEST_F(ControllerTest, UpdatesLedWhenSwitchingModes) {
   setDigitalRead(kPinPowerAuto, true);
   setDigitalRead(kPinPowerOn, true);
 
-  Controller controller;
   ASSERT_TRUE(controller.Init());
   const uint32_t duty_cycle = controller.GetLedDutyCycle();
   controller.Step();
@@ -99,11 +99,10 @@ TEST(ControllerTest, UpdatesLedWhenSwitchingModes) {
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
 }
 
-TEST(ControllerTest, DebouncePowerMode) {
+TEST_F(ControllerTest, DebouncePowerMode) {
   setDigitalRead(kPinPowerAuto, true);
   setDigitalRead(kPinPowerOn, true);
 
-  Controller controller;
   ASSERT_TRUE(controller.Init());
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOff);
 
@@ -130,11 +129,10 @@ TEST(ControllerTest, DebouncePowerMode) {
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
 }
 
-TEST(ControllerTest, MotionTriggersLed) {
+TEST_F(ControllerTest, MotionTriggersLed) {
   setDigitalRead(kPinPowerAuto, true);
   setDigitalRead(kPinPowerOn, true);
 
-  Controller controller;
   ASSERT_TRUE(controller.Init());
   const uint32_t duty_cycle = controller.GetLedDutyCycle();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
@@ -170,11 +168,10 @@ TEST(ControllerTest, MotionTriggersLed) {
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
 
-TEST(ControllerTest, ContinuedMotionKeepsLedOn) {
+TEST_F(ControllerTest, ContinuedMotionKeepsLedOn) {
   setDigitalRead(kPinPowerAuto, false);
   setDigitalRead(kPinPowerOn, true);
 
-  Controller controller;
   ASSERT_TRUE(controller.Init());
   const uint32_t duty_cycle = controller.GetLedDutyCycle();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
@@ -216,8 +213,7 @@ TEST(ControllerTest, ContinuedMotionKeepsLedOn) {
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
 
-TEST(ControllerTest, ReadsBatteryVoltage) {
-  Controller controller;
+TEST_F(ControllerTest, ReadsBatteryVoltage) {
   ASSERT_TRUE(controller.Init());
 
   setAnalogRead(AVREF, kFakeVrefintCal / 4);
@@ -230,10 +226,9 @@ TEST(ControllerTest, ReadsBatteryVoltage) {
   EXPECT_EQ(Controller::ReadRawBatteryMillivolts(), 2000);
 }
 
-TEST(ControllerTest, FiltersBatteryVoltage) {
+TEST_F(ControllerTest, FiltersBatteryVoltage) {
   setAnalogRead(AVREF, kFakeVrefintCal / 4);
 
-  Controller controller;
   ASSERT_TRUE(controller.Init());
   ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3000);
   EXPECT_EQ(controller.GetFilteredBatteryMillivolts(), 3000);

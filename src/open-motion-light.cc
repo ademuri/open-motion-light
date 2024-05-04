@@ -3,8 +3,10 @@
 
 #include "pins.h"
 #include "controller.h"
+#include "arduino-vcnl4010.cc"
 
-Controller controller;
+ArduinoVCNL4010 vcnl4010;
+Controller controller{&vcnl4010};
 
 void setup() {
   // USB pins
