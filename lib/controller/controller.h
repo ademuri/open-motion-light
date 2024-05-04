@@ -43,6 +43,9 @@ class Controller {
   // testing.
   static uint16_t ReadRawBatteryMillivolts();
 
+  uint16_t ReadProximity() { return vcnl4010_->ReadProximity(); }
+  uint16_t ReadAmbientLight() { return vcnl4010_->ReadAmbient(); }
+
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
   static constexpr uint8_t kBatteryMedianFilterSize = 5;
