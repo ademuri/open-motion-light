@@ -7,6 +7,7 @@
 #include <array>
 
 static std::array<bool, kPinMax> digital_read_data;
+static std::array<bool, kPinMax> digital_write_data;
 static std::array<uint32_t, kPinMax> analog_write_data;
 static std::array<uint32_t, kPinMax> analog_read_data;
 
@@ -22,6 +23,16 @@ void setDigitalRead(uint32_t ulPin, bool value) {
   digital_read_data[ulPin] = value;
 }
 
+void digitalWrite(uint32_t ulPin, uint32_t ulVal) {
+  ASSERT_LT(ulPin, kPinMax);
+  digital_write_data[ulPin] = ulVal;
+}
+
+bool getDigitalWrite(uint32_t ulPin) {
+  EXPECT_LT(ulPin, kPinMax);
+  return digital_write_data[ulPin];
+}
+
 void analogWrite(uint32_t ulPin, uint32_t ulValue) {
   ASSERT_LT(ulPin, kPinMax);
   analog_write_data[ulPin] = ulValue;
@@ -35,7 +46,6 @@ uint32_t getAnalogWrite(uint32_t ulPin) {
 uint32_t analogRead(uint32_t ulPin) {
   EXPECT_LT(ulPin, kPinMax);
   return analog_read_data[ulPin];
-
 }
 
 void setAnalogRead(uint32_t ulPin, uint32_t value) {

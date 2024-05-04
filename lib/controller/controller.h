@@ -67,6 +67,8 @@ class Controller {
   // testing.
   static uint16_t ReadRawBatteryMillivolts();
 
+  static uint16_t ReadAnalogVoltageMillivolts(uint32_t pin, uint16_t battery_millivolts);
+
   uint16_t ReadProximity() { return vcnl4010_->ReadProximity(); }
   uint16_t ReadAmbientLight() { return vcnl4010_->ReadAmbient(); }
 
@@ -89,6 +91,18 @@ class Controller {
   static constexpr uint8_t kBatteryMedianFilterSize = 5;
   static constexpr uint32_t kBatteryFilterRunIntervalMillis = 10;
 
+  // The V_DDA value that the reference calibration was measured using.
+  static constexpr uint16_t kReferenceSupplyMillivolts = 3000;
+  // The max value for the ADC during the reference measurement, which uses the
+  // full 12 bits of the ADC.
+  static constexpr uint32_t kAdcMaxCount = 4096;
+  // The current configured max value for the ADC, which is 2^<number of bits>.
+  static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
+
+  static constexpr uint16_t kUsbNoConnectionMillivolts = 200;
+  static constexpr uint16_t kUsbStandardMillivolts = 660;
+  static constexpr uint16_t kUsb1_5Millivolts = 1230;
+
  private:
   // Reads the state of the power mode switch.
   static PowerMode ReadPowerMode();
@@ -109,12 +123,4 @@ class Controller {
       kBatteryFilterAlpha};
 
   VCNL4010* vcnl4010_;
-
-  // The V_DDA value that the reference calibration was measured using.
-  static constexpr uint16_t kReferenceSupplyMillivolts = 3000;
-  // The max value for the ADC during the reference measurement, which uses the
-  // full 12 bits of the ADC.
-  static constexpr uint32_t kAdcMaxCount = 4096;
-  // The current configured max value for the ADC, which is 2^<number of bits>.
-  static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
 };

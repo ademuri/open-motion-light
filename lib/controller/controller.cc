@@ -53,6 +53,12 @@ uint16_t Controller::ReadRawBatteryMillivolts() {
          vrefint_raw;
 }
 
+uint16_t Controller::ReadAnalogVoltageMillivolts(
+    const uint32_t pin, const uint16_t battery_millivolts) {
+  uint32_t pin_value = analogRead(pin);
+  return (pin_value * battery_millivolts) / kAdcConfiguredMaxCount;
+}
+
 void Controller::Step() {
 #ifndef ARDUINO
   battery_median_filter_.SetMillis(millis());
@@ -77,6 +83,36 @@ void Controller::Step() {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
       }
     }
+  }
+
+  // ADC readings are relative to the battery voltage.
+  // TODO: possibly consolidate this read with the one inside the battery median
+  // filter, to save power.
+  const uint16_t battery_millivolts = ReadRawBatteryMillivolts();
+  const uint16_t cc1_millivolts =
+      ReadAnalogVoltageMillivolts(/*pin=*/kPinCc1, battery_millivolts);
+  const uint16_t cc2_millivolts =
+      ReadAnalogVoltageMillivolts(/*pin=*/kPinCc2, battery_millivolts);
+  const uint16_t cc_millivolts = std::max(cc1_millivolts, cc2_millivolts);
+  if (cc_millivolts < kUsbNoConnectionMillivolts) {
+    usb_status_ = USBStatus::kNoConnection;
+  } else if (cc_millivolts < kUsbStandardMillivolts) {
+    usb_status_ = USBStatus::kStandardUsb;
+  } else if (cc_millivolts < kUsb1_5Millivolts) {
+    usb_status_ = USBStatus::kUSB1_5;
+  } else {
+    usb_status_ = USBStatus::kUSB3_0;
+  }
+  switch (usb_status_) {
+    case USBStatus::kNoConnection:
+    case USBStatus::kStandardUsb:
+      digitalWrite(kPinChargeHighCurrentEnable, false);
+      break;
+
+    case USBStatus::kUSB1_5:
+    case USBStatus::kUSB3_0:
+      digitalWrite(kPinChargeHighCurrentEnable, true);
+      break;
   }
 
   {

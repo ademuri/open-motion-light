@@ -18,6 +18,7 @@ class ControllerTest : public LightTest {
 
     // This yields a voltage of 3000 / 0.85 = 3529mV.
     setAnalogRead(AVREF, kFakeVrefintCal * 0.85 / 4);
+    ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3529);
   }
 
   FakeVCNL4010 vcnl4010;
@@ -306,10 +307,118 @@ TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
 }
 
+// Returns an analog value which approximates the millivolt reading. Note: due
+// to precision limits, this is NOT exact.
+uint16_t ComputeAnalogValueForMillivolts(uint32_t millivolts) {
+  const uint32_t battery_millivolts = Controller::ReadRawBatteryMillivolts();
+  EXPECT_LE(millivolts, battery_millivolts);
+  return (millivolts * Controller::kAdcConfiguredMaxCount) / battery_millivolts;
+}
+
+TEST(ControllerTestFunctionsTest, ComputeAnalogValueForMillivolts) {
+  const uint32_t pin = PA0;
+
+  setAnalogRead(AVREF, kFakeVrefintCal * 0.75 / 4);
+  const uint16_t battery_millivolts = 4000;
+  ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), battery_millivolts);
+
+  const uint16_t value_1000 = ComputeAnalogValueForMillivolts(1000);
+  setAnalogRead(pin, value_1000);
+  EXPECT_EQ(Controller::ReadAnalogVoltageMillivolts(pin, battery_millivolts),
+            1000);
+
+  const uint16_t value_250 = ComputeAnalogValueForMillivolts(250);
+  setAnalogRead(pin, value_250);
+  EXPECT_EQ(Controller::ReadAnalogVoltageMillivolts(pin, battery_millivolts),
+            250);
+}
+
 TEST_F(ControllerTest, SetsUSBStatus) {
+  // Battery voltage should be max ~3.6V.
+  setAnalogRead(AVREF, kFakeVrefintCal * 0.8 / 4);
+  ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3750);
+
+  const uint16_t vusb_min = ComputeAnalogValueForMillivolts(200);
+  const uint16_t vusb_max = ComputeAnalogValueForMillivolts(610);
+  const uint16_t v1_5_min = ComputeAnalogValueForMillivolts(700);
+  const uint16_t v1_5_max = ComputeAnalogValueForMillivolts(1160);
+  const uint16_t v3_0_min = ComputeAnalogValueForMillivolts(1310);
+  const uint16_t v3_0_max = ComputeAnalogValueForMillivolts(2040);
+  setAnalogRead(kPinCc1, 0);
+  setAnalogRead(kPinCc2, 0);
+
   ASSERT_TRUE(controller.Init());
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
-
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+
+  setAnalogRead(kPinCc1, vusb_min - 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+
+  setAnalogRead(kPinCc1, vusb_min + 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kStandardUsb);
+
+  setAnalogRead(kPinCc1, vusb_max - 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kStandardUsb);
+
+  setAnalogRead(kPinCc1, v1_5_min + 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+
+  setAnalogRead(kPinCc1, v1_5_max - 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+
+  setAnalogRead(kPinCc1, v3_0_min + 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB3_0);
+
+  setAnalogRead(kPinCc1, v3_0_max - 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB3_0);
+}
+
+TEST_F(ControllerTest, SetsUSBFromCC1AndCC2) {
+  // Battery voltage should be max ~3.6V.
+  setAnalogRead(AVREF, kFakeVrefintCal * 0.8 / 4);
+  ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3750);
+
+  const uint16_t vusb_max = ComputeAnalogValueForMillivolts(610);
+  const uint16_t v1_5_min = ComputeAnalogValueForMillivolts(700);
+  setAnalogRead(kPinCc1, 0);
+  setAnalogRead(kPinCc2, 0);
+
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+
+  setAnalogRead(kPinCc1, v1_5_min + 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+
+  setAnalogRead(kPinCc1, 0);
+  setAnalogRead(kPinCc2, v1_5_min + 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+
+  setAnalogRead(kPinCc1, vusb_max - 1);
+  setAnalogRead(kPinCc2, v1_5_min + 1);
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+}
+
+TEST_F(ControllerTest, ReadsAnalogVoltage) {
+  const uint32_t pin = PA0;
+  setAnalogRead(pin, Controller::kAdcConfiguredMaxCount);
+  EXPECT_EQ(
+      Controller::ReadAnalogVoltageMillivolts(pin, /*battery_millivolts=*/3000),
+      3000);
+
+  setAnalogRead(pin, Controller::kAdcConfiguredMaxCount / 2);
+  EXPECT_EQ(
+      Controller::ReadAnalogVoltageMillivolts(pin, /*battery_millivolts=*/3000),
+      1500);
 }
