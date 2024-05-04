@@ -16,6 +16,17 @@ enum class PowerMode {
   kOn,
 };
 
+enum class PowerStatus {
+  kBattery,
+  kCharging,
+  kCharged,
+  kChargeError,
+  kLowBatteryCutoff,
+  // The battery is low enough that we should operate in low-power mode, but
+  // we're charging, so we should display that on the charge status LEDs.
+  kLowBatteryCutoffCharging,
+};
+
 class Controller {
  public:
   Controller(VCNL4010* vcnl4010) : vcnl4010_(vcnl4010) {}
@@ -23,7 +34,9 @@ class Controller {
   // Initializes this object. Returns whether this was successful.
   bool Init();
 
-  PowerMode GetPowerMode() { return power_mode_; };
+  PowerMode GetPowerMode() { return power_mode_; }
+
+  PowerStatus GetPowerStatus() { return power_status_; }
 
   void Step();
 
@@ -33,6 +46,8 @@ class Controller {
 
   // The brightness of the white LEDs when they're on.
   uint32_t GetLedDutyCycle() { return kLedDutyCycle; }
+
+  uint32_t GetLowBatteryCutoffMillivolts() { return 3000; }
 
   // Returns the battery voltage, filtered for stability.
   uint16_t GetFilteredBatteryMillivolts() {
@@ -58,6 +73,8 @@ class Controller {
   PowerMode power_mode_ = PowerMode::kOff;
   // Used to debounce reading the power mode switch.
   CountDownTimer power_mode_read_timer_{10};
+
+  PowerStatus power_status_ = PowerStatus::kBattery;
 
   CountUpTimer motion_timer_;
 

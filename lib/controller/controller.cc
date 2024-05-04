@@ -78,6 +78,31 @@ void Controller::Step() {
       }
     }
 
+    {
+      const bool charging_value = !digitalRead(kPinBatteryCharge);
+      const bool done_value = !digitalRead(kPinBatteryDone);
+      // TODO: possibly adjust the threshold based on estimated current
+      // consumption when the white LEDs are on.
+      const bool battery_low =
+          GetFilteredBatteryMillivolts() < GetLowBatteryCutoffMillivolts();
+      if (battery_low && charging_value && !done_value) {
+        power_status_ = PowerStatus::kLowBatteryCutoffCharging;
+      } else if (battery_low) {
+        power_status_ = PowerStatus::kLowBatteryCutoff;
+      } else if (!charging_value && !done_value) {
+        // TODO: detect the USB CC voltages - if something is connected and this
+        // is the case, then there is a charging error.
+        power_status_ = PowerStatus::kBattery;
+      } else if (charging_value && done_value) {
+        // This should't be possible, according to the CN3058E datasheet.
+        power_status_ = PowerStatus::kChargeError;
+      } else if (charging_value) {
+        power_status_ = PowerStatus::kCharging;
+      } else if (done_value) {
+        power_status_ = PowerStatus::kCharged;
+      }
+    }
+
     bool motion_detected = digitalRead(kPinMotionSensor);
     if (motion_detected) {
       motion_timer_.Reset();

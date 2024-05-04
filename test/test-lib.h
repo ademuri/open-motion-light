@@ -7,8 +7,9 @@
 #include "controller.h"
 #include "types.h"
 
-std::ostream& operator<<(std::ostream& os,
-                         const PowerMode power_mode);
+std::ostream& operator<<(std::ostream& os, const PowerMode power_mode);
+
+std::ostream& operator<<(std::ostream& os, const PowerStatus power_status);
 
 class LightTest : public ::testing::Test {
  protected:

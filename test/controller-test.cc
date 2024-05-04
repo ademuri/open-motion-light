@@ -13,6 +13,11 @@ class ControllerTest : public LightTest {
     LightTest::SetUp();
     setDigitalRead(kPinPowerAuto, true);
     setDigitalRead(kPinPowerOn, true);
+    setDigitalRead(kPinBatteryCharge, true);
+    setDigitalRead(kPinBatteryDone, true);
+
+    // This yields a voltage of 3000 / 0.85 = 3529mV.
+    setAnalogRead(AVREF, kFakeVrefintCal * 0.85 / 4);
   }
 
   FakeVCNL4010 vcnl4010;
@@ -249,4 +254,54 @@ TEST_F(ControllerTest, FiltersBatteryVoltage) {
     EXPECT_LT(controller.GetFilteredBatteryMillivolts(), 4000) << "step " << n;
   }
   EXPECT_GT(controller.GetFilteredBatteryMillivolts(), 3800);
+}
+
+TEST_F(ControllerTest, SetsPowerStatus) {
+  setDigitalRead(kPinBatteryCharge, true);
+  setDigitalRead(kPinBatteryDone, true);
+
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+
+  setDigitalRead(kPinBatteryCharge, false);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kCharging);
+
+  setDigitalRead(kPinBatteryCharge, true);
+  setDigitalRead(kPinBatteryDone, false);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kCharged);
+
+  setDigitalRead(kPinBatteryCharge, false);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kChargeError);
+}
+
+TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
+  setDigitalRead(kPinBatteryCharge, true);
+  setDigitalRead(kPinBatteryDone, true);
+
+  setAnalogRead(AVREF, kFakeVrefintCal * 1.5 / 4);
+  ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 2000);
+
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+  controller.Step();
+  ASSERT_EQ(controller.GetFilteredBatteryMillivolts(), 2000);
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+
+  setDigitalRead(kPinBatteryCharge, false);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(),
+            PowerStatus::kLowBatteryCutoffCharging);
+
+  setDigitalRead(kPinBatteryDone, false);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+
+  setDigitalRead(kPinBatteryCharge, true);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
 }

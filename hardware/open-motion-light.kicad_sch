@@ -17480,7 +17480,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "http://www.consonance-elec.com/pdf/datasheet/DSE-CN3058E.pdf"
+		(property "Datasheet" "https://www.mikrocontroller.net/attachment/519010/DSE-CN3058E.pdf"
 			(at 59.69 190.5 0)
 			(effects
 				(font
