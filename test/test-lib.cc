@@ -1,7 +1,5 @@
 #include "test-lib.h"
 
-using PowerMode = Controller::PowerMode;
-
 std::ostream& operator<<(std::ostream& os, const PowerMode power_mode) {
   switch(power_mode) {
     case PowerMode::kOff:

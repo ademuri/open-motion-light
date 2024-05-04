@@ -8,7 +8,7 @@
 #include "types.h"
 
 std::ostream& operator<<(std::ostream& os,
-                         const Controller::PowerMode power_mode);
+                         const PowerMode power_mode);
 
 class LightTest : public ::testing::Test {
  protected:

@@ -10,14 +10,14 @@
 
 #include "vcnl4010.h"
 
+enum class PowerMode {
+  kOff,
+  kAuto,
+  kOn,
+};
+
 class Controller {
  public:
-  enum class PowerMode {
-    kOff,
-    kAuto,
-    kOn,
-  };
-
   Controller(VCNL4010* vcnl4010) : vcnl4010_(vcnl4010) {}
 
   // Initializes this object. Returns whether this was successful.

@@ -7,8 +7,6 @@
 #include "test-lib.h"
 #include "types.h"
 
-using PowerMode = Controller::PowerMode;
-
 class ControllerTest : public LightTest {
  protected:
   void SetUp() override {

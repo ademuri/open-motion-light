@@ -2,8 +2,6 @@
 
 #include "pins.h"
 
-using PowerMode = Controller::PowerMode;
-
 bool Controller::Init() {
   // TODO: read power mode switch
   analogWrite(kPinWhiteLed, 0);
