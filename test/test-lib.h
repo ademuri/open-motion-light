@@ -11,6 +11,8 @@ std::ostream& operator<<(std::ostream& os, const PowerMode power_mode);
 
 std::ostream& operator<<(std::ostream& os, const PowerStatus power_status);
 
+std::ostream& operator<<(std::ostream& os, const USBStatus usb_status);
+
 class LightTest : public ::testing::Test {
  protected:
   void SetUp() override {

@@ -36,3 +36,21 @@ std::ostream& operator<<(std::ostream& os, const PowerStatus power_status) {
   }
   return os;
 }
+
+
+static const std::map<USBStatus, std::string> kUSBStatusMap = {
+  {USBStatus::kNoConnection, "no_connection"},
+  {USBStatus::kStandardUsb, "standard_usb"},
+  {USBStatus::kUSB1_5, "usb_1.5A"},
+  {USBStatus::kUSB3_0, "usb_3.0A"},
+};
+
+std::ostream& operator<<(std::ostream& os, const USBStatus usb_status) {
+  auto value = kUSBStatusMap.find(usb_status);
+  if (value == kUSBStatusMap.end()) {
+    os << static_cast<int>(usb_status);
+  } else {
+    os << value->second;
+  }
+  return os;
+}

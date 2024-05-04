@@ -27,6 +27,24 @@ enum class PowerStatus {
   kLowBatteryCutoffCharging,
 };
 
+enum class USBStatus {
+  kNoConnection,
+  // "Standard" current is available. This typically means that the device is
+  // plugged into a USB A port via an A-to-C cable. Technically, this requires
+  // negotiation with the host to determine the current available. However, most
+  // USB A port sources (e.g. cheap chargers) support currents >=1A, and do no
+  // typically support current negotiation. So, from a user's perspective, the
+  // "correct" behavior is for us to charge from one of these sources - and to
+  // be conservative, we'll use the lower-current charging option, to keep draw
+  // below 500mA.
+  kStandardUsb,
+  // 1.5A is available.
+  kUSB1_5,
+  // 3A is available. This device shouldn't draw more than about 1.5A, so we
+  // don't need to distinguish this from the 1.5A case.
+  kUSB3_0,
+};
+
 class Controller {
  public:
   Controller(VCNL4010* vcnl4010) : vcnl4010_(vcnl4010) {}
@@ -37,8 +55,8 @@ class Controller {
   void Step();
 
   PowerMode GetPowerMode() { return power_mode_; }
-
   PowerStatus GetPowerStatus() { return power_status_; }
+  USBStatus GetUSBStatus() { return usb_status_;}
 
   // Returns the battery voltage, filtered for stability.
   uint16_t GetFilteredBatteryMillivolts() {
@@ -80,6 +98,7 @@ class Controller {
   CountDownTimer power_mode_read_timer_{10};
 
   PowerStatus power_status_ = PowerStatus::kBattery;
+  USBStatus usb_status_ = USBStatus::kNoConnection;
 
   CountUpTimer motion_timer_;
 

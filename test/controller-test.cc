@@ -305,3 +305,11 @@ TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
 }
+
+TEST_F(ControllerTest, SetsUSBStatus) {
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+
+  controller.Step();
+  EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+}
