@@ -56,7 +56,7 @@ class Controller {
 
   PowerMode GetPowerMode() { return power_mode_; }
   PowerStatus GetPowerStatus() { return power_status_; }
-  USBStatus GetUSBStatus() { return usb_status_;}
+  USBStatus GetUSBStatus() { return usb_status_; }
 
   // Returns the battery voltage, filtered for stability.
   uint16_t GetFilteredBatteryMillivolts() {
@@ -67,7 +67,8 @@ class Controller {
   // testing.
   static uint16_t ReadRawBatteryMillivolts();
 
-  static uint16_t ReadAnalogVoltageMillivolts(uint32_t pin, uint16_t battery_millivolts);
+  static uint16_t ReadAnalogVoltageMillivolts(uint32_t pin,
+                                              uint16_t battery_millivolts);
 
   uint16_t ReadProximity() { return vcnl4010_->ReadProximity(); }
   uint16_t ReadAmbientLight() { return vcnl4010_->ReadAmbient(); }
@@ -91,6 +92,8 @@ class Controller {
   static constexpr uint8_t kBatteryMedianFilterSize = 5;
   static constexpr uint32_t kBatteryFilterRunIntervalMillis = 10;
 
+  static constexpr uint32_t kBatteryLevelDisplayTimeSeconds = 10;
+
   // The V_DDA value that the reference calibration was measured using.
   static constexpr uint16_t kReferenceSupplyMillivolts = 3000;
   // The max value for the ADC during the reference measurement, which uses the
@@ -102,6 +105,11 @@ class Controller {
   static constexpr uint16_t kUsbNoConnectionMillivolts = 200;
   static constexpr uint16_t kUsbStandardMillivolts = 660;
   static constexpr uint16_t kUsb1_5Millivolts = 1230;
+
+  // Battery levels. This is non-linear, since LiFePO4 batteries have a cubic
+  // discharge curve.
+  static constexpr uint16_t kBatteryVoltage1 = 3400;
+  static constexpr uint16_t kBatteryVoltage0 = 3150;
 
  private:
   // Reads the state of the power mode switch.
@@ -115,6 +123,8 @@ class Controller {
   USBStatus usb_status_ = USBStatus::kNoConnection;
 
   CountUpTimer motion_timer_;
+
+  CountDownTimer battery_level_timer_{kBatteryLevelDisplayTimeSeconds * 1000};
 
   MedianFilter<uint16_t, uint16_t, kBatteryMedianFilterSize>
       battery_median_filter_{Controller::ReadRawBatteryMillivolts};

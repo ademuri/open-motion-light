@@ -79,8 +79,10 @@ void Controller::Step() {
       } else if (power_mode_ == PowerMode::kAuto) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
         motion_timer_.Reset();
+        battery_level_timer_.Reset();
       } else if (power_mode_ == PowerMode::kOn) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
+        battery_level_timer_.Reset();
       }
     }
   }
@@ -158,5 +160,19 @@ void Controller::Step() {
       // TODO: check that this actually turns off the LED
       analogWrite(kPinWhiteLed, 0);
     }
+  }
+
+  if (battery_level_timer_.Active()) {
+    // TODO: Add brightness control via PWM, and light up the "off" LEDs dimly
+    // TODO: blink the LEDs while charging
+    const uint16_t battery_millivolts =
+        battery_average_filter_.GetFilteredValue();
+    digitalWrite(kPinBatteryLed3, battery_millivolts > kBatteryVoltage1);
+    digitalWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0);
+    digitalWrite(kPinBatteryLed1, true);
+  } else {
+    digitalWrite(kPinBatteryLed3, false);
+    digitalWrite(kPinBatteryLed2, false);
+    digitalWrite(kPinBatteryLed1, false);
   }
 }

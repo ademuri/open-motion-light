@@ -444,3 +444,72 @@ TEST_F(ControllerTest, ReadsAnalogVoltage) {
       Controller::ReadAnalogVoltageMillivolts(pin, /*battery_millivolts=*/3000),
       1500);
 }
+
+std::array<bool, 3> BatteryLeds(bool led1, bool led2, bool led3) {
+  return {led1, led2, led3};
+}
+
+std::array<bool, 3> GetBatteryLeds() {
+  return BatteryLeds(getDigitalWrite(kPinBatteryLed1),
+                     getDigitalWrite(kPinBatteryLed2),
+                     getDigitalWrite(kPinBatteryLed3));
+}
+
+TEST_F(ControllerTest, DisplaysBatteryVoltage) {
+  setDigitalRead(kPinBatteryCharge, true);
+  setDigitalRead(kPinBatteryDone, true);
+
+  setAnalogRead(AVREF,
+                (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
+                    (Controller::kBatteryVoltage1 + 100) / 4);
+  // This causes a link error, and I'm not sure why.
+  // ASSERT_GT(controller.ReadRawBatteryMillivolts(),
+  //           Controller::kBatteryVoltage1);
+  ASSERT_GT(controller.ReadRawBatteryMillivolts(), 3400);
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(0, 0, 0));
+
+  setDigitalRead(kPinPowerAuto, false);
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(1, 1, 1));
+
+  advanceMillis(Controller::kBatteryLevelDisplayTimeSeconds * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(0, 0, 0));
+
+  // Medium voltage
+  setAnalogRead(AVREF,
+                (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
+                    (Controller::kBatteryVoltage0 + 10) / 4);
+  ASSERT_GT(controller.ReadRawBatteryMillivolts(), 3150);
+  ASSERT_LT(controller.ReadRawBatteryMillivolts(), 3400);
+  // Pump the battery voltage filters
+  for (uint32_t n = 0; n < 100; n++) {
+    advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
+    controller.Step();
+  }
+
+  setDigitalRead(kPinPowerAuto, true);
+  setDigitalRead(kPinPowerOn, false);
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(1, 1, 0));
+
+  // Low voltage
+  setAnalogRead(AVREF,
+                (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
+                    (Controller::kBatteryVoltage0 - 10) / 4);
+  ASSERT_LT(controller.ReadRawBatteryMillivolts(), 3150);
+  // Pump the battery voltage filters
+  for (uint32_t n = 0; n < 100; n++) {
+    advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
+    controller.Step();
+  }
+
+  setDigitalRead(kPinPowerAuto, false);
+  setDigitalRead(kPinPowerOn, true);
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(1, 0, 0));
+}
