@@ -7,6 +7,32 @@
 #include "test-lib.h"
 #include "types.h"
 
+// Returns an analog value which approximates the millivolt reading. Note: due
+// to precision limits, this is NOT exact.
+uint16_t ComputeAnalogValueForMillivolts(uint32_t millivolts) {
+  const uint32_t battery_millivolts = Controller::ReadRawBatteryMillivolts();
+  EXPECT_LE(millivolts, battery_millivolts);
+  return (millivolts * Controller::kAdcConfiguredMaxCount) / battery_millivolts;
+}
+
+TEST(ControllerTestFunctionsTest, ComputeAnalogValueForMillivolts) {
+  const uint32_t pin = PA0;
+
+  setAnalogRead(AVREF, kFakeVrefintCal * 0.75 / 4);
+  const uint16_t battery_millivolts = 4000;
+  ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), battery_millivolts);
+
+  const uint16_t value_1000 = ComputeAnalogValueForMillivolts(1000);
+  setAnalogRead(pin, value_1000);
+  EXPECT_EQ(Controller::ReadAnalogVoltageMillivolts(pin, battery_millivolts),
+            1000);
+
+  const uint16_t value_250 = ComputeAnalogValueForMillivolts(250);
+  setAnalogRead(pin, value_250);
+  EXPECT_EQ(Controller::ReadAnalogVoltageMillivolts(pin, battery_millivolts),
+            250);
+}
+
 class ControllerTest : public LightTest {
  protected:
   void SetUp() override {
@@ -260,6 +286,7 @@ TEST_F(ControllerTest, FiltersBatteryVoltage) {
 TEST_F(ControllerTest, SetsPowerStatus) {
   setDigitalRead(kPinBatteryCharge, true);
   setDigitalRead(kPinBatteryDone, true);
+  setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(0));
 
   ASSERT_TRUE(controller.Init());
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
@@ -276,6 +303,15 @@ TEST_F(ControllerTest, SetsPowerStatus) {
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kCharged);
 
   setDigitalRead(kPinBatteryCharge, false);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kChargeError);
+
+  setDigitalRead(kPinBatteryCharge, true);
+  setDigitalRead(kPinBatteryDone, true);
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+
+  setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(1000));
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kChargeError);
 }
@@ -305,32 +341,6 @@ TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
   setDigitalRead(kPinBatteryCharge, true);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
-}
-
-// Returns an analog value which approximates the millivolt reading. Note: due
-// to precision limits, this is NOT exact.
-uint16_t ComputeAnalogValueForMillivolts(uint32_t millivolts) {
-  const uint32_t battery_millivolts = Controller::ReadRawBatteryMillivolts();
-  EXPECT_LE(millivolts, battery_millivolts);
-  return (millivolts * Controller::kAdcConfiguredMaxCount) / battery_millivolts;
-}
-
-TEST(ControllerTestFunctionsTest, ComputeAnalogValueForMillivolts) {
-  const uint32_t pin = PA0;
-
-  setAnalogRead(AVREF, kFakeVrefintCal * 0.75 / 4);
-  const uint16_t battery_millivolts = 4000;
-  ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), battery_millivolts);
-
-  const uint16_t value_1000 = ComputeAnalogValueForMillivolts(1000);
-  setAnalogRead(pin, value_1000);
-  EXPECT_EQ(Controller::ReadAnalogVoltageMillivolts(pin, battery_millivolts),
-            1000);
-
-  const uint16_t value_250 = ComputeAnalogValueForMillivolts(250);
-  setAnalogRead(pin, value_250);
-  EXPECT_EQ(Controller::ReadAnalogVoltageMillivolts(pin, battery_millivolts),
-            250);
 }
 
 TEST_F(ControllerTest, SetsUSBStatus) {

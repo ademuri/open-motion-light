@@ -127,9 +127,11 @@ void Controller::Step() {
     } else if (battery_low) {
       power_status_ = PowerStatus::kLowBatteryCutoff;
     } else if (!charging_value && !done_value) {
-      // TODO: detect the USB CC voltages - if something is connected and this
-      // is the case, then there is a charging error.
-      power_status_ = PowerStatus::kBattery;
+      if (usb_status_ == USBStatus::kNoConnection) {
+        power_status_ = PowerStatus::kBattery;
+      } else {
+        power_status_ = PowerStatus::kChargeError;
+      }
     } else if (charging_value && done_value) {
       // This should't be possible, according to the CN3058E datasheet.
       power_status_ = PowerStatus::kChargeError;
