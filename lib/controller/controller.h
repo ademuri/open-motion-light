@@ -34,20 +34,11 @@ class Controller {
   // Initializes this object. Returns whether this was successful.
   bool Init();
 
+  void Step();
+
   PowerMode GetPowerMode() { return power_mode_; }
 
   PowerStatus GetPowerStatus() { return power_status_; }
-
-  void Step();
-
-  // How long the light should be on for after motion is detected. Visible for
-  // testing.
-  uint32_t GetMotionTimeoutSeconds() { return kMotionTimeoutSeconds; }
-
-  // The brightness of the white LEDs when they're on.
-  uint32_t GetLedDutyCycle() { return kLedDutyCycle; }
-
-  uint32_t GetLowBatteryCutoffMillivolts() { return 3000; }
 
   // Returns the battery voltage, filtered for stability.
   uint16_t GetFilteredBatteryMillivolts() {
@@ -60,6 +51,20 @@ class Controller {
 
   uint16_t ReadProximity() { return vcnl4010_->ReadProximity(); }
   uint16_t ReadAmbientLight() { return vcnl4010_->ReadAmbient(); }
+
+  // Configuration values. TODO: store these in EEPROM and add an interface for
+  // changing them.
+
+  // How long the light should be on for after motion is detected. Visible for
+  // testing.
+  uint32_t GetMotionTimeoutSeconds() { return 128; }
+
+  // The brightness of the white LEDs when they're on.
+  uint32_t GetLedDutyCycle() { return 128; }
+
+  // This is considered to be the "empty" point for the battery. Below this
+  // voltage, the device goes into a lower-power mode to minimize battery drain.
+  uint32_t GetLowBatteryCutoffMillivolts() { return 3000; }
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
@@ -93,8 +98,4 @@ class Controller {
   static constexpr uint32_t kAdcMaxCount = 4096;
   // The current configured max value for the ADC, which is 2^<number of bits>.
   static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
-
-  // TODO: make these configurable and store it in EEPROM
-  static constexpr uint32_t kMotionTimeoutSeconds = 30;
-  static constexpr uint32_t kLedDutyCycle = 128;
 };
