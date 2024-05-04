@@ -351,34 +351,42 @@ TEST_F(ControllerTest, SetsUSBStatus) {
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+  EXPECT_FALSE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, vusb_min - 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+  EXPECT_FALSE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, vusb_min + 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kStandardUsb);
+  EXPECT_FALSE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, vusb_max - 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kStandardUsb);
+  EXPECT_FALSE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, v1_5_min + 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+  EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, v1_5_max - 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+  EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, v3_0_min + 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB3_0);
+  EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, v3_0_max - 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB3_0);
+  EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 }
 
 TEST_F(ControllerTest, SetsUSBFromCC1AndCC2) {
@@ -394,20 +402,24 @@ TEST_F(ControllerTest, SetsUSBFromCC1AndCC2) {
   ASSERT_TRUE(controller.Init());
   controller.Step();
   ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+  EXPECT_FALSE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, v1_5_min + 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+  EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, 0);
   setAnalogRead(kPinCc2, v1_5_min + 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+  EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 
   setAnalogRead(kPinCc1, vusb_max - 1);
   setAnalogRead(kPinCc2, v1_5_min + 1);
   controller.Step();
   EXPECT_EQ(controller.GetUSBStatus(), USBStatus::kUSB1_5);
+  EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 }
 
 TEST_F(ControllerTest, ReadsAnalogVoltage) {
