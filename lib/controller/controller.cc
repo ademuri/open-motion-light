@@ -163,16 +163,19 @@ void Controller::Step() {
   }
 
   if (battery_level_timer_.Active()) {
-    // TODO: Add brightness control via PWM, and light up the "off" LEDs dimly
     // TODO: blink the LEDs while charging
     const uint16_t battery_millivolts =
         battery_average_filter_.GetFilteredValue();
-    digitalWrite(kPinBatteryLed3, battery_millivolts > kBatteryVoltage1);
-    digitalWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0);
-    digitalWrite(kPinBatteryLed1, true);
+    analogWrite(kPinBatteryLed3, battery_millivolts > kBatteryVoltage1
+                                     ? 255
+                                     : kBatteryLedPlaceholderBrightness);
+    analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
+                                     ? 255
+                                     : kBatteryLedPlaceholderBrightness);
+    analogWrite(kPinBatteryLed1, 255);
   } else {
-    digitalWrite(kPinBatteryLed3, false);
-    digitalWrite(kPinBatteryLed2, false);
-    digitalWrite(kPinBatteryLed1, false);
+    analogWrite(kPinBatteryLed3, 0);
+    analogWrite(kPinBatteryLed2, 0);
+    analogWrite(kPinBatteryLed1, 0);
   }
 }

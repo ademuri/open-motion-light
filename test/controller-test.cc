@@ -445,14 +445,15 @@ TEST_F(ControllerTest, ReadsAnalogVoltage) {
       1500);
 }
 
-std::array<bool, 3> BatteryLeds(bool led1, bool led2, bool led3) {
+std::array<uint32_t, 3> BatteryLeds(uint32_t led1, uint32_t led2,
+                                    uint32_t led3) {
   return {led1, led2, led3};
 }
 
-std::array<bool, 3> GetBatteryLeds() {
-  return BatteryLeds(getDigitalWrite(kPinBatteryLed1),
-                     getDigitalWrite(kPinBatteryLed2),
-                     getDigitalWrite(kPinBatteryLed3));
+std::array<uint32_t, 3> GetBatteryLeds() {
+  return BatteryLeds(getAnalogWrite(kPinBatteryLed1),
+                     getAnalogWrite(kPinBatteryLed2),
+                     getAnalogWrite(kPinBatteryLed3));
 }
 
 TEST_F(ControllerTest, DisplaysBatteryVoltage) {
@@ -470,7 +471,7 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setDigitalRead(kPinPowerAuto, false);
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
-  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(1, 1, 1));
+  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(255, 255, 255));
 
   advanceMillis(Controller::kBatteryLevelDisplayTimeSeconds * 1000 + 10);
   controller.Step();
@@ -494,7 +495,9 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setDigitalRead(kPinPowerOn, false);
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOn);
-  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(1, 1, 0));
+  EXPECT_EQ(
+      GetBatteryLeds(),
+      BatteryLeds(255, 255, Controller::kBatteryLedPlaceholderBrightness));
 
   // Low voltage
   setAnalogRead(AVREF,
@@ -512,5 +515,7 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setDigitalRead(kPinPowerOn, true);
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
-  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(1, 0, 0));
+  EXPECT_EQ(GetBatteryLeds(),
+            BatteryLeds(255, Controller::kBatteryLedPlaceholderBrightness,
+                        Controller::kBatteryLedPlaceholderBrightness));
 }

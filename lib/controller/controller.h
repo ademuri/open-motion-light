@@ -106,6 +106,10 @@ class Controller {
   static constexpr uint16_t kUsbStandardMillivolts = 660;
   static constexpr uint16_t kUsb1_5Millivolts = 1230;
 
+  // The duty cycle for LEDs when they're not active, but are lit up for
+  // clarity.
+  static constexpr uint16_t kBatteryLedPlaceholderBrightness = 16;
+
   // Battery levels. This is non-linear, since LiFePO4 batteries have a cubic
   // discharge curve.
   static inline constexpr uint16_t kBatteryVoltage1 = 3400;
