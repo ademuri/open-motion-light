@@ -462,10 +462,8 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setAnalogRead(AVREF,
                 (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
                     (Controller::kBatteryVoltage1 + 100) / 4);
-  // This causes a link error, and I'm not sure why.
-  // ASSERT_GT(controller.ReadRawBatteryMillivolts(),
-  //           Controller::kBatteryVoltage1);
-  ASSERT_GT(controller.ReadRawBatteryMillivolts(), 3400);
+  ASSERT_GT(controller.ReadRawBatteryMillivolts(),
+            Controller::kBatteryVoltage1);
   ASSERT_TRUE(controller.Init());
   EXPECT_EQ(GetBatteryLeds(), BatteryLeds(0, 0, 0));
 
@@ -482,8 +480,10 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setAnalogRead(AVREF,
                 (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
                     (Controller::kBatteryVoltage0 + 10) / 4);
-  ASSERT_GT(controller.ReadRawBatteryMillivolts(), 3150);
-  ASSERT_LT(controller.ReadRawBatteryMillivolts(), 3400);
+  ASSERT_GT(controller.ReadRawBatteryMillivolts(),
+            Controller::kBatteryVoltage0);
+  ASSERT_LT(controller.ReadRawBatteryMillivolts(),
+            Controller::kBatteryVoltage1);
   // Pump the battery voltage filters
   for (uint32_t n = 0; n < 100; n++) {
     advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
@@ -500,7 +500,8 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setAnalogRead(AVREF,
                 (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
                     (Controller::kBatteryVoltage0 - 10) / 4);
-  ASSERT_LT(controller.ReadRawBatteryMillivolts(), 3150);
+  ASSERT_LT(controller.ReadRawBatteryMillivolts(),
+            Controller::kBatteryVoltage0);
   // Pump the battery voltage filters
   for (uint32_t n = 0; n < 100; n++) {
     advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
