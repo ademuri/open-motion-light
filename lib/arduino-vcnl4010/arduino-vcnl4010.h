@@ -23,5 +23,7 @@ class ArduinoVCNL4010 : public VCNL4010 {
 
  private:
   // TODO: modify this library to allow lower-power usage, or write a new one.
+  // Additionally, the readProximity and readAmbient calls are blocking, which
+  // isn't what we want.
   Adafruit_VCNL4010 sensor_;
 };
