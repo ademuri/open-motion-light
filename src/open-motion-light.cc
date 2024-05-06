@@ -5,6 +5,7 @@
 #include "arduino-vcnl4010.cc"
 #include "controller.h"
 #include "pins.h"
+#include "clock.h"
 
 // This enables printing values for the VCNL4010 to the serial console.
 // #define DEBUG_VCNL4010
