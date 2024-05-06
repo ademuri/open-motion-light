@@ -10,6 +10,8 @@ void Error_Handler() {
 // Generated using STM32Cube IDE. Sets the clock to use the MSI at 1MHz.
 // According to STM32Cube's power calculator, the processor should consume about
 // 230uA with this configuration.
+// If you change the clock rate, also update the value of F_CPU in
+// platformio.ini.
 void SystemClock_Config() {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
