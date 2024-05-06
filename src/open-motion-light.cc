@@ -6,14 +6,18 @@
 #include "controller.h"
 #include "pins.h"
 
-constexpr bool kDebugVCNL4010 = true;
+// This enables printing values for the VCNL4010 to the serial console.
+// #define DEBUG_VCNL4010
+
 CountDownTimer vcnl4010_timer{200};
 
 ArduinoVCNL4010 vcnl4010;
 Controller controller{&vcnl4010};
 
 void setup() {
+#ifdef DEBUG_VCNL4010
   Serial2.begin(115200);
+#endif  // ifdef DEBUG_VCNL4010
 
   // USB pins
   pinMode(kPinCc1, INPUT_ANALOG);
@@ -61,9 +65,11 @@ void setup() {
 void loop() {
   controller.Step();
 
-  if (kDebugVCNL4010 && vcnl4010_timer.Expired()) {
+#ifdef DEBUG_VCNL4010
+  if (vcnl4010_timer.Expired()) {
     Serial2.printf("ambient: %5u,   proximity: %5u\n",
                    controller.ReadAmbientLight(), controller.ReadProximity());
     vcnl4010_timer.Reset();
   }
+#endif  // ifdef DEBUG_VCNL4010
 }
