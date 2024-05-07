@@ -10,7 +10,7 @@
 // This enables printing values for the VCNL4010 to the serial console.
 // #define DEBUG_VCNL4010
 
-CountDownTimer vcnl4010_timer{200};
+CountDownTimer vcnl4010_timer{20};
 
 ArduinoVCNL4010 vcnl4010;
 Controller controller{&vcnl4010};
@@ -18,13 +18,12 @@ Controller controller{&vcnl4010};
 void setup() {
 #ifdef DEBUG_VCNL4010
   Serial2.begin(115200);
+  Serial2.println("Booting...");
 #endif  // ifdef DEBUG_VCNL4010
 
   // USB pins
   pinMode(kPinCc1, INPUT_ANALOG);
   pinMode(kPinCc2, INPUT_ANALOG);
-  pinMode(kPinSerialTx, OUTPUT);
-  pinMode(kPinSerialRx, INPUT);
 
   // UI pins
   pinMode(kPinBatteryLed1, OUTPUT);
