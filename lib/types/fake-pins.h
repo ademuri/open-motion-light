@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#ifndef ARDUINO
+
 // Fake pin definitions for native code
 
 static constexpr uint32_t kPortA = 0;
@@ -64,3 +66,5 @@ extern const uint16_t *const VREFINT_CAL_ADDR;
 static constexpr int AVREF = PC15 + 1;
 
 static constexpr uint32_t kPinMax = PC15 + 2;
+
+#endif // ifndef ARDUINO
