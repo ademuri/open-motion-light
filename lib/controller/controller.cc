@@ -3,7 +3,6 @@
 #include "pins.h"
 
 bool Controller::Init() {
-  // TODO: read power mode switch
   analogWrite(kPinWhiteLed, 0);
 
   // Initialize the battery filter
@@ -76,6 +75,7 @@ void Controller::Step() {
       power_mode_read_timer_.Reset();
       if (power_mode_ == PowerMode::kOff) {
         analogWrite(kPinWhiteLed, 0);
+        battery_level_timer_.Stop();
       } else if (power_mode_ == PowerMode::kAuto) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
         motion_timer_.Reset();
@@ -159,6 +159,7 @@ void Controller::Step() {
                motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
       // TODO: check that this actually turns off the LED
       analogWrite(kPinWhiteLed, 0);
+      motion_timer_.Stop();
     }
   }
 
