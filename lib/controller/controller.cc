@@ -14,6 +14,8 @@ bool Controller::Init() {
   battery_median_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
   battery_average_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
 
+  vcnl4010_->Begin();
+
   return true;
 }
 
@@ -172,6 +174,10 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
                                      ? 255
                                      : kBatteryLedPlaceholderBrightness);
+    // This pin is on the same timer channel (TIM2 channel 1) as the white LEDs,
+    // so if both pins use PWM they must both be at the same duty cycle. Work
+    // around this by using digitalWrite for this pin, since it'll always either
+    // be on or off.
     digitalWrite(kPinBatteryLed3, 255);
   } else {
     analogWrite(kPinBatteryLed1, 0);

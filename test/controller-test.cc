@@ -519,3 +519,13 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
             BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
                         Controller::kBatteryLedPlaceholderBrightness, 1));
 }
+
+TEST_F(ControllerTest, AmbientAndProximitySensorsWork) {
+  ASSERT_TRUE(controller.Init());
+
+  vcnl4010.SetAmbient(500);
+  EXPECT_EQ(controller.ReadAmbientLight(), 500);
+
+  vcnl4010.SetProximity(600);
+  EXPECT_EQ(controller.ReadProximity(), 600);
+}
