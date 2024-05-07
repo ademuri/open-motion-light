@@ -157,7 +157,6 @@ void Controller::Step() {
       motion_timer_.Reset();
     } else if (motion_timer_.Running() &&
                motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
-      // TODO: check that this actually turns off the LED
       analogWrite(kPinWhiteLed, 0);
       motion_timer_.Stop();
     }
@@ -167,16 +166,16 @@ void Controller::Step() {
     // TODO: blink the LEDs while charging
     const uint16_t battery_millivolts =
         battery_average_filter_.GetFilteredValue();
-    analogWrite(kPinBatteryLed3, battery_millivolts > kBatteryVoltage1
+    analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
                                      ? 255
                                      : kBatteryLedPlaceholderBrightness);
     analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
                                      ? 255
                                      : kBatteryLedPlaceholderBrightness);
-    analogWrite(kPinBatteryLed1, 255);
+    digitalWrite(kPinBatteryLed3, 255);
   } else {
-    analogWrite(kPinBatteryLed3, 0);
-    analogWrite(kPinBatteryLed2, 0);
     analogWrite(kPinBatteryLed1, 0);
+    analogWrite(kPinBatteryLed2, 0);
+    digitalWrite(kPinBatteryLed3, 0);
   }
 }

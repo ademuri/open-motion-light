@@ -3,9 +3,9 @@
 #include <arduino-timer.h>
 
 #include "arduino-vcnl4010.cc"
+#include "clock.h"
 #include "controller.h"
 #include "pins.h"
-#include "clock.h"
 
 // This enables printing values for the VCNL4010 to the serial console.
 // #define DEBUG_VCNL4010
@@ -46,6 +46,11 @@ void setup() {
   pinMode(kPinBatteryDone, INPUT);
   pinMode(kPinChargeHighCurrentEnable, OUTPUT);
 
+  // Indicate that the program has started.
+  digitalWrite(kPinBatteryLed3, true);
+  delay(100);
+  digitalWrite(kPinBatteryLed3, false);
+
   // I2C - used for light sensor
   Wire.setSCL(kPinScl);
   Wire.setSDA(kPinSda);
@@ -54,7 +59,10 @@ void setup() {
 
   // From the datasheet for the MT9284BS6 LED driver, its recommended PWM
   // frequency is 20kHz < n < 1MHz.
-  analogWriteFrequency(50 * 1000);
+  // analogWriteFrequency(125 * 1000);
+  // Using a lower frequency for now because we're limited by the 1MHz core
+  // frequency: 1_024_000 / 256 = 4000 Hz max.
+  analogWriteFrequency(4000);
   analogWriteResolution(8);
 
   // TODO: handle failure
@@ -65,6 +73,7 @@ void setup() {
 
 void loop() {
   controller.Step();
+  delay(1);
 
 #ifdef DEBUG_VCNL4010
   if (vcnl4010_timer.Expired()) {
