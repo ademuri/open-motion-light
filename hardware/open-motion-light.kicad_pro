@@ -611,7 +611,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "../enclosure/open-motion-light.step",
       "svg": "",
       "vrml": ""
     },
