@@ -5512,6 +5512,12 @@
 		(uuid "06bfdb43-d659-4cd8-a57b-687c5937cf0d")
 	)
 	(junction
+		(at 264.16 160.02)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "06fffc59-a3aa-4abc-aa0a-c6ffc7e92917")
+	)
+	(junction
 		(at 88.9 20.32)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5710,6 +5716,12 @@
 		(uuid "7aa36025-ce41-43d2-81e3-9ecad6ebe5b4")
 	)
 	(junction
+		(at 264.16 167.64)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7c9371e8-22d6-4e79-a196-dcf0b69dff29")
+	)
+	(junction
 		(at 105.41 91.44)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5818,12 +5830,6 @@
 		(uuid "c563a27e-81d5-46d8-8af6-46063a101c67")
 	)
 	(junction
-		(at 264.16 167.64)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "ce3ea9ac-7a32-458e-90c4-f5afacc20d0c")
-	)
-	(junction
 		(at 49.53 160.02)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5840,12 +5846,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d76a117f-5d74-47f7-82e3-5c812a3b6d40")
-	)
-	(junction
-		(at 264.16 160.02)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d785e47a-75cf-466d-8bf3-d22325636a92")
 	)
 	(junction
 		(at 346.71 59.69)
@@ -5983,16 +5983,6 @@
 	)
 	(wire
 		(pts
-			(xy 264.16 167.64) (xy 276.86 167.64)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "04a00f75-57df-41cd-9d25-6713a7bb43fa")
-	)
-	(wire
-		(pts
 			(xy 49.53 181.61) (xy 49.53 180.34)
 		)
 		(stroke
@@ -6053,6 +6043,16 @@
 	)
 	(wire
 		(pts
+			(xy 264.16 167.64) (xy 276.86 167.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0dfe0f2a-aa3a-4331-a842-8755cfc3103c")
+	)
+	(wire
+		(pts
 			(xy 219.71 175.26) (xy 228.6 175.26)
 		)
 		(stroke
@@ -6093,7 +6093,7 @@
 	)
 	(polyline
 		(pts
-			(xy 73.66 138.43) (xy 73.66 196.85)
+			(xy 73.66 138.43) (xy 73.66 198.12)
 		)
 		(stroke
 			(width 0)
@@ -6230,6 +6230,16 @@
 			(type default)
 		)
 		(uuid "24bdc38c-3217-4fcf-b3a9-8017d0c5c3b9")
+	)
+	(wire
+		(pts
+			(xy 264.16 160.02) (xy 276.86 160.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "25edab28-b632-4ab6-b146-d8c01eca417a")
 	)
 	(wire
 		(pts
@@ -6763,7 +6773,7 @@
 	)
 	(polyline
 		(pts
-			(xy 73.66 196.85) (xy 13.97 196.85)
+			(xy 73.66 198.12) (xy 13.97 198.12)
 		)
 		(stroke
 			(width 0)
@@ -6893,7 +6903,7 @@
 	)
 	(polyline
 		(pts
-			(xy 13.97 196.85) (xy 13.97 138.43)
+			(xy 13.97 198.12) (xy 13.97 138.43)
 		)
 		(stroke
 			(width 0)
@@ -7123,17 +7133,7 @@
 	)
 	(wire
 		(pts
-			(xy 276.86 160.02) (xy 264.16 160.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9d4b7410-af3a-4a93-8900-d05819168023")
-	)
-	(wire
-		(pts
-			(xy 264.16 160.02) (xy 251.46 160.02)
+			(xy 251.46 160.02) (xy 264.16 160.02)
 		)
 		(stroke
 			(width 0)
@@ -8111,7 +8111,7 @@
 		)
 		(uuid "f9e63403-e173-4e56-8ccc-844aca2b7567")
 	)
-	(text "MCU input capacitance is 5pF\nAt 4MΩ, T=20us"
+	(text "MCU input capacitance is 5pF\nTVS diode capacitance is 80pf\nAt 4MΩ, T=340us"
 		(exclude_from_sim no)
 		(at 56.642 194.564 0)
 		(effects
@@ -9872,7 +9872,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5252448"
+		(property "LCSC" "C5199848"
 			(at 36.83 184.15 90)
 			(effects
 				(font
@@ -10438,7 +10438,7 @@
 				)
 			)
 		)
-		(property "Value" "1k"
+		(property "Value" "10k"
 			(at 90.17 40.4438 90)
 			(effects
 				(font
@@ -10473,7 +10473,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C11702"
+		(property "LCSC" "C25744"
 			(at 90.17 43.18 0)
 			(effects
 				(font
@@ -10551,7 +10551,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5252448"
+		(property "LCSC" "C5199848"
 			(at 49.53 163.83 90)
 			(effects
 				(font
@@ -10706,7 +10706,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5252448"
+		(property "LCSC" "C5199848"
 			(at 114.3 95.25 90)
 			(effects
 				(font
@@ -12487,7 +12487,7 @@
 				)
 			)
 		)
-		(property "Value" "1k"
+		(property "Value" "10k"
 			(at 22.86 32.8238 90)
 			(effects
 				(font
@@ -12522,7 +12522,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C11702"
+		(property "LCSC" "C25744"
 			(at 22.86 35.56 0)
 			(effects
 				(font
@@ -12615,15 +12615,15 @@
 	(symbol
 		(lib_id "Device:C")
 		(at 264.16 163.83 0)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "60127f7c-ddfe-4d23-ab26-51a114c2f182")
 		(property "Reference" "C6"
-			(at 267.081 162.6178 0)
+			(at 267.081 165.0422 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12632,7 +12632,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 267.081 165.0421 0)
+			(at 267.081 162.6179 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12641,7 +12641,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
-			(at 265.1252 167.64 0)
+			(at 265.1252 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15211,6 +15211,15 @@
 			)
 		)
 		(property "Description" "STMicroelectronics Arm Cortex-M0+ MCU, 64KB flash, 8KB RAM, 32 MHz, 1.65-3.6V, 27 GPIO, UFQFPN32"
+			(at 241.3 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C516778"
 			(at 241.3 195.58 0)
 			(effects
 				(font
@@ -17925,7 +17934,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5252448"
+		(property "LCSC" "C5199848"
 			(at 130.81 243.84 90)
 			(effects
 				(font
@@ -18970,13 +18979,13 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 21.59 218.44 90)
+		(at 21.59 218.44 270)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "e9028fc6-9678-440b-b25d-f5883dbc0dba")
 		(property "Reference" "R37"
 			(at 21.59 213.2795 90)
