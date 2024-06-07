@@ -16,30 +16,21 @@
 
 #pragma once
 
-#include <Adafruit_VCNL4010.h>
 #include <types.h>
 
-#include "vcnl4010.h"
-
-// Implementation of the VCNL4010 HAL on the hardware device.
-class ArduinoVCNL4010 : public VCNL4010 {
+// HAL for the VCNL4020 ambient light and proximity sensor.
+class VCNL4020 {
  public:
   // Initializes the sensor.
-  bool Begin() override;
+  virtual bool Begin() = 0;
 
   // Sets the current for the proximity sensor LED, in milliamps. The precision
   // is 10s of milliamps.
-  void SetLEDCurrent(uint8_t mA) override;
+  virtual void SetLEDCurrent(uint8_t mA) = 0;
 
   // Reads the 16-bit proximity sensor value. This depends on the LED current.
-  uint16_t ReadProximity() override;
+  virtual uint16_t ReadProximity() = 0;
 
   // Reads the 16-bit ambient light value.
-  uint16_t ReadAmbient() override;
-
- private:
-  // TODO: modify this library to allow lower-power usage, or write a new one.
-  // Additionally, the readProximity and readAmbient calls are blocking, which
-  // isn't what we want.
-  Adafruit_VCNL4010 sensor_;
+  virtual uint16_t ReadAmbient() = 0;
 };

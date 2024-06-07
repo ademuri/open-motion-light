@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include "fake-vcnl4010.h"
+#include "fake-VCNL4020.h"
 #include "pins.h"
 #include "test-lib.h"
 #include "types.h"
@@ -61,8 +61,8 @@ class ControllerTest : public LightTest {
     ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3529);
   }
 
-  FakeVCNL4010 vcnl4010;
-  Controller controller{&vcnl4010};
+  FakeVCNL4020 VCNL4020;
+  Controller controller{&VCNL4020};
 };
 
 TEST_F(ControllerTest, Initializes) { EXPECT_TRUE(controller.Init()); }
@@ -537,9 +537,9 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
 TEST_F(ControllerTest, AmbientAndProximitySensorsWork) {
   ASSERT_TRUE(controller.Init());
 
-  vcnl4010.SetAmbient(500);
+  VCNL4020.SetAmbient(500);
   EXPECT_EQ(controller.ReadAmbientLight(), 500);
 
-  vcnl4010.SetProximity(600);
+  VCNL4020.SetProximity(600);
   EXPECT_EQ(controller.ReadProximity(), 600);
 }

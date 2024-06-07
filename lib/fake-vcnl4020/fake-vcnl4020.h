@@ -19,10 +19,10 @@
 #include <gtest/gtest.h>
 #include <types.h>
 
-#include "vcnl4010.h"
+#include "VCNL4020.h"
 
-// Fake implementation of the VCNL4010 for testing.
-class FakeVCNL4010 : public VCNL4010 {
+// Fake implementation of the VCNL4020 for testing.
+class FakeVCNL4020 : public VCNL4020 {
  public:
   // Initializes the sensor.
   bool Begin() override {
@@ -33,7 +33,7 @@ class FakeVCNL4010 : public VCNL4010 {
   // Sets the current for the proximity sensor LED, in milliamps. The precision
   // is 10s of milliamps.
   void SetLEDCurrent(uint8_t mA) override {
-    ASSERT_TRUE(initialized_) << "FakeVCNL4010::Begin() not yet called";
+    ASSERT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
     ASSERT_LE(mA, 200);
     ASSERT_EQ(mA % 10, 0) << "LED current has 10s precision";
     led_current_ma_ = mA;
@@ -43,7 +43,7 @@ class FakeVCNL4010 : public VCNL4010 {
 
   // Reads the 16-bit proximity sensor value. This depends on the LED current.
   uint16_t ReadProximity() override {
-    EXPECT_TRUE(initialized_) << "FakeVCNL4010::Begin() not yet called";
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
     return proximity_;
   }
 
@@ -52,7 +52,7 @@ class FakeVCNL4010 : public VCNL4010 {
 
   // Reads the 16-bit ambient light value.
   uint16_t ReadAmbient() override {
-    EXPECT_TRUE(initialized_) << "FakeVCNL4010::Begin() not yet called";
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
     return ambient_;
   }
 

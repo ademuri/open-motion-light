@@ -24,7 +24,7 @@
 #include <exponential-moving-average-filter.h>
 #include <median-filter.h>
 
-#include "vcnl4010.h"
+#include "vcnl4020.h"
 
 enum class PowerMode {
   kOff,
@@ -63,7 +63,7 @@ enum class USBStatus {
 
 class Controller {
  public:
-  Controller(VCNL4010* vcnl4010) : vcnl4010_(vcnl4010) {}
+  Controller(VCNL4020* vcnl4020) : vcnl4020_(vcnl4020) {}
 
   // Initializes this object. Returns whether this was successful.
   bool Init();
@@ -86,8 +86,8 @@ class Controller {
   static uint16_t ReadAnalogVoltageMillivolts(uint32_t pin,
                                               uint16_t battery_millivolts);
 
-  uint16_t ReadProximity() { return vcnl4010_->ReadProximity(); }
-  uint16_t ReadAmbientLight() { return vcnl4010_->ReadAmbient(); }
+  uint16_t ReadProximity() { return vcnl4020_->ReadProximity(); }
+  uint16_t ReadAmbientLight() { return vcnl4020_->ReadAmbient(); }
 
   // Configuration values. TODO: store these in EEPROM and add an interface for
   // changing them.
@@ -152,5 +152,5 @@ class Controller {
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};
 
-  VCNL4010* vcnl4010_;
+  VCNL4020* vcnl4020_;
 };

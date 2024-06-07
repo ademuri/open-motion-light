@@ -28,7 +28,7 @@ bool Controller::Init() {
   battery_median_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
   battery_average_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
 
-  vcnl4010_->Begin();
+  vcnl4020_->Begin();
 
   return true;
 }

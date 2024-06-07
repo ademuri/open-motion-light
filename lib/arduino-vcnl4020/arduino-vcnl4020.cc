@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "arduino-vcnl4010.h"
+#include "arduino-vcnl4020.h"
 
-bool ArduinoVCNL4010::Begin() {
+bool ArduinoVCNL4020::Begin() {
   // The light sensor isn't on the default I2C pins, but
   // `open-motion-light.cc::setup()` configures the default `Wire` to use the
   // correct pins.
   return sensor_.begin();
 }
 
-void ArduinoVCNL4010::SetLEDCurrent(uint8_t mA) {
+void ArduinoVCNL4020::SetLEDCurrent(uint8_t mA) {
   if (mA > 200) {
     mA = 200;
   }
-  sensor_.setLEDcurrent(mA / 10);
+  sensor_.setProxLEDmA(mA);
 }
 
-uint16_t ArduinoVCNL4010::ReadProximity() { return sensor_.readProximity(); }
+uint16_t ArduinoVCNL4020::ReadProximity() { return sensor_.readProximity(); }
 
-uint16_t ArduinoVCNL4010::ReadAmbient() { return sensor_.readAmbient(); }
+uint16_t ArduinoVCNL4020::ReadAmbient() { return sensor_.readAmbient(); }
