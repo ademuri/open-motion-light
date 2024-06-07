@@ -10048,7 +10048,7 @@
 		(exclude_from_sim yes)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "1c9fc22a-6db9-4638-9f26-91ee92375d44")
 		(property "Reference" "H1"
@@ -12840,7 +12840,7 @@
 		(exclude_from_sim yes)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "645422a2-4c1d-4d55-bced-2698320dbbb6")
 		(property "Reference" "H2"
@@ -13096,6 +13096,15 @@
 		)
 		(property "LCSC Part" "C511034"
 			(at 50.8 288.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C511034"
+			(at 50.8 254 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18187,7 +18196,7 @@
 		(exclude_from_sim yes)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "cdbe758b-d83c-446d-b2cf-dda4bd3a1a09")
 		(property "Reference" "H3"
