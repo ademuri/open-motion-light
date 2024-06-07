@@ -43,7 +43,6 @@ void setup() {
   pinMode(kPinBatteryLed1, OUTPUT);
   pinMode(kPinBatteryLed2, OUTPUT);
   pinMode(kPinBatteryLed3, OUTPUT);
-  pinMode(kPinSw1, INPUT_PULLUP);
   pinMode(kPinWhiteLed, OUTPUT);
 
   // Sensors

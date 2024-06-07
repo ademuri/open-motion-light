@@ -19,21 +19,20 @@
 #include "types.h"
 
 // USB pins
-constexpr int kPinCc1 = PA0;
-constexpr int kPinCc2 = PA1;
+constexpr int kPinCc1 = PA6;
+constexpr int kPinCc2 = PA7;
 constexpr int kPinSerialTx = PA9;
 constexpr int kPinSerialRx = PA10;
 
 // UI pins
-constexpr int kPinBatteryLed1 = PA2;
-constexpr int kPinBatteryLed2 = PA3;
-constexpr int kPinBatteryLed3 = PA5;
-constexpr int kPinSw1 = PB3;
-constexpr int kPinWhiteLed = PA15;
+constexpr int kPinBatteryLed1 = PA1;
+constexpr int kPinBatteryLed2 = PA2;
+constexpr int kPinBatteryLed3 = PA3;
+constexpr int kPinWhiteLed = PA0;
 
 // Sensors
-constexpr int kPinMotionSensor = PA8;
-constexpr int kPinLightSensorInterrupt = PA7;
+constexpr int kPinMotionSensor = PA11;
+constexpr int kPinLightSensorInterrupt = PA8;
 
 // I2C - used for light sensor
 constexpr int kPinScl = PB6;
@@ -41,12 +40,13 @@ constexpr int kPinSda = PB7;
 
 // Power switch
 constexpr int kPinPowerAuto = PA4;
-constexpr int kPinPowerOn = PA6;
+constexpr int kPinPowerOn = PA5;
 
 // Battery management
 constexpr int kPinBatteryCharge = PC14;
 constexpr int kPinBatteryDone = PC15;
-constexpr int kPinChargeHighCurrentEnable = PB1;
+constexpr int kPinChargeHighCurrentEnable = PB4;
+constexpr int kPin5vDetect = PA15;
 
 // The output of the internal voltage reference for the ADC. Since this is a
 // fixed voltage, we can use this to indirectly measure the battery voltage.

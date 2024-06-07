@@ -2,7 +2,7 @@
   "build": {
     "core": "stm32",
     "cpu": "cortex-m0plus",
-    "extra_flags": "-DSTM32L0xx -DSTM32L031xx",
+    "extra_flags": "-DSTM32L0xx -DSTM32L051xx",
     "f_cpu": "32000000L",
     "framework_extra_flags": {
       "arduino": "-D__CORTEX_SC=0"
@@ -13,24 +13,24 @@
         "0x7523"
       ]
     ],
-    "mcu": "stm32l031g6ux",
-    "product_line": "STM32L031xx",
-    "variant": "STM32L0xx/L031G(4-6)U_L041G6U"
+    "mcu": "stm32l051k8ux",
+    "product_line": "STM32L051xx",
+    "variant": "STM32L0xx/L051K(6-8)U"
   },
   "debug": {
-    "jlink_device": "STM32L031G6",
+    "jlink_device": "STM32L051K8",
     "openocd_target": "stm32l0x",
-    "svd_path": "STM32l031.svd"
+    "svd_path": "STM32l051.svd"
   },
   "frameworks": [
     "arduino",
     "cmsis",
     "stm32cube"
   ],
-  "name": "generic_stm32l031g6u",
+  "name": "generic_stm32l051k8u",
   "upload": {
     "maximum_ram_size": 8192,
-    "maximum_size": 32768,
+    "maximum_size": 65536,
     "protocol": "mbed",
     "protocols": [
       "blackmagic",
