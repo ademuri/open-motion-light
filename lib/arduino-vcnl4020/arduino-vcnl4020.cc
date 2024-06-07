@@ -18,7 +18,13 @@ bool ArduinoVCNL4020::Begin() {
   // The light sensor isn't on the default I2C pins, but
   // `open-motion-light.cc::setup()` configures the default `Wire` to use the
   // correct pins.
-  return sensor_.begin();
+  bool success = sensor_.begin();
+  if (!success) {
+    return false;
+  }
+  // Disable periodic measurements
+  sensor_.enable(/*als=*/false, /*prox=*/false, /*selftimed=*/false);
+  return true;
 }
 
 void ArduinoVCNL4020::SetLEDCurrent(uint8_t mA) {
@@ -27,6 +33,8 @@ void ArduinoVCNL4020::SetLEDCurrent(uint8_t mA) {
   }
   sensor_.setProxLEDmA(mA);
 }
+
+// TODO: need to trigger measurements and wait for them to be ready
 
 uint16_t ArduinoVCNL4020::ReadProximity() { return sensor_.readProximity(); }
 
