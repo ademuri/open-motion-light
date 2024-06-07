@@ -12,3 +12,9 @@ git clone -b stm32l051k6_8u --single-branch https://github.com/candykingdom/Ardu
 cd Arduino_Core_STM32
 cp ./* "${HOME?}/.platformio/packages/framework-arduinoststm32/"
 ```
+
+## Hardware v1.1 measurements
+
+### LED driver
+
+Signal rise time is ~85ns, which is about 10MHz. No overshoot or ringing visible on a 50MHz scope.

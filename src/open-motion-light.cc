@@ -72,10 +72,7 @@ void setup() {
 
   // From the datasheet for the MT9284BS6 LED driver, its recommended PWM
   // frequency is 20kHz < n < 1MHz.
-  // analogWriteFrequency(125 * 1000);
-  // Using a lower frequency for now because we're limited by the 1MHz core
-  // frequency: 1_024_000 / 256 = 4000 Hz max.
-  analogWriteFrequency(4000);
+  analogWriteFrequency(20 * 1000);
   analogWriteResolution(8);
 
   if (!controller.Init()) {
