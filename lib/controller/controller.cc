@@ -188,14 +188,10 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
                                      ? 255
                                      : kBatteryLedPlaceholderBrightness);
-    // This pin is on the same timer channel (TIM2 channel 1) as the white LEDs,
-    // so if both pins use PWM they must both be at the same duty cycle. Work
-    // around this by using digitalWrite for this pin, since it'll always either
-    // be on or off.
-    digitalWrite(kPinBatteryLed3, 255);
+    analogWrite(kPinBatteryLed3, 255);
   } else {
     analogWrite(kPinBatteryLed1, 0);
     analogWrite(kPinBatteryLed2, 0);
-    digitalWrite(kPinBatteryLed3, 0);
+    analogWrite(kPinBatteryLed3, 0);
   }
 }

@@ -57,6 +57,7 @@ void setup() {
   pinMode(kPinBatteryCharge, INPUT);
   pinMode(kPinBatteryDone, INPUT);
   pinMode(kPinChargeHighCurrentEnable, OUTPUT);
+  pinMode(kPin5vDetect, INPUT_PULLDOWN);
 
   // Indicate that the program has started.
   digitalWrite(kPinBatteryLed3, true);
