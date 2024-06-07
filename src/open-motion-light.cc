@@ -78,8 +78,14 @@ void setup() {
   analogWriteFrequency(4000);
   analogWriteResolution(8);
 
-  // TODO: handle failure
-  controller.Init();
+  if (!controller.Init()) {
+    while (true) {
+      uint8_t brightness = (millis() / 100) % 2;
+      analogWrite(kPinBatteryLed1, brightness);
+      analogWrite(kPinBatteryLed2, brightness);
+      analogWrite(kPinBatteryLed3, brightness);
+    }
+  }
 
   vncl4020_timer.Reset();
 }

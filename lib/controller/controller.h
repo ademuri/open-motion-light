@@ -97,7 +97,7 @@ class Controller {
   uint32_t GetMotionTimeoutSeconds() { return 2; }
 
   // The brightness of the white LEDs when they're on.
-  uint32_t GetLedDutyCycle() { return 255; }
+  uint32_t GetLedDutyCycle() { return 1; }
 
   // This is considered to be the "empty" point for the battery. Below this
   // voltage, the device goes into a lower-power mode to minimize battery drain.
