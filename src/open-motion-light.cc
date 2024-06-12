@@ -31,8 +31,8 @@ Controller controller{&vcnl4020};
 
 void setup() {
 #ifdef DEBUG_VCNL4020
-  Serial2.begin(115200);
-  Serial2.println("Booting...");
+  Serial1.begin(115200);
+  Serial1.println("Booting...");
 #endif  // ifdef DEBUG_VCNL4020
 
   // USB pins
@@ -93,7 +93,7 @@ void loop() {
 
 #ifdef DEBUG_VCNL4020
   if (vncl4020_timer.Expired()) {
-    Serial2.printf("ambient: %5u,   proximity: %5u\n",
+    Serial1.printf("ambient: %5u,   proximity: %5u\n",
                    controller.ReadAmbientLight(), controller.ReadProximity());
     vncl4020_timer.Reset();
   }
