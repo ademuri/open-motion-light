@@ -233,7 +233,7 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed3, 0);
   }
 
-  if (!led_on_) {
+  if (!led_on_ && power_status_ != PowerStatus::kCharging) {
     power_controller_->Sleep(GetSleepInterval());
   }
 }
