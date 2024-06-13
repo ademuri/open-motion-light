@@ -20,6 +20,7 @@
 #include "clock.h"
 #include "controller.h"
 #include "pins.h"
+#include "stm32-power-controller.h"
 
 // This enables printing values for the VCNL4020 to the serial console.
 // #define DEBUG_VCNL4020
@@ -27,13 +28,17 @@
 CountDownTimer vncl4020_timer{20};
 
 ArduinoVCNL4020 vcnl4020;
-Controller controller{&vcnl4020};
+Stm32PowerController power_controller;
+Controller controller{&vcnl4020, &power_controller};
 
 void setup() {
 #ifdef DEBUG_VCNL4020
   Serial1.begin(115200);
   Serial1.println("Booting...");
 #endif  // ifdef DEBUG_VCNL4020
+
+  Serial1.begin(115200);
+  Serial1.println("Booting...");
 
   // USB pins
   pinMode(kPinCc1, INPUT_ANALOG);

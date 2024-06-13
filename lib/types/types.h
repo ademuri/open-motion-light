@@ -29,6 +29,13 @@
 
 #include "fake-pins.h"
 
+// From cores/arduino/wiring_constants.h
+constexpr uint32_t LOW = 0;
+constexpr uint32_t HIGH = 1;
+constexpr uint32_t CHANGE = 2;
+constexpr uint32_t FALLING = 3;
+constexpr uint32_t RISING = 4;
+
 int digitalRead(uint32_t ulPin);
 void setDigitalRead(uint32_t ulPin, bool value);
 

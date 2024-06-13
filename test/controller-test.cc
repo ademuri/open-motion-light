@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include "fake-vcnl4020.h"
+#include "fake-power-controller.h"
 #include "pins.h"
 #include "test-lib.h"
 #include "types.h"
@@ -55,14 +56,16 @@ class ControllerTest : public LightTest {
     setDigitalRead(kPinPowerOn, true);
     setDigitalRead(kPinBatteryCharge, true);
     setDigitalRead(kPinBatteryDone, true);
+    setDigitalRead(kPinMotionSensor, false);
 
     // This yields a voltage of 3000 / 0.85 = 3529mV.
     setAnalogRead(AVREF, kFakeVrefintCal * 0.85 / 4);
     ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3529);
   }
 
-  FakeVCNL4020 VCNL4020;
-  Controller controller{&VCNL4020};
+  FakeVCNL4020 vcnl4020;
+  FakePowerController power_controller;
+  Controller controller{&vcnl4020, &power_controller};
 };
 
 TEST_F(ControllerTest, Initializes) { EXPECT_TRUE(controller.Init()); }
@@ -546,9 +549,20 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
 TEST_F(ControllerTest, AmbientAndProximitySensorsWork) {
   ASSERT_TRUE(controller.Init());
 
-  VCNL4020.SetAmbient(500);
+  vcnl4020.SetAmbient(500);
   EXPECT_EQ(controller.ReadAmbientLight(), 500);
 
-  VCNL4020.SetProximity(600);
+  vcnl4020.SetProximity(600);
   EXPECT_EQ(controller.ReadProximity(), 600);
+}
+
+TEST_F(ControllerTest, Sleeps) {
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  uint32_t sleep_interval = controller.GetSleepInterval();
+  ASSERT_NE(sleep_interval, 0);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), sleep_interval);
 }

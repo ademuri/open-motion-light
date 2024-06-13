@@ -33,6 +33,15 @@ bool Controller::Init() {
     return false;
   }
 
+  if (!power_controller_->Begin()) {
+    return false;
+  }
+
+  power_controller_->AttachInterruptWakeup(kPin5vDetect, CHANGE);
+  power_controller_->AttachInterruptWakeup(kPinMotionSensor, RISING);
+  power_controller_->AttachInterruptWakeup(kPinPowerAuto, CHANGE);
+  power_controller_->AttachInterruptWakeup(kPinPowerOn, CHANGE);
+
   return true;
 }
 
@@ -222,5 +231,9 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed1, 0);
     analogWrite(kPinBatteryLed2, 0);
     analogWrite(kPinBatteryLed3, 0);
+  }
+
+  if (!led_on_) {
+    power_controller_->Sleep(GetSleepInterval());
   }
 }

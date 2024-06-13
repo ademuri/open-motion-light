@@ -24,6 +24,7 @@
 #include <exponential-moving-average-filter.h>
 #include <median-filter.h>
 
+#include "power-controller.h"
 #include "vcnl4020.h"
 
 enum class PowerMode {
@@ -63,7 +64,8 @@ enum class USBStatus {
 
 class Controller {
  public:
-  Controller(VCNL4020* vcnl4020) : vcnl4020_(vcnl4020) {}
+  Controller(VCNL4020* vcnl4020, PowerController* power_controller)
+      : vcnl4020_(vcnl4020), power_controller_(power_controller) {}
 
   // Initializes this object. Returns whether this was successful.
   bool Init();
@@ -104,12 +106,14 @@ class Controller {
   // voltage, the device goes into a lower-power mode to minimize battery drain.
   uint32_t GetLowBatteryCutoffMillivolts() { return 3000; }
 
+  uint32_t GetSleepInterval() { return 60 * 1000;}
+
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
   static constexpr uint8_t kBatteryMedianFilterSize = 5;
   static constexpr uint32_t kBatteryFilterRunIntervalMillis = 10;
 
-  static constexpr uint32_t kBatteryLevelDisplayTimeSeconds = 10;
+  static constexpr uint32_t kBatteryLevelDisplayTimeSeconds = 0;
 
   // The V_DDA value that the reference calibration was measured using.
   static constexpr uint16_t kReferenceSupplyMillivolts = 3000;
@@ -159,5 +163,6 @@ class Controller {
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};
 
-  VCNL4020* vcnl4020_;
+  VCNL4020* const vcnl4020_;
+  PowerController* const power_controller_;
 };
