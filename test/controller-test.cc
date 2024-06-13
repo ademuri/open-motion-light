@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include "fake-VCNL4020.h"
+#include "fake-vcnl4020.h"
 #include "pins.h"
 #include "test-lib.h"
 #include "types.h"
@@ -467,7 +467,7 @@ std::array<uint32_t, 3> BatteryLeds(uint32_t led1, uint32_t led2,
 std::array<uint32_t, 3> GetBatteryLeds() {
   return BatteryLeds(getAnalogWrite(kPinBatteryLed1),
                      getAnalogWrite(kPinBatteryLed2),
-                     getDigitalWrite(kPinBatteryLed3));
+                     getAnalogWrite(kPinBatteryLed3));
 }
 
 TEST_F(ControllerTest, DisplaysBatteryVoltage) {
@@ -485,7 +485,7 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setDigitalRead(kPinPowerAuto, false);
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
-  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(255, 255, 1));
+  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(255, 255, 255));
 
   advanceMillis(Controller::kBatteryLevelDisplayTimeSeconds * 1000 + 10);
   controller.Step();
@@ -511,7 +511,7 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOn);
   EXPECT_EQ(
       GetBatteryLeds(),
-      BatteryLeds(Controller::kBatteryLedPlaceholderBrightness, 255, 1));
+      BatteryLeds(Controller::kBatteryLedPlaceholderBrightness, 255, 255));
 
   // Low voltage
   setAnalogRead(AVREF,
@@ -531,7 +531,7 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
   EXPECT_EQ(GetBatteryLeds(),
             BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
-                        Controller::kBatteryLedPlaceholderBrightness, 1));
+                        Controller::kBatteryLedPlaceholderBrightness, 255));
 }
 
 TEST_F(ControllerTest, AmbientAndProximitySensorsWork) {
