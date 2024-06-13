@@ -179,6 +179,7 @@ TEST_F(ControllerTest, MotionTriggersLed) {
 
   ASSERT_TRUE(controller.Init());
   const uint32_t duty_cycle = controller.GetLedDutyCycle();
+  ASSERT_GT(duty_cycle, 0);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
@@ -195,7 +196,9 @@ TEST_F(ControllerTest, MotionTriggersLed) {
 
   setDigitalRead(kPinMotionSensor, true);
   controller.Step();
-  ASSERT_GT(duty_cycle, 0);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+  advanceMillis(Controller::kMotionPulseLengthMs + 10);
+  controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
   setDigitalRead(kPinMotionSensor, false);
 
@@ -215,9 +218,11 @@ TEST_F(ControllerTest, MotionTriggersLed) {
 TEST_F(ControllerTest, ContinuedMotionKeepsLedOn) {
   setDigitalRead(kPinPowerAuto, false);
   setDigitalRead(kPinPowerOn, true);
+  setDigitalRead(kPinMotionSensor, false);
 
   ASSERT_TRUE(controller.Init());
   const uint32_t duty_cycle = controller.GetLedDutyCycle();
+  ASSERT_GT(duty_cycle, 0);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
@@ -227,8 +232,12 @@ TEST_F(ControllerTest, ContinuedMotionKeepsLedOn) {
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 
   setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(Controller::kMotionPulseLengthMs);
   controller.Step();
-  ASSERT_GT(duty_cycle, 0);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  advanceMillis(10);
+  controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
   setDigitalRead(kPinMotionSensor, false);
 
@@ -236,7 +245,7 @@ TEST_F(ControllerTest, ContinuedMotionKeepsLedOn) {
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
 
-  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 - 10);
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 - 20);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
 

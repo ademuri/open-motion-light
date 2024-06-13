@@ -18,6 +18,7 @@
 
 bool Controller::Init() {
   analogWrite(kPinWhiteLed, 0);
+  led_on_ = false;
 
   // Initialize the battery filter
   for (uint32_t i = 0; i < kBatteryMedianFilterSize; i++) {
@@ -92,14 +93,26 @@ void Controller::Step() {
     if (previous_power_mode != power_mode_) {
       power_mode_read_timer_.Reset();
       if (power_mode_ == PowerMode::kOff) {
-        analogWrite(kPinWhiteLed, 0);
+        if (led_on_) {
+          analogWrite(kPinWhiteLed, 0);
+          led_change_motion_timeout_.Reset();
+        }
+        led_on_ = false;
         battery_level_timer_.Stop();
       } else if (power_mode_ == PowerMode::kAuto) {
-        analogWrite(kPinWhiteLed, GetLedDutyCycle());
+        if (!led_on_) {
+          analogWrite(kPinWhiteLed, GetLedDutyCycle());
+          led_change_motion_timeout_.Reset();
+        }
+        led_on_ = true;
         motion_timer_.Reset();
         battery_level_timer_.Reset();
       } else if (power_mode_ == PowerMode::kOn) {
-        analogWrite(kPinWhiteLed, GetLedDutyCycle());
+        if (!led_on_) {
+          analogWrite(kPinWhiteLed, GetLedDutyCycle());
+          led_change_motion_timeout_.Reset();
+        }
+        led_on_ = true;
         battery_level_timer_.Reset();
       }
     }
@@ -163,19 +176,33 @@ void Controller::Step() {
   }
 
   bool motion_detected = digitalRead(kPinMotionSensor);
-  if (motion_detected) {
+  // If the LED was changed recently, then ignore the motion sensor, since the
+  // LEDs shining on the lens can trigger the sensor.
+  // https://marriedtotheseacomics.com/image/103884129802
+  if (led_change_motion_timeout_.Active()) {
+    motion_detected = false;
+  }
+  static bool prev_motion_detected;
+  if (motion_detected && !prev_motion_detected) {
     motion_timer_.Reset();
   }
+  prev_motion_detected = motion_detected;
 
   if (power_mode_ == PowerMode::kAuto) {
     if (motion_detected) {
-      // TODO: check whether calling this repeatedly when not necessary causes
-      // issues.
-      analogWrite(kPinWhiteLed, GetLedDutyCycle());
+      if (!led_on_) {
+        analogWrite(kPinWhiteLed, GetLedDutyCycle());
+        led_change_motion_timeout_.Reset();
+      }
+      led_on_ = true;
       motion_timer_.Reset();
     } else if (motion_timer_.Running() &&
                motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
-      analogWrite(kPinWhiteLed, 0);
+      if (led_on_) {
+        analogWrite(kPinWhiteLed, 0);
+        led_change_motion_timeout_.Reset();
+      }
+      led_on_ = false;
       motion_timer_.Stop();
     }
   }

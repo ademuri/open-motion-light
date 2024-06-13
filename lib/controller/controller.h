@@ -94,11 +94,11 @@ class Controller {
 
   // How long the light should be on for after motion is detected. Visible for
   // testing.
-  uint32_t GetMotionTimeoutSeconds() { return 2; }
+  uint32_t GetMotionTimeoutSeconds() { return 10; }
 
   // The brightness of the white LEDs when they're on.
   // Note: with a 20kHz output duty cycle, minimum value is 3.
-  uint32_t GetLedDutyCycle() { return 255; }
+  uint32_t GetLedDutyCycle() { return 64; }
 
   // This is considered to be the "empty" point for the battery. Below this
   // voltage, the device goes into a lower-power mode to minimize battery drain.
@@ -118,6 +118,9 @@ class Controller {
   static constexpr uint32_t kAdcMaxCount = 4096;
   // The current configured max value for the ADC, which is 2^<number of bits>.
   static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
+
+  // How long the motion sensor signal is "active" for after detecting motion.
+  static constexpr uint32_t kMotionPulseLengthMs = 2600;
 
   static constexpr uint16_t kUsbNoConnectionMillivolts = 200;
   static constexpr uint16_t kUsbStandardMillivolts = 660;
@@ -146,6 +149,9 @@ class Controller {
   CountUpTimer motion_timer_;
 
   CountDownTimer battery_level_timer_{kBatteryLevelDisplayTimeSeconds * 1000};
+  CountDownTimer led_change_motion_timeout_{kMotionPulseLengthMs};
+
+  bool led_on_ = false;
 
   MedianFilter<uint16_t, uint16_t, kBatteryMedianFilterSize>
       battery_median_filter_{Controller::ReadRawBatteryMillivolts};

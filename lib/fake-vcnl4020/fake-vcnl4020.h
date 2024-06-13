@@ -19,7 +19,7 @@
 #include <gtest/gtest.h>
 #include <types.h>
 
-#include "VCNL4020.h"
+#include "vcnl4020.h"
 
 // Fake implementation of the VCNL4020 for testing.
 class FakeVCNL4020 : public VCNL4020 {
