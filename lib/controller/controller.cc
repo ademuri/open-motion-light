@@ -96,32 +96,19 @@ void Controller::Step() {
   battery_average_filter_.Run();
 
   const PowerMode previous_power_mode = power_mode_;
+  bool auto_triggered = false;
 
   if (!power_mode_read_timer_.Running() || power_mode_read_timer_.Expired()) {
     power_mode_ = ReadPowerMode();
     if (previous_power_mode != power_mode_) {
       power_mode_read_timer_.Reset();
       if (power_mode_ == PowerMode::kOff) {
-        if (led_on_) {
-          analogWrite(kPinWhiteLed, 0);
-          led_change_motion_timeout_.Reset();
-        }
-        led_on_ = false;
         battery_level_timer_.Stop();
       } else if (power_mode_ == PowerMode::kAuto) {
-        if (!led_on_) {
-          analogWrite(kPinWhiteLed, GetLedDutyCycle());
-          led_change_motion_timeout_.Reset();
-        }
-        led_on_ = true;
+        auto_triggered = true;
         motion_timer_.Reset();
         battery_level_timer_.Reset();
       } else if (power_mode_ == PowerMode::kOn) {
-        if (!led_on_) {
-          analogWrite(kPinWhiteLed, GetLedDutyCycle());
-          led_change_motion_timeout_.Reset();
-        }
-        led_on_ = true;
         battery_level_timer_.Reset();
       }
     }
@@ -192,6 +179,7 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed1, 0);
     analogWrite(kPinBatteryLed2, 0);
     analogWrite(kPinBatteryLed3, 0);
+    // TODO: disable PIR interrupt to conserve power
     power_controller_->Sleep(GetSleepInterval());
     return;
   }
@@ -214,8 +202,18 @@ void Controller::Step() {
       analogWrite(kPinWhiteLed, 0);
       led_on_ = false;
     }
+  } else if (power_mode_ == PowerMode::kOff) {
+    if (led_on_) {
+      analogWrite(kPinWhiteLed, 0);
+      led_on_ = false;
+    }
+  } else if (power_mode_ == PowerMode::kOn) {
+    if (!led_on_) {
+      analogWrite(kPinWhiteLed, GetLedDutyCycle());
+      led_on_ = true;
+    }
   } else if (power_mode_ == PowerMode::kAuto) {
-    if (motion_detected) {
+    if (motion_detected || auto_triggered) {
       if (!led_on_) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
         led_change_motion_timeout_.Reset();
@@ -233,7 +231,24 @@ void Controller::Step() {
     }
   }
 
-  if (battery_level_timer_.Active()) {
+  if (power_status_ == PowerStatus::kCharging ||
+      power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
+    const uint16_t battery_millivolts =
+        battery_average_filter_.GetFilteredValue();
+    const uint8_t brightness =
+        (millis() / 500) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
+    analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
+                                     ? brightness
+                                     : kBatteryLedPlaceholderBrightness);
+    analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
+                                     ? brightness
+                                     : kBatteryLedPlaceholderBrightness);
+    analogWrite(kPinBatteryLed3, brightness);
+  } else if (power_status_ == PowerStatus::kCharged) {
+    analogWrite(kPinBatteryLed1, 255);
+    analogWrite(kPinBatteryLed2, 255);
+    analogWrite(kPinBatteryLed3, 255);
+  } else if (battery_level_timer_.Active()) {
     // TODO: blink the LEDs while charging
     const uint16_t battery_millivolts =
         battery_average_filter_.GetFilteredValue();

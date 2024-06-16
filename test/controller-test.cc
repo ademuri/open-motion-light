@@ -400,6 +400,14 @@ TEST_F(ControllerTest, DoesntTurnOnLedWhenBatteryLow) {
   EXPECT_EQ(getAnalogWrite(kPinBatteryLed1), 0);
   EXPECT_EQ(getAnalogWrite(kPinBatteryLed2), 0);
   EXPECT_EQ(getAnalogWrite(kPinBatteryLed3), 0);
+
+  setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(1800));
+  setDigitalRead(kPinBatteryCharge, false);
+  setDigitalRead(kPinBatteryDone, true);
+  controller.Step();
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kUSB3_0);
+  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoffCharging);
+  EXPECT_EQ(getDigitalWrite(kPinWhiteLed), 0);
 }
 
 TEST_F(ControllerTest, TurnsOffLedWhenBatteryLow) {
