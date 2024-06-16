@@ -184,6 +184,18 @@ void Controller::Step() {
     }
   }
 
+  if (power_status_ == PowerStatus::kLowBatteryCutoff) {
+    if (led_on_) {
+      analogWrite(kPinWhiteLed, 0);
+      led_on_ = false;
+    }
+    analogWrite(kPinBatteryLed1, 0);
+    analogWrite(kPinBatteryLed2, 0);
+    analogWrite(kPinBatteryLed3, 0);
+    power_controller_->Sleep(GetSleepInterval());
+    return;
+  }
+
   bool motion_detected = digitalRead(kPinMotionSensor);
   // If the LED was changed recently, then ignore the motion sensor, since the
   // LEDs shining on the lens can trigger the sensor.
@@ -197,7 +209,12 @@ void Controller::Step() {
   }
   prev_motion_detected = motion_detected;
 
-  if (power_mode_ == PowerMode::kAuto) {
+  if (power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
+    if (led_on_) {
+      analogWrite(kPinWhiteLed, 0);
+      led_on_ = false;
+    }
+  } else if (power_mode_ == PowerMode::kAuto) {
     if (motion_detected) {
       if (!led_on_) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());

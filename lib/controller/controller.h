@@ -96,11 +96,11 @@ class Controller {
 
   // How long the light should be on for after motion is detected. Visible for
   // testing.
-  uint32_t GetMotionTimeoutSeconds() { return 15; }
+  uint32_t GetMotionTimeoutSeconds() { return 10; }
 
   // The brightness of the white LEDs when they're on.
   // Note: with a 20kHz output duty cycle, minimum value is 3.
-  uint32_t GetLedDutyCycle() { return 255; }
+  uint32_t GetLedDutyCycle() { return 8; }
 
   // This is considered to be the "empty" point for the battery. Below this
   // voltage, the device goes into a lower-power mode to minimize battery drain.
@@ -113,7 +113,7 @@ class Controller {
   static constexpr uint8_t kBatteryMedianFilterSize = 5;
   static constexpr uint32_t kBatteryFilterRunIntervalMillis = 10;
 
-  static constexpr uint32_t kBatteryLevelDisplayTimeSeconds = 0;
+  static constexpr uint32_t kBatteryLevelDisplayTimeSeconds = 10;
 
   // The V_DDA value that the reference calibration was measured using.
   static constexpr uint16_t kReferenceSupplyMillivolts = 3000;

@@ -57,6 +57,9 @@ class ControllerTest : public LightTest {
     setDigitalRead(kPinBatteryCharge, true);
     setDigitalRead(kPinBatteryDone, true);
     setDigitalRead(kPinMotionSensor, false);
+    setDigitalRead(kPin5vDetect, false);
+    setAnalogRead(kPinCc1, 0);
+    setAnalogRead(kPinCc2, 0);
 
     // This yields a voltage of 3000 / 0.85 = 3529mV.
     setAnalogRead(AVREF, kFakeVrefintCal * 0.85 / 4);
@@ -367,6 +370,71 @@ TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
   setDigitalRead(kPinBatteryCharge, true);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+}
+
+TEST_F(ControllerTest, DoesntTurnOnLedWhenBatteryLow) {
+  setAnalogRead(AVREF, kFakeVrefintCal * 1.5 / 4);
+  ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 2000);
+
+  ASSERT_TRUE(controller.Init());
+  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+  controller.Step();
+  ASSERT_EQ(controller.GetFilteredBatteryMillivolts(), 2000);
+  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+
+  setDigitalRead(kPinPowerOn, LOW);
+  advanceMillis(100);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(getDigitalWrite(kPinWhiteLed), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed1), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed2), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed3), 0);
+
+  setDigitalRead(kPinPowerOn, HIGH);
+  setDigitalRead(kPinPowerAuto, LOW);
+  advanceMillis(100);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(getDigitalWrite(kPinWhiteLed), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed1), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed2), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed3), 0);
+}
+
+TEST_F(ControllerTest, TurnsOffLedWhenBatteryLow) {
+  ASSERT_TRUE(controller.Init());
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+  controller.Step();
+  ASSERT_GT(controller.GetFilteredBatteryMillivolts(), Controller::kBatteryVoltage1);
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+
+  setDigitalRead(kPinPowerOn, LOW);
+  advanceMillis(100);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed1), 255);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed2), 255);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed3), 255);
+
+  setAnalogRead(AVREF, kFakeVrefintCal * 1.5 / 4);
+  ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 2000);
+
+  for (uint32_t t = 0; t < 10; t++) {
+    advanceMillis(100);
+    controller.Step();
+  }
+
+  ASSERT_LT(controller.GetFilteredBatteryMillivolts(), Controller::kBatteryVoltage0);
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed1), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed2), 0);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed3), 0);
 }
 
 TEST_F(ControllerTest, SetsUSBStatus) {
