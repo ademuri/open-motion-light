@@ -90,6 +90,10 @@ void setup() {
   }
 
   vncl4020_timer.Reset();
+
+  digitalWrite(kPinBatteryLed2, true);
+  delay(100);
+  digitalWrite(kPinBatteryLed2, false);
 }
 
 void loop() {

@@ -17,7 +17,9 @@
 #include "pins.h"
 
 bool Controller::Init() {
-  analogWrite(kPinWhiteLed, 0);
+  // For some reason, this causes the LEDs to flash (likely something to do with
+  // the STM32 Arduino implementation).
+  // analogWrite(kPinWhiteLed, 0);
   led_on_ = false;
 
   // Initialize the battery filter
