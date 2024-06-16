@@ -152,8 +152,15 @@ void Controller::Step() {
     const bool done_value = !digitalRead(kPinBatteryDone);
     // TODO: possibly adjust the threshold based on estimated current
     // consumption when the white LEDs are on.
-    const bool battery_low =
-        GetFilteredBatteryMillivolts() < GetLowBatteryCutoffMillivolts();
+    static bool battery_low = false;
+    if (battery_low) {
+      battery_low = GetFilteredBatteryMillivolts() <
+                    GetLowBatteryHysteresisThresholdMillivolts();
+    } else {
+      battery_low =
+          GetFilteredBatteryMillivolts() < GetLowBatteryCutoffMillivolts();
+    }
+
     if (battery_low && charging_value && !done_value) {
       power_status_ = PowerStatus::kLowBatteryCutoffCharging;
     } else if (battery_low) {

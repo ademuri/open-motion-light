@@ -106,6 +106,10 @@ class Controller {
   // voltage, the device goes into a lower-power mode to minimize battery drain.
   uint32_t GetLowBatteryCutoffMillivolts() { return 3000; }
 
+  // Once the battery is low, it must exceed this voltage before the device will
+  // turn on again.
+  uint32_t GetLowBatteryHysteresisThresholdMillivolts() { return 3200; }
+
   uint32_t GetSleepInterval() { return 60 * 1000; }
 
   // Tuning constants - visible for testing

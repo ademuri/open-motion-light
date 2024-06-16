@@ -345,6 +345,51 @@ TEST_F(ControllerTest, SetsPowerStatus) {
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kChargeError);
 }
 
+TEST_F(ControllerTest, UsesHysteresisForBatteryVoltage) {
+  setAnalogRead(AVREF, kFakeVrefintCal * 1.5 / 4);
+  ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 2000);
+
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+  controller.Step();
+  ASSERT_EQ(controller.GetFilteredBatteryMillivolts(), 2000);
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+
+  setAnalogRead(AVREF, kFakeVrefintCal / 1.05 / 4);
+  ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 3157);
+
+  for (uint32_t t = 0; t < 100; t++) {
+    advanceMillis(100);
+    controller.Step();
+    EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+  }
+
+  ASSERT_EQ(controller.GetFilteredBatteryMillivolts(), 3157);
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
+
+  setAnalogRead(AVREF, kFakeVrefintCal / 1.1 / 4);
+  ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 3305);
+
+  for (uint32_t t = 0; t < 100; t++) {
+    advanceMillis(100);
+    controller.Step();
+  }
+  ASSERT_EQ(controller.GetFilteredBatteryMillivolts(), 3305);
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+
+  setAnalogRead(AVREF, kFakeVrefintCal / 1.05 / 4);
+  ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 3157);
+
+  for (uint32_t t = 0; t < 100; t++) {
+    advanceMillis(100);
+    controller.Step();
+    EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+  }
+
+  ASSERT_EQ(controller.GetFilteredBatteryMillivolts(), 3157);
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
+}
+
 TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
   setDigitalRead(kPinBatteryCharge, true);
   setDigitalRead(kPinBatteryDone, true);
