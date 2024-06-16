@@ -102,6 +102,7 @@ void Controller::Step() {
     power_mode_ = ReadPowerMode();
     if (previous_power_mode != power_mode_) {
       power_mode_read_timer_.Reset();
+      sleep_lockout_timer.Reset();
       if (power_mode_ == PowerMode::kOff) {
         battery_level_timer_.Stop();
       } else if (power_mode_ == PowerMode::kAuto) {
@@ -265,7 +266,8 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed3, 0);
   }
 
-  if (!led_on_ && power_status_ != PowerStatus::kCharging) {
+  if (!led_on_ && power_status_ != PowerStatus::kCharging &&
+      !sleep_lockout_timer.Active()) {
     power_controller_->Sleep(GetSleepInterval());
   }
 }

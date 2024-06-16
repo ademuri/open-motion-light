@@ -100,13 +100,13 @@ class Controller {
 
   // The brightness of the white LEDs when they're on.
   // Note: with a 20kHz output duty cycle, minimum value is 3.
-  uint32_t GetLedDutyCycle() { return 8; }
+  uint32_t GetLedDutyCycle() { return 255; }
 
   // This is considered to be the "empty" point for the battery. Below this
   // voltage, the device goes into a lower-power mode to minimize battery drain.
   uint32_t GetLowBatteryCutoffMillivolts() { return 3000; }
 
-  uint32_t GetSleepInterval() { return 60 * 1000;}
+  uint32_t GetSleepInterval() { return 60 * 1000; }
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
@@ -146,6 +146,10 @@ class Controller {
   PowerMode power_mode_ = PowerMode::kOff;
   // Used to debounce reading the power mode switch.
   CountDownTimer power_mode_read_timer_{10};
+
+  // After anything changes, wait this long before going to sleep. This prevents
+  // missing mode changes if the switch bounces.
+  CountDownTimer sleep_lockout_timer{30};
 
   PowerStatus power_status_ = PowerStatus::kBattery;
   USBStatus usb_status_ = USBStatus::kNoConnection;
