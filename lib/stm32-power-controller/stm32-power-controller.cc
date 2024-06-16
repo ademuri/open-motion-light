@@ -12,21 +12,8 @@ extern __IO uint32_t uwTick;
 
 namespace {
 
-// Called when the processor wakes up from sleep. Updates Arduino's millis()
-// based on the RTC.
-void WakeUpCallback() {
-  uint32_t seconds;
-  uint32_t subseconds;
-  STM32RTC& rtc = STM32RTC::getInstance();
-  seconds = rtc.getEpoch(&subseconds);
-
-  // This reaches into STM32's Arduino implementation and modifies the value
-  // underlying millis() directly. This is not great, but it works.
-  uwTick += (seconds - rtc_seconds_at_sleep) * 1000 +
-            (subseconds - rtc_subseconds_at_sleep);
-
-  // TODO: trigger I2C re-init?
-}
+// Called when the processor wakes up from sleep.
+void WakeUpCallback() {}
 
 };  // namespace
 
@@ -40,16 +27,29 @@ void Stm32PowerController::AttachInterruptWakeup(uint32_t pin, uint32_t mode) {
                               LP_Mode::DEEP_SLEEP_MODE);
 }
 
-void Stm32PowerController::Sleep(uint32_t millis) {
-  // Puts the processor into STM32 Stop mode
+void Stm32PowerController::Sleep(uint32_t ms) {
+  // When in stop mode, the SysTick interrupt doesn't fire to update Arduino's
+  // `millis()` value. So, keep track of the elapsed time using the RTC, and
+  // update the value manually on wakeup.
   STM32RTC& rtc = STM32RTC::getInstance();
   rtc_seconds_at_sleep = rtc.getEpoch(&rtc_subseconds_at_sleep);
   pinMode(kPinScl, INPUT);
   pinMode(kPinSda, INPUT);
 
+  // Puts the processor into STM32 Stop mode
   // TODO: reduce power consumption. Currently deepSleep() is ~376uA, and
   // shutdown() is ~48uA.
   // TODO: Make sure that the light sensor is actually in standby.
-  impl_.deepSleep(millis);
+  impl_.deepSleep(ms);
   // impl_.shutdown();
+
+  uint32_t seconds;
+  uint32_t subseconds;
+  seconds = rtc.getEpoch(&subseconds);
+
+  // This reaches into STM32's Arduino implementation and modifies the value
+  // underlying millis() directly. This is not great, but it works.
+  uwTick += (seconds - rtc_seconds_at_sleep) * 1000 +
+            (subseconds - rtc_subseconds_at_sleep);
+  // TODO: trigger I2C re-init?
 }
