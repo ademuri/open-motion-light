@@ -10,7 +10,7 @@ I added support for the STM32L051K8U on Arduino to Platformio in [this commit](h
 cd /tmp
 git clone -b stm32l051k6_8u --single-branch https://github.com/candykingdom/Arduino_Core_STM32.git
 cd Arduino_Core_STM32
-cp ./* "${HOME?}/.platformio/packages/framework-arduinoststm32/"
+cp -r ./* "${HOME?}/.platformio/packages/framework-arduinoststm32/"
 ```
 
 ## Hardware v1.1 measurements
