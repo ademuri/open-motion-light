@@ -23,20 +23,15 @@
 #include "stm32-power-controller.h"
 
 // This enables printing values for the VCNL4020 to the serial console.
-// #define DEBUG_VCNL4020
+#define DEBUG_VCNL4020
 
-CountDownTimer vncl4020_timer{20};
+CountDownTimer vncl4020_timer{200};
 
 ArduinoVCNL4020 vcnl4020;
 Stm32PowerController power_controller;
 Controller controller{&vcnl4020, &power_controller};
 
 void setup() {
-#ifdef DEBUG_VCNL4020
-  Serial1.begin(115200);
-  Serial1.println("Booting...");
-#endif  // ifdef DEBUG_VCNL4020
-
   Serial1.begin(115200);
   Serial1.println("Booting...");
 
@@ -89,7 +84,10 @@ void setup() {
     }
   }
 
+#ifdef DEBUG_VCNL4020
+  vcnl4020.SetPeriodicAmbient(true);
   vncl4020_timer.Reset();
+#endif  // DEBUG_VCNL4020
 
   digitalWrite(kPinBatteryLed2, true);
   delay(100);
@@ -102,8 +100,9 @@ void loop() {
 
 #ifdef DEBUG_VCNL4020
   if (vncl4020_timer.Expired()) {
-    Serial1.printf("ambient: %5u,   proximity: %5u\n",
-                   controller.ReadAmbientLight(), controller.ReadProximity());
+    if (vcnl4020.AmbientReady()) {
+      Serial1.printf("ambient: %5u\n", vcnl4020.ReadAmbient());
+    }
     vncl4020_timer.Reset();
   }
 #endif  // ifdef DEBUG_VCNL4020

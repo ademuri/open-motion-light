@@ -31,6 +31,13 @@ class VCNL4020 {
   // Reads the 16-bit proximity sensor value. This depends on the LED current.
   virtual uint16_t ReadProximity() = 0;
 
+  // Enables or disables periodic ambient light measurements.
+  virtual void SetPeriodicAmbient(bool enable);
+
+  // Returns true when the ambient measurement is ready. Reset by calls to
+  // ReadAmbient.
+  virtual bool AmbientReady() = 0;
+
   // Reads the 16-bit ambient light value.
   virtual uint16_t ReadAmbient() = 0;
 };

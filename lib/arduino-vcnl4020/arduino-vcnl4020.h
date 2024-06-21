@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <Adafruit_VCNL4020.h>
 #include <types.h>
 
 #include "vcnl4020.h"
@@ -34,12 +33,36 @@ class ArduinoVCNL4020 : public VCNL4020 {
   // Reads the 16-bit proximity sensor value. This depends on the LED current.
   uint16_t ReadProximity() override;
 
+  void SetPeriodicAmbient(bool enable) override;
+
+  // Returns true when the ambient measurement is ready. Reset by calls to
+  // ReadAmbient.
+  bool AmbientReady() override;
+
   // Reads the 16-bit ambient light value.
   uint16_t ReadAmbient() override;
 
+  uint8_t ReadStatus();
+
  private:
-  // TODO: modify this library to allow lower-power usage, or write a new one.
-  // Additionally, the readProximity and readAmbient calls are blocking, which
-  // isn't what we want.
-  Adafruit_VCNL4020 sensor_;
+  uint8_t ReadByte(uint8_t register_address);
+  uint8_t WriteByte(uint8_t register_address, uint8_t data);
+
+  uint8_t command_ = 0;
+
+  static constexpr uint8_t kDeviceAddress = 0x13;
+
+  static constexpr uint8_t kRegCommand = 0x80;
+  static constexpr uint8_t kRegProductId = 0x81;
+  static constexpr uint8_t kRegAlsParameter = 0x84;
+  static constexpr uint8_t kRegAlsResultLow = 0x85;
+  static constexpr uint8_t kRegAlsResultHigh = 0x86;
+
+  static constexpr uint8_t kCommandAlsDataReady = 0b1000000;
+  static constexpr uint8_t kCommandProxDataReady = 0b100000;
+  static constexpr uint8_t kCommandAlsOnDemand = 0b10000;
+  static constexpr uint8_t kCommandProxOnDemand = 0b1000;
+  static constexpr uint8_t kCommandAlsEnable = 0b100;
+  static constexpr uint8_t kCommandProxEnable = 0b10;
+  static constexpr uint8_t kCommandSelfTimedEnable = 0b1;
 };
