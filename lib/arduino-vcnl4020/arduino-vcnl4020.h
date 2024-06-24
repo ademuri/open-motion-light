@@ -50,6 +50,12 @@ class ArduinoVCNL4020 : public VCNL4020 {
 
   uint8_t command_ = 0;
 
+  // Continuous conversion mode disabled
+  // ALS measurement rate 1 sample/second
+  // Auto offset compensation enabled
+  // Average function set to 2 measurements
+  static constexpr uint8_t als_parameter_ = 0b00001001;
+
   static constexpr uint8_t kDeviceAddress = 0x13;
 
   static constexpr uint8_t kRegCommand = 0x80;

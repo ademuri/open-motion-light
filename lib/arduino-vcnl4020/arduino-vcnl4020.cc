@@ -42,6 +42,8 @@ bool ArduinoVCNL4020::Begin() {
   // Initialize defaults - sensor standby (1.5uA power consumption)
   WriteByte(kRegCommand, command_);
 
+  WriteByte(kRegAlsParameter, als_parameter_);
+
   return true;
 }
 

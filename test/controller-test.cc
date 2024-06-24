@@ -16,8 +16,8 @@
 
 #include <gtest/gtest.h>
 
-#include "fake-vcnl4020.h"
 #include "fake-power-controller.h"
+#include "fake-vcnl4020.h"
 #include "pins.h"
 #include "test-lib.h"
 #include "types.h"
@@ -60,6 +60,9 @@ class ControllerTest : public LightTest {
     setDigitalRead(kPin5vDetect, false);
     setAnalogRead(kPinCc1, 0);
     setAnalogRead(kPinCc2, 0);
+
+    // Set to 0 so that the light will always trigger in auto mode.
+    vcnl4020.SetAmbient(0);
 
     // This yields a voltage of 3000 / 0.85 = 3529mV.
     setAnalogRead(AVREF, kFakeVrefintCal * 0.85 / 4);
@@ -451,7 +454,8 @@ TEST_F(ControllerTest, DoesntTurnOnLedWhenBatteryLow) {
   setDigitalRead(kPinBatteryDone, true);
   controller.Step();
   ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kUSB3_0);
-  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoffCharging);
+  ASSERT_EQ(controller.GetPowerStatus(),
+            PowerStatus::kLowBatteryCutoffCharging);
   EXPECT_EQ(getDigitalWrite(kPinWhiteLed), 0);
 }
 
@@ -460,7 +464,8 @@ TEST_F(ControllerTest, TurnsOffLedWhenBatteryLow) {
   ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
   ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
   controller.Step();
-  ASSERT_GT(controller.GetFilteredBatteryMillivolts(), Controller::kBatteryVoltage1);
+  ASSERT_GT(controller.GetFilteredBatteryMillivolts(),
+            Controller::kBatteryVoltage1);
   ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
   ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
 
@@ -481,7 +486,8 @@ TEST_F(ControllerTest, TurnsOffLedWhenBatteryLow) {
     controller.Step();
   }
 
-  ASSERT_LT(controller.GetFilteredBatteryMillivolts(), Controller::kBatteryVoltage0);
+  ASSERT_LT(controller.GetFilteredBatteryMillivolts(),
+            Controller::kBatteryVoltage0);
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
@@ -687,3 +693,75 @@ TEST_F(ControllerTest, Sleeps) {
   controller.Step();
   EXPECT_EQ(power_controller.GetSleep(), sleep_interval);
 }
+
+TEST_F(ControllerTest, EnablesLightSensorPeriodicMeasurements) {
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), false);
+
+  setDigitalRead(kPinPowerAuto, false);
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), true);
+
+  setDigitalRead(kPinPowerAuto, true);
+  setDigitalRead(kPinPowerOn, false);
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), false);
+
+  setDigitalRead(kPinPowerOn, true);
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), false);
+}
+
+TEST_F(ControllerTest, UsesAmbientLightForAutoMode) {
+  setDigitalRead(kPinPowerAuto, false);
+  vcnl4020.SetAmbient(0xFFFF);
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), true);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+  advanceMillis(Controller::kMotionPulseLengthMs + 10);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinMotionSensor, false);
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  vcnl4020.SetAmbient(1);
+  setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  vcnl4020.SetAmbient(0xFFFF);
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  setDigitalRead(kPinMotionSensor, false);
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+}
+

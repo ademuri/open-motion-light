@@ -32,7 +32,7 @@ class VCNL4020 {
   virtual uint16_t ReadProximity() = 0;
 
   // Enables or disables periodic ambient light measurements.
-  virtual void SetPeriodicAmbient(bool enable);
+  virtual void SetPeriodicAmbient(bool enable) = 0;
 
   // Returns true when the ambient measurement is ready. Reset by calls to
   // ReadAmbient.

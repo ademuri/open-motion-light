@@ -23,7 +23,7 @@
 #include "stm32-power-controller.h"
 
 // This enables printing values for the VCNL4020 to the serial console.
-#define DEBUG_VCNL4020
+// #define DEBUG_VCNL4020
 
 CountDownTimer vncl4020_timer{200};
 

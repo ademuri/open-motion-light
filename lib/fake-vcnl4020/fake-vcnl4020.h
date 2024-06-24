@@ -50,9 +50,30 @@ class FakeVCNL4020 : public VCNL4020 {
   // Sets the value of the proximity for testing.
   void SetProximity(uint16_t val) { proximity_ = val; }
 
+  void SetPeriodicAmbient(bool enable) override {
+    ASSERT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    periodic_ambient_ = enable;
+  }
+
+  bool GetPeriodicAmbient() {
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    return periodic_ambient_;
+  }
+
+  bool AmbientReady() override {
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    return ambient_ready_;
+  }
+
+  void SetAmbientReady() {
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    ambient_ready_ = true;
+  }
+
   // Reads the 16-bit ambient light value.
   uint16_t ReadAmbient() override {
     EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    ambient_ready_ = false;
     return ambient_;
   }
 
@@ -61,6 +82,8 @@ class FakeVCNL4020 : public VCNL4020 {
 
  private:
   bool initialized_ = false;
+  bool periodic_ambient_ = false;
+  bool ambient_ready_ = false;
   uint8_t led_current_ma_;
   uint16_t proximity_;
   uint16_t ambient_;

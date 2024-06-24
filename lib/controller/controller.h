@@ -112,6 +112,10 @@ class Controller {
 
   uint32_t GetSleepInterval() { return 60 * 1000; }
 
+  // Iff the light sensor value is below this, the light will turn on when
+  // motion is triggered (in auto mode).
+  uint16_t GetAutoBrightnessThreshold() { return 4000; }
+
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
   static constexpr uint8_t kBatteryMedianFilterSize = 5;
