@@ -157,7 +157,7 @@ class Controller {
 
   // After anything changes, wait this long before going to sleep. This prevents
   // missing mode changes if the switch bounces.
-  CountDownTimer sleep_lockout_timer{30};
+  CountDownTimer sleep_lockout_timer{1000};
 
   PowerStatus power_status_ = PowerStatus::kBattery;
   USBStatus usb_status_ = USBStatus::kNoConnection;
