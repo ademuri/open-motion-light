@@ -15,6 +15,7 @@
 #include "controller.h"
 
 #include <gtest/gtest.h>
+#include <limits>
 
 #include "fake-power-controller.h"
 #include "fake-vcnl4020.h"
@@ -762,6 +763,42 @@ TEST_F(ControllerTest, UsesAmbientLightForAutoMode) {
   setDigitalRead(kPinMotionSensor, false);
   advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
   controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+}
+
+TEST_F(ControllerTest, HandlesMillisRollover) {
+  setMillis(std::numeric_limits<uint32_t>::max() - 1000);
+  setDigitalRead(kPinPowerAuto, true);
+  setDigitalRead(kPinPowerOn, true);
+
+  ASSERT_TRUE(controller.Init());
+  const uint32_t duty_cycle = controller.GetLedDutyCycle();
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinPowerOn, false);
+  advanceMillis(100);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
+
+  setDigitalRead(kPinPowerOn, true);
+  advanceMillis(100);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinPowerOn, false);
+  setMillis(100);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), duty_cycle);
+
+  setDigitalRead(kPinPowerOn, true);
+  advanceMillis(100);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
 
