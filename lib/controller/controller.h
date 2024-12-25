@@ -144,7 +144,7 @@ class Controller {
 
   // Battery levels. This is non-linear, since LiFePO4 batteries have a ~cubic
   // discharge curve.
-  static inline constexpr uint16_t kBatteryVoltage1 = 3400;
+  static inline constexpr uint16_t kBatteryVoltage1 = 3350;
   static inline constexpr uint16_t kBatteryVoltage0 = 3150;
 
  private:

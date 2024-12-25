@@ -250,6 +250,7 @@ void Controller::Step() {
       power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
     const uint16_t battery_millivolts =
         battery_average_filter_.GetFilteredValue();
+    // Slow blink
     const uint8_t brightness =
         (millis() / 500) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
     analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
@@ -264,7 +265,6 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed2, 255);
     analogWrite(kPinBatteryLed3, 255);
   } else if (battery_level_timer_.Active()) {
-    // TODO: blink the LEDs while charging
     const uint16_t battery_millivolts =
         battery_average_filter_.GetFilteredValue();
     analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
@@ -274,6 +274,13 @@ void Controller::Step() {
                                      ? 255
                                      : kBatteryLedPlaceholderBrightness);
     analogWrite(kPinBatteryLed3, 255);
+  } else if (power_status_ == PowerStatus::kChargeError) {
+    // Fast blink
+    const uint8_t brightness =
+        (millis() / 100) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
+    analogWrite(kPinBatteryLed1, brightness);
+    analogWrite(kPinBatteryLed2, brightness);
+    analogWrite(kPinBatteryLed3, brightness);
   } else {
     analogWrite(kPinBatteryLed1, 0);
     analogWrite(kPinBatteryLed2, 0);
