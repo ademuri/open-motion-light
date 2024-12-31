@@ -58,7 +58,10 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "lib_footprint_mismatch|90600000|125612500|ee2cac4f-31dc-4244-af69-0c6fabf41742|00000000-0000-0000-0000-000000000000",
+        "unconnected_items|64350000|95300000|fc00c84a-e32a-4899-9f1b-30f541f43d64|2fcdce55-165a-444a-9c26-3330a6a9a52b"
+      ],
       "meta": {
         "version": 2
       },
@@ -79,6 +82,7 @@
         "footprint_type_mismatch": "warning",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -420,7 +424,9 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      "pin_to_pin|787400|914400|078d4eb8-cc6f-492f-8e9a-5e2210f7157d|4240030e-2d3d-469d-a8fa-2053ac27fcfb|/f39d6745-1b59-458d-9712-dda63c04ccc8|/f39d6745-1b59-458d-9712-dda63c04ccc8|/f39d6745-1b59-458d-9712-dda63c04ccc8"
+    ],
     "meta": {
       "version": 0
     },
@@ -724,6 +730,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
