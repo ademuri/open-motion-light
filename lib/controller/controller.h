@@ -114,7 +114,7 @@ class Controller {
 
   // Iff the light sensor value is below this, the light will turn on when
   // motion is triggered (in auto mode).
-  uint16_t GetAutoBrightnessThreshold() { return 4000; }
+  uint16_t GetAutoBrightnessThreshold() { return 1 << 14; }
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
