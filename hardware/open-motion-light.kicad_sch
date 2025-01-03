@@ -5778,12 +5778,6 @@
 		(uuid "933efa00-c073-4af6-b731-b953e4c934df")
 	)
 	(junction
-		(at 171.45 248.92)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9436b025-777f-4b3e-ab03-6f975d3dc16d")
-	)
-	(junction
 		(at 69.85 105.41)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6869,7 +6863,7 @@
 	)
 	(wire
 		(pts
-			(xy 172.72 248.92) (xy 171.45 248.92)
+			(xy 170.18 248.92) (xy 172.72 248.92)
 		)
 		(stroke
 			(width 0)
@@ -7599,16 +7593,6 @@
 	)
 	(wire
 		(pts
-			(xy 171.45 248.92) (xy 170.18 248.92)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cc3c198d-3c94-48d3-984b-2b852654d143")
-	)
-	(wire
-		(pts
 			(xy 38.1 218.44) (xy 45.72 218.44)
 		)
 		(stroke
@@ -7886,16 +7870,6 @@
 			(type default)
 		)
 		(uuid "eee0828d-9651-44a4-99e1-8cf8bfa70fc3")
-	)
-	(wire
-		(pts
-			(xy 171.45 250.19) (xy 171.45 248.92)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f3214659-bdcd-4716-a692-3887f3515e86")
 	)
 	(wire
 		(pts
@@ -13948,85 +13922,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 171.45 254 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "728cb5cb-7b0c-4a0e-8a44-902206b0398b")
-		(property "Reference" "R17"
-			(at 173.228 252.7878 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100k"
-			(at 173.228 255.2121 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 169.672 254 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 171.45 254 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 171.45 254 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C25741"
-			(at 171.45 254 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "d1fa3dc8-5056-471d-a2aa-567f412a5428")
-		)
-		(pin "1"
-			(uuid "111d66ae-4b72-4e97-a3be-af2303bd14e8")
-		)
-		(instances
-			(project "open-motion-light"
-				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
-					(reference "R17")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 36.83 187.96 0)
 		(unit 1)
@@ -15140,72 +15035,6 @@
 			(project "open-motion-light"
 				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
 					(reference "C16")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 171.45 257.81 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8cd855b4-ed71-467f-b95f-0571649121c4")
-		(property "Reference" "#PWR038"
-			(at 171.45 264.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 171.45 261.9431 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 171.45 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 171.45 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 171.45 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "38f147de-06fb-44f7-8ba9-69ff724e0708")
-		)
-		(instances
-			(project "open-motion-light"
-				(path "/f39d6745-1b59-458d-9712-dda63c04ccc8"
-					(reference "#PWR038")
 					(unit 1)
 				)
 			)
