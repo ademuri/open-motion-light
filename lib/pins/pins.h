@@ -28,7 +28,7 @@ constexpr int kPinSerialRx = PA10;
 constexpr int kPinBatteryLed1 = PA1;
 constexpr int kPinBatteryLed2 = PA2;
 constexpr int kPinBatteryLed3 = PA3;
-constexpr int kPinWhiteLed = PA0;
+constexpr int kPinWhiteLed = PA5;
 
 // Sensors
 constexpr int kPinMotionSensor = PA11;
@@ -40,13 +40,13 @@ constexpr int kPinSda = PB7;
 
 // Power switch
 constexpr int kPinPowerAuto = PA4;
-constexpr int kPinPowerOn = PA5;
+constexpr int kPinPowerOn = PB0;
 
 // Battery management
 constexpr int kPinBatteryCharge = PC14;
 constexpr int kPinBatteryDone = PC15;
 constexpr int kPinChargeHighCurrentEnable = PB4;
-constexpr int kPin5vDetect = PA15;
+constexpr int kPin5vDetect = PA0;
 
 // The output of the internal voltage reference for the ADC. Since this is a
 // fixed voltage, we can use this to indirectly measure the battery voltage.
