@@ -19,6 +19,7 @@ void WakeUpCallback() {}
 };  // namespace
 
 bool Stm32PowerController::Begin() {
+  STM32RTC::getInstance().begin();
   impl_.begin();
   return true;
 };
