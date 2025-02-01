@@ -39,10 +39,12 @@ bool Controller::Init() {
     return false;
   }
 
-  power_controller_->AttachInterruptWakeup(kPin5vDetect, CHANGE);
-  power_controller_->AttachInterruptWakeup(kPinMotionSensor, RISING);
+  // Note: there seems to be either an order dependence or a limited number. If
+  // the interrupt for the 5V detect pin is first, it doesn't work.
   power_controller_->AttachInterruptWakeup(kPinPowerAuto, CHANGE);
+  power_controller_->AttachInterruptWakeup(kPinMotionSensor, RISING);
   power_controller_->AttachInterruptWakeup(kPinPowerOn, CHANGE);
+  power_controller_->AttachInterruptWakeup(kPin5vDetect, CHANGE);
 
   return true;
 }
