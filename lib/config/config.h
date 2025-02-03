@@ -33,5 +33,5 @@ struct Config {
   // This version will allow for breaking changes, if needed.
   uint8_t version = 1;
 
-  BrightnessMode brightnessMode = BrightnessMode::kOnWhenBelow;
+  BrightnessMode brightnessMode = BrightnessMode::kDisabled;
 };

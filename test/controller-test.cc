@@ -15,6 +15,7 @@
 #include "controller.h"
 
 #include <gtest/gtest.h>
+
 #include <limits>
 
 #include "fake-power-controller.h"
@@ -64,6 +65,11 @@ class ControllerTest : public LightTest {
 
     // Set to 0 so that the light will always trigger in auto mode.
     vcnl4020.SetAmbient(0);
+
+    controller.TestSetConfig({
+      version : 1,
+      brightnessMode : BrightnessMode::kOnWhenBelow,
+    });
 
     // This yields a voltage of 3000 / 0.85 = 3529mV.
     setAnalogRead(AVREF, kFakeVrefintCal * 0.85 / 4);
@@ -696,6 +702,7 @@ TEST_F(ControllerTest, Sleeps) {
 }
 
 TEST_F(ControllerTest, EnablesLightSensorPeriodicMeasurements) {
+  controller.TestSetConfig({brightnessMode : BrightnessMode::kOnWhenBelow});
   ASSERT_TRUE(controller.Init());
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOff);
@@ -721,7 +728,29 @@ TEST_F(ControllerTest, EnablesLightSensorPeriodicMeasurements) {
   EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), false);
 }
 
-TEST_F(ControllerTest, UsesAmbientLightForAutoMode) {
+TEST_F(ControllerTest,
+       DisablesLightSensorPeriodicMeasurementsWhenBrightnessModeDisabled) {
+  controller.TestSetConfig({brightnessMode : BrightnessMode::kOnWhenBelow});
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), false);
+
+  setDigitalRead(kPinPowerAuto, false);
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), true);
+
+  controller.TestSetConfig({brightnessMode : BrightnessMode::kDisabled});
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), true);
+}
+
+TEST_F(ControllerTest, UsesAmbientLightForAutoModeBrightnessModeOnWhenBelow) {
+  controller.TestSetConfig({brightnessMode : BrightnessMode::kOnWhenBelow});
   setDigitalRead(kPinPowerAuto, false);
   vcnl4020.SetAmbient(0xFFFF);
   ASSERT_TRUE(controller.Init());
@@ -766,6 +795,44 @@ TEST_F(ControllerTest, UsesAmbientLightForAutoMode) {
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
 
+TEST_F(ControllerTest, IgnoresAmbientLightForAutoModeBrightnessDisabled) {
+  controller.TestSetConfig({brightnessMode : BrightnessMode::kDisabled});
+  setDigitalRead(kPinPowerAuto, false);
+  vcnl4020.SetAmbient(0xFFFF);
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), false);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+  advanceMillis(Controller::kMotionPulseLengthMs + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  setDigitalRead(kPinMotionSensor, false);
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  advanceMillis(Controller::kMotionPulseLengthMs + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  vcnl4020.SetAmbient(0);
+  setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+}
+
 TEST_F(ControllerTest, HandlesMillisRollover) {
   setMillis(std::numeric_limits<uint32_t>::max() - 1000);
   setDigitalRead(kPinPowerAuto, true);
@@ -801,4 +868,3 @@ TEST_F(ControllerTest, HandlesMillisRollover) {
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
-
