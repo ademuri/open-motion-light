@@ -114,7 +114,7 @@ void Controller::Step() {
         vcnl4020_->SetPeriodicAmbient(false);
         battery_level_timer_.Stop();
       } else if (power_mode_ == PowerMode::kAuto) {
-        vcnl4020_->SetPeriodicAmbient(GetBrightnessMode() !=
+        vcnl4020_->SetPeriodicAmbient(config_.brightnessMode !=
                                       BrightnessMode::kDisabled);
         auto_triggered = true;
         motion_timer_.Reset();
@@ -234,7 +234,8 @@ void Controller::Step() {
   } else if (power_mode_ == PowerMode::kAuto) {
     if (motion_detected || auto_triggered) {
       if (!led_on_ &&
-          (GetBrightnessMode() == BrightnessMode::kDisabled || auto_triggered ||
+          (config_.brightnessMode == BrightnessMode::kDisabled ||
+           auto_triggered ||
            vcnl4020_->ReadAmbient() < GetAutoBrightnessThreshold())) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
         led_change_motion_timeout_.Reset();

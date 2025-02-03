@@ -24,6 +24,7 @@
 #include <exponential-moving-average-filter.h>
 #include <median-filter.h>
 
+#include "config.h"
 #include "power-controller.h"
 #include "vcnl4020.h"
 
@@ -60,12 +61,6 @@ enum class USBStatus {
   // 3A is available. This device shouldn't draw more than about 1.5A, so we
   // don't need to distinguish this from the 1.5A case.
   kUSB3_0,
-};
-
-// Ambient light brightness sensing mode
-enum class BrightnessMode {
-  kDisabled,
-  kOnWhenBelow,
 };
 
 class Controller {
@@ -121,8 +116,6 @@ class Controller {
   // Iff the light sensor value is below this, the light will turn on when
   // motion is triggered (in auto mode).
   uint16_t GetAutoBrightnessThreshold() { return 1 << 14; }
-
-  BrightnessMode GetBrightnessMode() { return BrightnessMode::kOnWhenBelow; }
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
@@ -185,4 +178,6 @@ class Controller {
 
   VCNL4020* const vcnl4020_;
   PowerController* const power_controller_;
+
+  Config config_;
 };
