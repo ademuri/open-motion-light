@@ -6437,7 +6437,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor")
 		(property "Reference" "C24"
-			(at 0 -1.43 360)
+			(at 0 -1.43 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f5368f79-6bf7-4499-beb3-dfa901fc3a43")
@@ -6449,7 +6449,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "e2a67cf4-5e09-40dc-8859-6ea162833883")
 			(effects
@@ -6617,7 +6617,7 @@
 			(uuid "3fb428cf-7e6c-4c40-b324-8e194f4ab856")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "f29dbdeb-1d71-45ca-a481-5ca9f4e8bda1")
 			(effects
@@ -24132,15 +24132,15 @@
 			(pintype "passive")
 			(uuid "37bc40f0-ecb1-4bb9-a312-4490da1c39dd")
 		)
-		(model "${HOMEBREW}/TYPE-C-31-M-12.wrl"
+		(model "${HOMEBREW}/USB-C_SMD-TYPE-C-31-M-12.wrl"
 			(offset
-				(xyz 0 -2.47 0)
+				(xyz 0 -2.5 0)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 90 180 180)
+				(xyz 0 0 180)
 			)
 		)
 	)
