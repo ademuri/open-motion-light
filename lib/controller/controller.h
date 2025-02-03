@@ -62,6 +62,12 @@ enum class USBStatus {
   kUSB3_0,
 };
 
+// Ambient light brightness sensing mode
+enum class BrightnessMode {
+  kDisabled,
+  kOnWhenBelow,
+};
+
 class Controller {
  public:
   Controller(VCNL4020* vcnl4020, PowerController* power_controller)
@@ -115,6 +121,8 @@ class Controller {
   // Iff the light sensor value is below this, the light will turn on when
   // motion is triggered (in auto mode).
   uint16_t GetAutoBrightnessThreshold() { return 1 << 14; }
+
+  BrightnessMode GetBrightnessMode() { return BrightnessMode::kOnWhenBelow; }
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
