@@ -85,7 +85,7 @@ uint8_t ArduinoVCNL4020::ReadByte(uint8_t register_address) {
   Wire.beginTransmission(kDeviceAddress);
   Wire.write(register_address);
   Wire.endTransmission(false);
-  Wire.requestFrom(kDeviceAddress, 1);
+  Wire.requestFrom(kDeviceAddress, (uint8_t)1);
   if (Wire.available() == 0) {
     Serial1.printf("Error: got no data from light sensor for register: 0x%X\n",
                    register_address);
