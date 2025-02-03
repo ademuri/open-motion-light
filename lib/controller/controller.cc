@@ -16,6 +16,9 @@
 
 #include "pins.h"
 
+// Useful for debugging, to display other values on the battery LEDs.
+constexpr bool kShowBatteryStatus = true;
+
 bool Controller::Init() {
   // For some reason, this causes the LEDs to flash (likely something to do with
   // the STM32 Arduino implementation).
@@ -248,45 +251,47 @@ void Controller::Step() {
     }
   }
 
-  if (power_status_ == PowerStatus::kCharging ||
-      power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
-    const uint16_t battery_millivolts =
-        battery_average_filter_.GetFilteredValue();
-    // Slow blink
-    const uint8_t brightness =
-        (millis() / 500) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
-    analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
-                                     ? brightness
-                                     : kBatteryLedPlaceholderBrightness);
-    analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
-                                     ? brightness
-                                     : kBatteryLedPlaceholderBrightness);
-    analogWrite(kPinBatteryLed3, brightness);
-  } else if (power_status_ == PowerStatus::kCharged) {
-    analogWrite(kPinBatteryLed1, 255);
-    analogWrite(kPinBatteryLed2, 255);
-    analogWrite(kPinBatteryLed3, 255);
-  } else if (battery_level_timer_.Active()) {
-    const uint16_t battery_millivolts =
-        battery_average_filter_.GetFilteredValue();
-    analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
-                                     ? 255
-                                     : kBatteryLedPlaceholderBrightness);
-    analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
-                                     ? 255
-                                     : kBatteryLedPlaceholderBrightness);
-    analogWrite(kPinBatteryLed3, 255);
-  } else if (power_status_ == PowerStatus::kChargeError) {
-    // Fast blink
-    const uint8_t brightness =
-        (millis() / 100) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
-    analogWrite(kPinBatteryLed1, brightness);
-    analogWrite(kPinBatteryLed2, brightness);
-    analogWrite(kPinBatteryLed3, brightness);
-  } else {
-    analogWrite(kPinBatteryLed1, 0);
-    analogWrite(kPinBatteryLed2, 0);
-    analogWrite(kPinBatteryLed3, 0);
+  if (kShowBatteryStatus) {
+    if (power_status_ == PowerStatus::kCharging ||
+        power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
+      const uint16_t battery_millivolts =
+          battery_average_filter_.GetFilteredValue();
+      // Slow blink
+      const uint8_t brightness =
+          (millis() / 500) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
+      analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
+                                       ? brightness
+                                       : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
+                                       ? brightness
+                                       : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed3, brightness);
+    } else if (power_status_ == PowerStatus::kCharged) {
+      analogWrite(kPinBatteryLed1, 255);
+      analogWrite(kPinBatteryLed2, 255);
+      analogWrite(kPinBatteryLed3, 255);
+    } else if (battery_level_timer_.Active()) {
+      const uint16_t battery_millivolts =
+          battery_average_filter_.GetFilteredValue();
+      analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
+                                       ? 255
+                                       : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
+                                       ? 255
+                                       : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed3, 255);
+    } else if (power_status_ == PowerStatus::kChargeError) {
+      // Fast blink
+      const uint8_t brightness =
+          (millis() / 100) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
+      analogWrite(kPinBatteryLed1, brightness);
+      analogWrite(kPinBatteryLed2, brightness);
+      analogWrite(kPinBatteryLed3, brightness);
+    } else {
+      analogWrite(kPinBatteryLed1, 0);
+      analogWrite(kPinBatteryLed2, 0);
+      analogWrite(kPinBatteryLed3, 0);
+    }
   }
 
   if (!led_on_ && power_status_ != PowerStatus::kCharging &&
