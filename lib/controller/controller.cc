@@ -236,7 +236,7 @@ void Controller::Step() {
       if (!led_on_ &&
           (config_.brightnessMode == BrightnessMode::kDisabled ||
            auto_triggered ||
-           vcnl4020_->ReadAmbient() < GetAutoBrightnessThreshold())) {
+           vcnl4020_->ReadAmbient() < config_.autoBrightnessThreshold)) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
         led_change_motion_timeout_.Reset();
         led_on_ = true;

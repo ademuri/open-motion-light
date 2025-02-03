@@ -34,4 +34,7 @@ struct Config {
   uint8_t version = 1;
 
   BrightnessMode brightnessMode = BrightnessMode::kDisabled;
+
+  // This is units of 1/4 lux - a value of 4000 corresponds to 1000 lux.
+  uint16_t autoBrightnessThreshold = 4 * 40;
 };

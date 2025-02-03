@@ -113,10 +113,6 @@ class Controller {
 
   uint32_t GetSleepInterval() { return 15 * 60 * 1000; }
 
-  // Iff the light sensor value is below this, the light will turn on when
-  // motion is triggered (in auto mode).
-  uint16_t GetAutoBrightnessThreshold() { return 1 << 14; }
-
   // Used for testing.
   void TestSetConfig(Config config) { config_ = config; }
 
@@ -136,7 +132,7 @@ class Controller {
   static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
 
   // How long the motion sensor signal is "active" for after detecting motion.
-  static constexpr uint32_t kMotionPulseLengthMs = 2600;
+  static constexpr uint32_t kMotionPulseLengthMs = 0;
 
   static constexpr uint16_t kUsbNoConnectionMillivolts = 200;
   static constexpr uint16_t kUsbStandardMillivolts = 660;

@@ -750,9 +750,12 @@ TEST_F(ControllerTest,
 }
 
 TEST_F(ControllerTest, UsesAmbientLightForAutoModeBrightnessModeOnWhenBelow) {
-  controller.TestSetConfig({brightnessMode : BrightnessMode::kOnWhenBelow});
+  controller.TestSetConfig({
+    brightnessMode : BrightnessMode::kOnWhenBelow,
+    autoBrightnessThreshold : 100
+  });
   setDigitalRead(kPinPowerAuto, false);
-  vcnl4020.SetAmbient(0xFFFF);
+  vcnl4020.SetAmbient(101);
   ASSERT_TRUE(controller.Init());
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
@@ -778,13 +781,13 @@ TEST_F(ControllerTest, UsesAmbientLightForAutoModeBrightnessModeOnWhenBelow) {
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 
-  vcnl4020.SetAmbient(1);
+  vcnl4020.SetAmbient(99);
   setDigitalRead(kPinMotionSensor, true);
   advanceMillis(10);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
 
-  vcnl4020.SetAmbient(0xFFFF);
+  vcnl4020.SetAmbient(101);
   advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
