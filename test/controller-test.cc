@@ -772,7 +772,7 @@ TEST_F(ControllerTest, UsesAmbientLightForAutoModeBrightnessModeOnWhenBelow) {
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 
   setDigitalRead(kPinMotionSensor, true);
-  advanceMillis(10);
+  advanceMillis(Controller::kBrightnessIgnorePeriodMs + 10);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 
@@ -794,6 +794,52 @@ TEST_F(ControllerTest, UsesAmbientLightForAutoModeBrightnessModeOnWhenBelow) {
 
   setDigitalRead(kPinMotionSensor, false);
   advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+}
+
+TEST_F(ControllerTest, RetriggersCorrectlyWithBrightnessInAutoMode) {
+  controller.TestSetConfig({
+    brightnessMode : BrightnessMode::kOnWhenBelow,
+    autoBrightnessThreshold : 100
+  });
+  setDigitalRead(kPinPowerAuto, false);
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 - 10);
+  setDigitalRead(kPinMotionSensor, true);
+  vcnl4020.SetAmbient(1000);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  setDigitalRead(kPinMotionSensor, false);
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(Controller::kBrightnessIgnorePeriodMs - 20);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  setDigitalRead(kPinMotionSensor, false);
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(Controller::kBrightnessIgnorePeriodMs + 20);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }

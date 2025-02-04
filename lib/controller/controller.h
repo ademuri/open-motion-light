@@ -134,6 +134,10 @@ class Controller {
   // How long the motion sensor signal is "active" for after detecting motion.
   static constexpr uint32_t kMotionPulseLengthMs = 0;
 
+  // In auto mode with brightness detection, ignore the light sensor for this
+  // long after the LED is on. The light sensor integrates over 1 second, so ignore 2 seconds to ensure there are no samples included with the light on.
+  static constexpr uint32_t kBrightnessIgnorePeriodMs = 2000;
+
   static constexpr uint16_t kUsbNoConnectionMillivolts = 200;
   static constexpr uint16_t kUsbStandardMillivolts = 660;
   static constexpr uint16_t kUsb1_5Millivolts = 1230;
@@ -166,6 +170,7 @@ class Controller {
 
   CountDownTimer battery_level_timer_{kBatteryLevelDisplayTimeSeconds * 1000};
   CountDownTimer led_change_motion_timeout_{kMotionPulseLengthMs};
+  CountDownTimer led_on_brightness_timeout_{kBrightnessIgnorePeriodMs};
 
   bool led_on_ = false;
 

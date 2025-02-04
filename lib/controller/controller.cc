@@ -216,6 +216,10 @@ void Controller::Step() {
   }
   prev_motion_detected = motion_detected;
 
+  if (led_on_) {
+    led_on_brightness_timeout_.Reset();
+  }
+
   if (power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
     if (led_on_) {
       analogWrite(kPinWhiteLed, 0);
@@ -235,7 +239,7 @@ void Controller::Step() {
     if (motion_detected || auto_triggered) {
       if (!led_on_ &&
           (config_.brightnessMode == BrightnessMode::kDisabled ||
-           auto_triggered ||
+           auto_triggered || led_on_brightness_timeout_.Active() ||
            vcnl4020_->ReadAmbient() < config_.autoBrightnessThreshold)) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
         led_change_motion_timeout_.Reset();
