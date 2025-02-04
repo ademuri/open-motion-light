@@ -30,10 +30,9 @@ class ArduinoVCNL4020 : public VCNL4020 {
   // is 10s of milliamps.
   void SetLEDCurrent(uint8_t mA) override;
 
-  // Reads the 16-bit proximity sensor value. This depends on the LED current.
-  uint16_t ReadProximity() override;
-
   void SetPeriodicAmbient(bool enable) override;
+
+  void SetPeriodicProximity(bool enable) override;
 
   // Returns true when the ambient measurement is ready. Reset by calls to
   // ReadAmbient.
@@ -41,6 +40,11 @@ class ArduinoVCNL4020 : public VCNL4020 {
 
   // Reads the 16-bit ambient light value.
   uint16_t ReadAmbient() override;
+
+  bool ProximityReady() override;
+
+  // Reads the 16-bit proximity sensor value. This depends on the LED current.
+  uint16_t ReadProximity() override;
 
   uint8_t ReadStatus();
 
@@ -60,9 +64,13 @@ class ArduinoVCNL4020 : public VCNL4020 {
 
   static constexpr uint8_t kRegCommand = 0x80;
   static constexpr uint8_t kRegProductId = 0x81;
+  static constexpr uint8_t kRegProxRate = 0x82;
+  static constexpr uint8_t kRegProxCurrent = 0x83;
   static constexpr uint8_t kRegAlsParameter = 0x84;
   static constexpr uint8_t kRegAlsResultHigh = 0x85;
   static constexpr uint8_t kRegAlsResultLow = 0x86;
+  static constexpr uint8_t kRegProxResultHigh = 0x87;
+  static constexpr uint8_t kRegProxResultLow = 0x88;
 
   static constexpr uint8_t kCommandAlsDataReady = 0b1000000;
   static constexpr uint8_t kCommandProxDataReady = 0b100000;

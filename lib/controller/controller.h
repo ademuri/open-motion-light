@@ -132,7 +132,7 @@ class Controller {
   static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
 
   // How long the motion sensor signal is "active" for after detecting motion.
-  static constexpr uint32_t kMotionPulseLengthMs = 0;
+  static constexpr uint32_t kMotionPulseLengthMs = 2600;
 
   // In auto mode with brightness detection, ignore the light sensor for this
   // long after the LED is on. The light sensor integrates over 1 second, so ignore 2 seconds to ensure there are no samples included with the light on.

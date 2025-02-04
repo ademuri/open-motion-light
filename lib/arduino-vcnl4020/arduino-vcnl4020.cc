@@ -51,12 +51,7 @@ void ArduinoVCNL4020::SetLEDCurrent(uint8_t mA) {
   if (mA > 200) {
     mA = 200;
   }
-  // TODO: implement this
-}
-
-uint16_t ArduinoVCNL4020::ReadProximity() {
-  // TODO: implement this
-  return 0;
+  WriteByte(kRegProxCurrent, mA / 10);
 }
 
 void ArduinoVCNL4020::SetPeriodicAmbient(bool enable) {
@@ -65,8 +60,21 @@ void ArduinoVCNL4020::SetPeriodicAmbient(bool enable) {
   // leave kCommandSelfTimedEnable active if prox is still enabled.
   if (enable) {
     command_ = command_ | kCommandAlsEnable | kCommandSelfTimedEnable;
+  } else if (command_ & kCommandProxEnable) {
+    command_ = command_ & (0xFF ^ kCommandAlsEnable);
   } else {
     command_ = command_ & (0xFF ^ kCommandAlsEnable ^ kCommandSelfTimedEnable);
+  }
+  WriteByte(kRegCommand, command_);
+}
+
+void ArduinoVCNL4020::SetPeriodicProximity(bool enable) {
+  if (enable) {
+    command_ = command_ | kCommandProxEnable | kCommandSelfTimedEnable;
+  } else if (command_ & kCommandAlsEnable) {
+    command_ = command_ & (0xFF ^ kCommandProxEnable);
+  } else {
+    command_ = command_ & (0xFF ^ kCommandProxEnable ^ kCommandSelfTimedEnable);
   }
   WriteByte(kRegCommand, command_);
 }
@@ -78,6 +86,16 @@ bool ArduinoVCNL4020::AmbientReady() {
 uint16_t ArduinoVCNL4020::ReadAmbient() {
   uint16_t result = ReadByte(kRegAlsResultLow);
   result |= ReadByte(kRegAlsResultHigh) << 8;
+  return result;
+}
+
+bool ArduinoVCNL4020::ProximityReady() {
+  return ReadByte(kRegCommand) & kCommandProxDataReady;
+}
+
+uint16_t ArduinoVCNL4020::ReadProximity() {
+  uint16_t result = ReadByte(kRegProxResultLow);
+  result |= ReadByte(kRegProxResultHigh) << 8;
   return result;
 }
 
