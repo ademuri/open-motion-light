@@ -32,6 +32,7 @@ enum class PowerMode {
   kOff,
   kAuto,
   kOn,
+  kToggled,
 };
 
 enum class PowerStatus {
@@ -97,7 +98,7 @@ class Controller {
 
   // How long the light should be on for after motion is detected. Visible for
   // testing.
-  uint32_t GetMotionTimeoutSeconds() { return 10; }
+  uint32_t GetMotionTimeoutSeconds() { return 3; }
 
   // The brightness of the white LEDs when they're on.
   // Note: with a 20kHz output duty cycle, minimum value is 3.
@@ -134,8 +135,13 @@ class Controller {
   // How long the motion sensor signal is "active" for after detecting motion.
   static constexpr uint32_t kMotionPulseLengthMs = 2600;
 
+  // How long to turn on the proximity sensor for after detection motion, when
+  // prox sensing is enabled.
+  static constexpr uint32_t kMotionProximityPeriodMs = 3500;
+
   // In auto mode with brightness detection, ignore the light sensor for this
-  // long after the LED is on. The light sensor integrates over 1 second, so ignore 2 seconds to ensure there are no samples included with the light on.
+  // long after the LED is on. The light sensor integrates over 1 second, so
+  // ignore 2 seconds to ensure there are no samples included with the light on.
   static constexpr uint32_t kBrightnessIgnorePeriodMs = 2000;
 
   static constexpr uint16_t kUsbNoConnectionMillivolts = 200;
@@ -171,6 +177,7 @@ class Controller {
   CountDownTimer battery_level_timer_{kBatteryLevelDisplayTimeSeconds * 1000};
   CountDownTimer led_change_motion_timeout_{kMotionPulseLengthMs};
   CountDownTimer led_on_brightness_timeout_{kBrightnessIgnorePeriodMs};
+  CountDownTimer motion_proximity_timeout_{kMotionProximityPeriodMs};
 
   bool led_on_ = false;
 
@@ -182,6 +189,8 @@ class Controller {
 
   VCNL4020* const vcnl4020_;
   PowerController* const power_controller_;
+
+  int32_t prev_proximity_ = 0;
 
   Config config_;
 };

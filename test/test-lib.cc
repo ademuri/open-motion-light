@@ -29,6 +29,14 @@ std::ostream& operator<<(std::ostream& os, const PowerMode power_mode) {
     case PowerMode::kOn:
       os << "kOn";
       break;
+
+    case PowerMode::kToggled:
+      os << "kToggled";
+      break;
+
+    default:
+      os << static_cast<int>(power_mode);
+      break;
   }
   return os;
 }

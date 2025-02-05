@@ -35,7 +35,7 @@ class FakeVCNL4020 : public VCNL4020 {
   void SetLEDCurrent(uint8_t mA) override {
     ASSERT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
     ASSERT_LE(mA, 200);
-    ASSERT_EQ(mA % 10, 0) << "LED current has 10s precision";
+    ASSERT_EQ(mA % 10, 0) << "LED current has 10mA precision";
     led_current_ma_ = mA;
   }
 
@@ -44,11 +44,22 @@ class FakeVCNL4020 : public VCNL4020 {
   // Reads the 16-bit proximity sensor value. This depends on the LED current.
   uint16_t ReadProximity() override {
     EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    proximity_ready_ = false;
     return proximity_;
   }
 
   // Sets the value of the proximity for testing.
   void SetProximity(uint16_t val) { proximity_ = val; }
+
+  void SetPeriodicProximity(bool enable) override {
+    ASSERT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    periodic_proximity_ = enable;
+  }
+
+  bool GetPeriodicProximity() {
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    return periodic_proximity_;
+  }
 
   void SetPeriodicAmbient(bool enable) override {
     ASSERT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
@@ -70,6 +81,16 @@ class FakeVCNL4020 : public VCNL4020 {
     ambient_ready_ = true;
   }
 
+  bool ProximityReady() override {
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    return proximity_ready_;
+  }
+
+  void SetProximityReady() {
+    EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
+    proximity_ready_ = true;
+  }
+
   // Reads the 16-bit ambient light value.
   uint16_t ReadAmbient() override {
     EXPECT_TRUE(initialized_) << "FakeVCNL4020::Begin() not yet called";
@@ -83,7 +104,9 @@ class FakeVCNL4020 : public VCNL4020 {
  private:
   bool initialized_ = false;
   bool periodic_ambient_ = false;
+  bool periodic_proximity_ = false;
   bool ambient_ready_ = false;
+  bool proximity_ready_ = false;
   uint8_t led_current_ma_;
   uint16_t proximity_;
   uint16_t ambient_;

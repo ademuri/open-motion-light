@@ -825,14 +825,17 @@ TEST_F(ControllerTest, RetriggersCorrectlyWithBrightnessInAutoMode) {
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 
   setDigitalRead(kPinMotionSensor, true);
-  advanceMillis(Controller::kBrightnessIgnorePeriodMs - 20);
-  controller.Step();
-  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+  if (Controller::kMotionPulseLengthMs <
+      Controller::kBrightnessIgnorePeriodMs) {
+    advanceMillis(Controller::kBrightnessIgnorePeriodMs - 20);
+    controller.Step();
+    EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
 
-  setDigitalRead(kPinMotionSensor, false);
-  advanceMillis(20);
-  controller.Step();
-  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+    setDigitalRead(kPinMotionSensor, false);
+    advanceMillis(20);
+    controller.Step();
+    EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+  }
 
   advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
   controller.Step();
@@ -880,6 +883,88 @@ TEST_F(ControllerTest, IgnoresAmbientLightForAutoModeBrightnessDisabled) {
   advanceMillis(10);
   controller.Step();
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+}
+
+TEST_F(ControllerTest, EnablesProxSensorForProximityToggleMode) {
+  controller.TestSetConfig({
+    proximity_mode : ProximityMode::kToggle,
+  });
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  EXPECT_EQ(vcnl4020.GetPeriodicProximity(), false);
+
+  setDigitalRead(kPinPowerAuto, false);
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+  EXPECT_EQ(vcnl4020.GetPeriodicProximity(), true);
+
+  advanceMillis(Controller::kMotionProximityPeriodMs - 10);
+  controller.Step();
+  EXPECT_EQ(vcnl4020.GetPeriodicProximity(), true);
+
+  advanceMillis(20);
+  controller.Step();
+  EXPECT_EQ(vcnl4020.GetPeriodicProximity(), false);
+
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000);
+  controller.Step();
+
+  setDigitalRead(kPinMotionSensor, true);
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(vcnl4020.GetPeriodicProximity(), true);
+}
+
+TEST_F(ControllerTest, TogglesLedInProximityModeToggle) {
+  controller.TestSetConfig({
+    proximity_mode : ProximityMode::kToggle,
+    proximity_threshold: 5,
+  });
+  ASSERT_TRUE(controller.Init());
+  vcnl4020.SetProximity(100);
+  vcnl4020.SetProximityReady();
+  controller.Step();
+  EXPECT_EQ(vcnl4020.GetPeriodicProximity(), false);
+
+  setDigitalRead(kPinPowerAuto, false);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  ASSERT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+  ASSERT_EQ(vcnl4020.GetPeriodicProximity(), true);
+
+  vcnl4020.SetProximity(101);
+  vcnl4020.SetProximityReady();
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+
+  vcnl4020.SetProximity(107);
+  vcnl4020.SetProximityReady();
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kToggled);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  vcnl4020.SetProximity(107);
+  vcnl4020.SetProximityReady();
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kToggled);
+
+  advanceMillis(controller.GetMotionTimeoutSeconds() * 1000 + 10);
+  controller.Step();
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kToggled);
+
+  EXPECT_EQ(vcnl4020.GetPeriodicProximity(), true);
+  vcnl4020.SetProximity(100);
+  vcnl4020.SetProximityReady();
+  advanceMillis(10);
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
 
 TEST_F(ControllerTest, HandlesMillisRollover) {

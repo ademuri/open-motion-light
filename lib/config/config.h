@@ -26,6 +26,11 @@ enum class BrightnessMode {
   kOnWhenBelow,
 };
 
+enum class ProximityMode {
+  kDisabled,
+  kToggle,
+};
+
 // Configuration data
 struct Config {
   // Version of this config data. Since this struct is read directly from flash,
@@ -33,9 +38,16 @@ struct Config {
   // This version will allow for breaking changes, if needed.
   uint8_t version = 1;
 
-  // BrightnessMode brightnessMode = BrightnessMode::kDisabled;
-  BrightnessMode brightnessMode = BrightnessMode::kOnWhenBelow;
+  BrightnessMode brightnessMode = BrightnessMode::kDisabled;
 
   // This is units of 1/4 lux - a value of 4000 corresponds to 1000 lux.
   uint16_t autoBrightnessThreshold = 4 * 30;
+
+  ProximityMode proximity_mode = ProximityMode::kToggle;
+
+  // Turn off the light if it's been on for this long in proximity toggle mode.
+  uint16_t proximity_toggle_timeout_seconds = 10 * 60;
+
+  // The proximity sensor must change by this much to toggle the mode.
+  uint16_t proximity_threshold = 300;
 };

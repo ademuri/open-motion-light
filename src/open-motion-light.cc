@@ -23,10 +23,9 @@
 #include "pins.h"
 #include "stm32-power-controller.h"
 
-// This enables printing values for the VCNL4020 to the serial console.
+// These enable printing values for the VCNL4020 to the serial console.
 // #define DEBUG_VCNL4020_BRIGHTNESS
-
-#define DEBUG_VCNL4020_PROXIMITY
+// #define DEBUG_VCNL4020_PROXIMITY
 
 CountDownTimer vncl4020_timer{200};
 
@@ -110,7 +109,6 @@ void setup() {
 
 void loop() {
   controller.Step();
-  delay(1);
 
 #ifdef DEBUG_VCNL4020_BRIGHTNESS
   if (vncl4020_timer.Expired()) {
@@ -122,15 +120,15 @@ void loop() {
 #endif  // ifdef DEBUG_VCNL4020_BRIGHTNESS
 
 #ifdef DEBUG_VCNL4020_PROXIMITY
-  if (vcnl4020.ProximityReady()) {
-    edge_filter.Run();
-    Serial1.printf("rising: %u, falling: %u, value: %u, slope: %d\n",
-                   edge_filter.Rising(threshold),
-                   edge_filter.Falling(threshold),
-                   edge_filter.GetFilteredValue(), edge_filter.Slope());
-  }
   // if (vcnl4020.ProximityReady()) {
-  //   Serial1.printf("proximity: %5u\n", vcnl4020.ReadProximity());
+  //   proximity_edge_filter.Run();
+  //   Serial1.printf("rising: %u, falling: %u, value: %u, slope: %d\n",
+  //                  edge_filter.Rising(proximity_threshold),
+  //                  edge_filter.Falling(proximity_threshold),
+  //                  edge_filter.GetFilteredValue(), edge_filter.Slope());
   // }
+  if (vcnl4020.ProximityReady()) {
+    Serial1.printf("proximity: %5u\n", vcnl4020.ReadProximity());
+  }
 #endif  // ifdef DEBUG_VCNL4020_PROXIMITY
 }

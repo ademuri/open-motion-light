@@ -109,23 +109,52 @@ void Controller::Step() {
 
   if (!power_mode_read_timer_.Running() || power_mode_read_timer_.Expired()) {
     power_mode_ = ReadPowerMode();
-    if (previous_power_mode != power_mode_) {
+    if (previous_power_mode == PowerMode::kToggled &&
+        power_mode_ == PowerMode::kAuto) {
+      power_mode_ = PowerMode::kToggled;
+    } else if (previous_power_mode != power_mode_) {
       power_mode_read_timer_.Reset();
       sleep_lockout_timer.Reset();
       if (power_mode_ == PowerMode::kOff) {
         vcnl4020_->SetPeriodicAmbient(false);
         battery_level_timer_.Stop();
       } else if (power_mode_ == PowerMode::kAuto) {
-        vcnl4020_->SetPeriodicAmbient(config_.brightnessMode !=
-                                      BrightnessMode::kDisabled);
-        auto_triggered = true;
-        motion_timer_.Reset();
-        battery_level_timer_.Reset();
+        if (previous_power_mode == PowerMode::kToggled) {
+        } else {
+          vcnl4020_->SetPeriodicAmbient(config_.brightnessMode !=
+                                        BrightnessMode::kDisabled);
+          auto_triggered = true;
+          motion_timer_.Reset();
+          battery_level_timer_.Reset();
+          motion_proximity_timeout_.Reset();
+          if (config_.proximity_mode == ProximityMode::kToggle) {
+            vcnl4020_->SetPeriodicProximity(true);
+          }
+        }
       } else if (power_mode_ == PowerMode::kOn) {
         vcnl4020_->SetPeriodicAmbient(false);
         battery_level_timer_.Reset();
       }
     }
+  }
+
+  if ((power_mode_ == PowerMode::kAuto || power_mode_ == PowerMode::kToggled) &&
+      config_.proximity_mode == ProximityMode::kToggle &&
+      vcnl4020_->ProximityReady()) {
+    int32_t proximity = vcnl4020_->ReadProximity();
+
+    if (prev_proximity_ != 0 &&
+        std::abs(proximity - prev_proximity_) > config_.proximity_threshold) {
+      if (power_mode_ == PowerMode::kAuto) {
+        power_mode_ = PowerMode::kToggled;
+        proximity = 0;
+      } else {
+        power_mode_ = PowerMode::kAuto;
+        proximity = 0;
+      }
+    }
+
+    prev_proximity_ = proximity;
   }
 
   // ADC readings are relative to the battery voltage.
@@ -215,6 +244,10 @@ void Controller::Step() {
   static bool prev_motion_detected;
   if (motion_detected && !prev_motion_detected) {
     motion_timer_.Reset();
+    motion_proximity_timeout_.Reset();
+    if (config_.proximity_mode == ProximityMode::kToggle) {
+      vcnl4020_->SetPeriodicProximity(true);
+    }
   }
   prev_motion_detected = motion_detected;
 
@@ -257,6 +290,12 @@ void Controller::Step() {
       led_on_ = false;
       motion_timer_.Stop();
     }
+  }
+
+  if (motion_proximity_timeout_.Expired() &&
+      power_mode_ != PowerMode::kToggled) {
+    vcnl4020_->SetPeriodicProximity(false);
+    motion_proximity_timeout_.Stop();
   }
 
   if (kShowBatteryStatus) {
@@ -302,8 +341,11 @@ void Controller::Step() {
     }
   }
 
+  const bool proximity_lockout =
+      config_.proximity_mode != ProximityMode::kDisabled &&
+      motion_proximity_timeout_.Active();
   if (!led_on_ && power_status_ != PowerStatus::kCharging &&
-      !sleep_lockout_timer.Active()) {
+      !sleep_lockout_timer.Active() && !proximity_lockout) {
     power_controller_->Sleep(GetSleepInterval());
   }
 }
