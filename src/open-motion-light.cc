@@ -15,6 +15,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <arduino-timer.h>
+#include <edge-filter.h>
 
 #include "arduino-vcnl4020.h"
 #include "clock.h"
@@ -23,13 +24,21 @@
 #include "stm32-power-controller.h"
 
 // This enables printing values for the VCNL4020 to the serial console.
-// #define DEBUG_VCNL4020
+// #define DEBUG_VCNL4020_BRIGHTNESS
+
+#define DEBUG_VCNL4020_PROXIMITY
 
 CountDownTimer vncl4020_timer{200};
 
 ArduinoVCNL4020 vcnl4020;
+
 Stm32PowerController power_controller;
 Controller controller{&vcnl4020, &power_controller};
+
+#ifdef DEBUG_VCNL4020_PROXIMITY
+constexpr uint16_t proximity_threshold = 5;
+EdgeFilter proximity_edge_filter([]() { return vcnl4020.ReadProximity(); }, /*alpha=*/ 255);
+#endif  // DEBUG_VCNL4020_PROXIMITY
 
 void setup() {
   Serial1.begin(115200);
@@ -84,10 +93,15 @@ void setup() {
     }
   }
 
-#ifdef DEBUG_VCNL4020
+#ifdef DEBUG_VCNL4020_BRIGHTNESS
   vcnl4020.SetPeriodicAmbient(true);
   vncl4020_timer.Reset();
-#endif  // DEBUG_VCNL4020
+#endif  // DEBUG_VCNL4020_BRIGHTNESS
+
+#ifdef DEBUG_VCNL4020_PROXIMITY
+  vcnl4020.SetPeriodicProximity(true);
+  vncl4020_timer.Reset();
+#endif  // DEBUG_VCNL4020_PROXIMITY
 
   digitalWrite(kPinBatteryLed2, true);
   delay(100);
@@ -98,12 +112,25 @@ void loop() {
   controller.Step();
   delay(1);
 
-#ifdef DEBUG_VCNL4020
+#ifdef DEBUG_VCNL4020_BRIGHTNESS
   if (vncl4020_timer.Expired()) {
     if (vcnl4020.AmbientReady()) {
       Serial1.printf("ambient: %5u\n", vcnl4020.ReadAmbient());
     }
     vncl4020_timer.Reset();
   }
-#endif  // ifdef DEBUG_VCNL4020
+#endif  // ifdef DEBUG_VCNL4020_BRIGHTNESS
+
+#ifdef DEBUG_VCNL4020_PROXIMITY
+  if (vcnl4020.ProximityReady()) {
+    edge_filter.Run();
+    Serial1.printf("rising: %u, falling: %u, value: %u, slope: %d\n",
+                   edge_filter.Rising(threshold),
+                   edge_filter.Falling(threshold),
+                   edge_filter.GetFilteredValue(), edge_filter.Slope());
+  }
+  // if (vcnl4020.ProximityReady()) {
+  //   Serial1.printf("proximity: %5u\n", vcnl4020.ReadProximity());
+  // }
+#endif  // ifdef DEBUG_VCNL4020_PROXIMITY
 }

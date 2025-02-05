@@ -44,6 +44,9 @@ bool ArduinoVCNL4020::Begin() {
 
   WriteByte(kRegAlsParameter, als_parameter_);
 
+  // Set the rate to ~4 measurements/second.
+  WriteByte(kRegProxRate, 0b1);
+
   return true;
 }
 

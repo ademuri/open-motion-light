@@ -38,7 +38,7 @@ bool Controller::Init() {
     return false;
   }
   // TODO: set this from config
-  vcnl4020_->SetLEDCurrent(40);
+  vcnl4020_->SetLEDCurrent(80);
 
   if (!power_controller_->Begin()) {
     return false;
