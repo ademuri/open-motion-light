@@ -150,7 +150,7 @@ class Controller {
 
   // The duty cycle for LEDs when they're not active, but are lit up for
   // clarity.
-  static constexpr uint16_t kBatteryLedPlaceholderBrightness = 16;
+  static constexpr uint16_t kBatteryLedPlaceholderBrightness = 1;
 
   // Battery levels. This is non-linear, since LiFePO4 batteries have a ~cubic
   // discharge curve.

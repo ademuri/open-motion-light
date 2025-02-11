@@ -117,7 +117,7 @@ void Controller::Step() {
       sleep_lockout_timer.Reset();
       if (power_mode_ == PowerMode::kOff) {
         vcnl4020_->SetPeriodicAmbient(false);
-        battery_level_timer_.Stop();
+        battery_level_timer_.Reset();
       } else if (power_mode_ == PowerMode::kAuto) {
         if (previous_power_mode == PowerMode::kToggled) {
         } else {
