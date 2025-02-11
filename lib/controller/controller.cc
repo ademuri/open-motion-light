@@ -304,8 +304,9 @@ void Controller::Step() {
       const uint16_t battery_millivolts =
           battery_average_filter_.GetFilteredValue();
       // Slow blink
-      const uint8_t brightness =
-          (millis() / 500) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
+      const uint8_t brightness = (millis() / 500) % 2 == 0
+                                     ? kBatteryLedActiveBrightness
+                                     : kBatteryLedPlaceholderBrightness;
       analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
                                        ? brightness
                                        : kBatteryLedPlaceholderBrightness);
@@ -314,23 +315,24 @@ void Controller::Step() {
                                        : kBatteryLedPlaceholderBrightness);
       analogWrite(kPinBatteryLed3, brightness);
     } else if (power_status_ == PowerStatus::kCharged) {
-      analogWrite(kPinBatteryLed1, 255);
-      analogWrite(kPinBatteryLed2, 255);
-      analogWrite(kPinBatteryLed3, 255);
+      analogWrite(kPinBatteryLed1, kBatteryLedActiveBrightness);
+      analogWrite(kPinBatteryLed2, kBatteryLedActiveBrightness);
+      analogWrite(kPinBatteryLed3, kBatteryLedActiveBrightness);
     } else if (battery_level_timer_.Active()) {
       const uint16_t battery_millivolts =
           battery_average_filter_.GetFilteredValue();
       analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
-                                       ? 255
+                                       ? kBatteryLedActiveBrightness
                                        : kBatteryLedPlaceholderBrightness);
       analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
-                                       ? 255
+                                       ? kBatteryLedActiveBrightness
                                        : kBatteryLedPlaceholderBrightness);
-      analogWrite(kPinBatteryLed3, 255);
+      analogWrite(kPinBatteryLed3, kBatteryLedActiveBrightness);
     } else if (power_status_ == PowerStatus::kChargeError) {
       // Fast blink
-      const uint8_t brightness =
-          (millis() / 100) % 2 == 0 ? 255 : kBatteryLedPlaceholderBrightness;
+      const uint8_t brightness = (millis() / 100) % 2 == 0
+                                     ? kBatteryLedActiveBrightness
+                                     : kBatteryLedPlaceholderBrightness;
       analogWrite(kPinBatteryLed1, brightness);
       analogWrite(kPinBatteryLed2, brightness);
       analogWrite(kPinBatteryLed3, brightness);

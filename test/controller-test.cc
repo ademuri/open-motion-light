@@ -481,9 +481,12 @@ TEST_F(ControllerTest, TurnsOffLedWhenBatteryLow) {
   controller.Step();
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
-  EXPECT_EQ(getAnalogWrite(kPinBatteryLed1), 255);
-  EXPECT_EQ(getAnalogWrite(kPinBatteryLed2), 255);
-  EXPECT_EQ(getAnalogWrite(kPinBatteryLed3), 255);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed1),
+            Controller::kBatteryLedActiveBrightness);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed2),
+            Controller::kBatteryLedActiveBrightness);
+  EXPECT_EQ(getAnalogWrite(kPinBatteryLed3),
+            Controller::kBatteryLedActiveBrightness);
 
   setAnalogRead(AVREF, kFakeVrefintCal * 1.5 / 4);
   ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 2000);
@@ -631,7 +634,10 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setDigitalRead(kPinPowerAuto, false);
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
-  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(255, 255, 255));
+  EXPECT_EQ(GetBatteryLeds(),
+            BatteryLeds(Controller::kBatteryLedActiveBrightness,
+                        Controller::kBatteryLedActiveBrightness,
+                        Controller::kBatteryLedActiveBrightness));
 
   advanceMillis(Controller::kBatteryLevelDisplayTimeSeconds * 1000 + 10);
   controller.Step();
@@ -655,9 +661,10 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   setDigitalRead(kPinPowerOn, false);
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOn);
-  EXPECT_EQ(
-      GetBatteryLeds(),
-      BatteryLeds(Controller::kBatteryLedPlaceholderBrightness, 255, 255));
+  EXPECT_EQ(GetBatteryLeds(),
+            BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
+                        Controller::kBatteryLedActiveBrightness,
+                        Controller::kBatteryLedActiveBrightness));
 
   // Low voltage
   setAnalogRead(AVREF,
@@ -677,7 +684,8 @@ TEST_F(ControllerTest, DisplaysBatteryVoltage) {
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
   EXPECT_EQ(GetBatteryLeds(),
             BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
-                        Controller::kBatteryLedPlaceholderBrightness, 255));
+                        Controller::kBatteryLedPlaceholderBrightness,
+                        Controller::kBatteryLedActiveBrightness));
 }
 
 TEST_F(ControllerTest, AmbientAndProximitySensorsWork) {
@@ -919,7 +927,7 @@ TEST_F(ControllerTest, EnablesProxSensorForProximityToggleMode) {
 TEST_F(ControllerTest, TogglesLedInProximityModeToggle) {
   controller.TestSetConfig({
     proximity_mode : ProximityMode::kToggle,
-    proximity_threshold: 5,
+    proximity_threshold : 5,
   });
   ASSERT_TRUE(controller.Init());
   vcnl4020.SetProximity(100);
