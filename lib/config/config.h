@@ -43,7 +43,7 @@ struct Config {
   // This is units of 1/4 lux - a value of 4000 corresponds to 1000 lux.
   uint16_t autoBrightnessThreshold = 4 * 30;
 
-  ProximityMode proximity_mode = ProximityMode::kToggle;
+  ProximityMode proximity_mode = ProximityMode::kDisabled;
 
   // Turn off the light if it's been on for this long in proximity toggle mode.
   uint16_t proximity_toggle_timeout_seconds = 10 * 60;
