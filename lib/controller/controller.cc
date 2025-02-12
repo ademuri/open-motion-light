@@ -347,7 +347,8 @@ void Controller::Step() {
       config_.proximity_mode != ProximityMode::kDisabled &&
       motion_proximity_timeout_.Active();
   if (!led_on_ && power_status_ != PowerStatus::kCharging &&
-      !sleep_lockout_timer.Active() && !proximity_lockout) {
+      !sleep_lockout_timer.Active() && !proximity_lockout &&
+      !battery_level_timer_.Active()) {
     power_controller_->Sleep(GetSleepInterval());
   }
 }
