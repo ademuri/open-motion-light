@@ -49,7 +49,7 @@ bool Controller::Init() {
   power_controller_->AttachInterruptWakeup(kPinPowerAuto, CHANGE);
   power_controller_->AttachInterruptWakeup(kPinMotionSensor, RISING);
   power_controller_->AttachInterruptWakeup(kPinPowerOn, CHANGE);
-  power_controller_->AttachInterruptWakeup(kPin5vDetect, CHANGE);
+  power_controller_->AttachInterruptWakeup(kPin5vDetect, RISING);
 
   return true;
 }
@@ -221,7 +221,7 @@ void Controller::Step() {
     }
   }
 
-  if (power_status_ == PowerStatus::kLowBatteryCutoff) {
+  if (power_status_ == PowerStatus::kLowBatteryCutoff){
     if (led_on_) {
       analogWrite(kPinWhiteLed, 0);
       led_on_ = false;
@@ -229,8 +229,7 @@ void Controller::Step() {
     analogWrite(kPinBatteryLed1, 0);
     analogWrite(kPinBatteryLed2, 0);
     analogWrite(kPinBatteryLed3, 0);
-    // TODO: disable PIR interrupt to conserve power
-    power_controller_->Sleep(GetSleepInterval());
+    power_controller_->Stop();
     return;
   }
 

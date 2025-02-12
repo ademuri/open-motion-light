@@ -23,4 +23,5 @@ class PowerController {
   virtual bool Begin() = 0;
   virtual void AttachInterruptWakeup(uint32_t pin, uint32_t mode) = 0;
   virtual void Sleep(uint32_t millis) = 0;
+  virtual void Stop() = 0;
 };

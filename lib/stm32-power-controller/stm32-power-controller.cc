@@ -26,7 +26,7 @@ bool Stm32PowerController::Begin() {
 
 void Stm32PowerController::AttachInterruptWakeup(uint32_t pin, uint32_t mode) {
   impl_.attachInterruptWakeup(pin, &WakeUpCallback, mode,
-                              LP_Mode::DEEP_SLEEP_MODE);
+                              LP_Mode::SHUTDOWN_MODE);
 }
 
 void Stm32PowerController::Sleep(uint32_t ms) {
@@ -74,4 +74,21 @@ void Stm32PowerController::Sleep(uint32_t ms) {
 
   Serial1.begin(115200);
   Serial1.println("Wakeup");
+}
+
+void Stm32PowerController::Stop() {
+  Wire.end();
+  pinMode(kPinScl, INPUT_ANALOG);
+  pinMode(kPinSda, INPUT_ANALOG);
+
+  pinMode(kPinBatteryLed1, INPUT_ANALOG);
+  pinMode(kPinBatteryLed2, INPUT_ANALOG);
+  pinMode(kPinBatteryLed3, INPUT_ANALOG);
+  pinMode(kPinWhiteLed, INPUT_ANALOG);
+  pinMode(kPinChargeHighCurrentEnable, INPUT_ANALOG);
+
+  Serial1.end();
+
+  // TODO: measure power consumption
+  impl_.shutdown();
 }

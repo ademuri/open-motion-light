@@ -26,6 +26,7 @@ class Stm32PowerController : public PowerController {
   bool Begin() override;
   void AttachInterruptWakeup(uint32_t pin, uint32_t mode) override;
   void Sleep(uint32_t millis) override;
+  void Stop() override;
 
   private:
   STM32LowPower impl_;
