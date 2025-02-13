@@ -98,7 +98,7 @@ class Controller {
 
   // How long the light should be on for after motion is detected. Visible for
   // testing.
-  uint32_t GetMotionTimeoutSeconds() { return 3; }
+  uint32_t GetMotionTimeoutSeconds() { return 10; }
 
   // The brightness of the white LEDs when they're on.
   // Note: with a 20kHz output duty cycle, minimum value is 3.
@@ -133,7 +133,7 @@ class Controller {
   static constexpr uint32_t kAdcConfiguredMaxCount = 1 << 10;
 
   // How long the motion sensor signal is "active" for after detecting motion.
-  static constexpr uint32_t kMotionPulseLengthMs = 2600;
+  static constexpr uint32_t kMotionPulseLengthMs = 0;
 
   // How long to turn on the proximity sensor for after detection motion, when
   // prox sensing is enabled.
