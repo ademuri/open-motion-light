@@ -221,7 +221,7 @@ void Controller::Step() {
     }
   }
 
-  if (power_status_ == PowerStatus::kLowBatteryCutoff){
+  if (power_status_ == PowerStatus::kLowBatteryCutoff) {
     if (led_on_) {
       analogWrite(kPinWhiteLed, 0);
       led_on_ = false;

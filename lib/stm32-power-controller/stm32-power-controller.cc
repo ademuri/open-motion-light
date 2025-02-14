@@ -48,8 +48,8 @@ void Stm32PowerController::Sleep(uint32_t ms) {
   STM32RTC& rtc = STM32RTC::getInstance();
   rtc_seconds_at_sleep = rtc.getEpoch(&rtc_subseconds_at_sleep);
 
-  // Puts the processor into STM32 Stop mode. Power consumption is ~17uA (as of
-  // 2024-10-26, with hardware v1.1)
+  // Puts the processor into STM32 Stop mode. Power consumption is ~15.5uA (as of
+  // 2025-02-14, with hardware v1.2)
   impl_.deepSleep(ms);
 
   uint32_t seconds;
@@ -87,8 +87,15 @@ void Stm32PowerController::Stop() {
   pinMode(kPinWhiteLed, INPUT_ANALOG);
   pinMode(kPinChargeHighCurrentEnable, INPUT_ANALOG);
 
+  pinMode(kPinMotionSensor, INPUT_ANALOG);
+  pinMode(kPinLightSensorInterrupt, INPUT_ANALOG);
+  pinMode(kPinPowerAuto, INPUT_ANALOG);
+  pinMode(kPinPowerOn, INPUT_ANALOG);
+  pinMode(kPinBatteryCharge, INPUT_ANALOG);
+  pinMode(kPinBatteryDone, INPUT_ANALOG);
+
   Serial1.end();
 
-  // TODO: measure power consumption
+  // Power consumption is 14.6uA, as of 2025-02-14, with hardware v1.2.
   impl_.shutdown();
 }
