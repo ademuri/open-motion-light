@@ -595,6 +595,49 @@ TEST_F(ControllerTest, SetsUSBFromCC1AndCC2) {
   EXPECT_TRUE(getDigitalWrite(kPinChargeHighCurrentEnable));
 }
 
+TEST_F(ControllerTest, DoesntTurnOnWhenUSBConnected) {
+  const uint16_t vusb_max = ComputeAnalogValueForMillivolts(610);
+  setAnalogRead(kPinCc1, vusb_max);
+  setAnalogRead(kPinCc2, 0);
+
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kStandardUsb);
+
+  setDigitalRead(kPinPowerOn, false);
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setAnalogRead(kPinCc1, 0);
+  controller.Step();
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  setAnalogRead(kPinCc1, vusb_max);
+  controller.Step();
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kStandardUsb);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setDigitalRead(kPinPowerOn, true);
+  setDigitalRead(kPinPowerAuto, false);
+  advanceMillis(11);
+  controller.Step();
+  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+
+  setAnalogRead(kPinCc1, 0);
+  setDigitalRead(kPinMotionSensor, true);
+  controller.Step();
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kNoConnection);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), controller.GetLedDutyCycle());
+
+  setAnalogRead(kPinCc1, vusb_max);
+  controller.Step();
+  ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kStandardUsb);
+  EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
+}
+
 TEST_F(ControllerTest, ReadsAnalogVoltage) {
   const uint32_t pin = PA0;
   setAnalogRead(pin, Controller::kAdcConfiguredMaxCount);

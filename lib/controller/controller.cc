@@ -264,6 +264,11 @@ void Controller::Step() {
       analogWrite(kPinWhiteLed, 0);
       led_on_ = false;
     }
+  } else if (usb_status_ != USBStatus::kNoConnection) {
+    if (led_on_) {
+      analogWrite(kPinWhiteLed, 0);
+      led_on_ = false;
+    }
   } else if (power_mode_ == PowerMode::kOn) {
     if (!led_on_) {
       analogWrite(kPinWhiteLed, GetLedDutyCycle());

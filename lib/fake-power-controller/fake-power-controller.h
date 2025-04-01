@@ -45,6 +45,8 @@ class FakePowerController : public PowerController {
     sleep_millis_ = millis;
   }
 
+  void Stop() override { ASSERT_TRUE(initialized_); }
+
   uint32_t GetSleep() { return sleep_millis_; }
 
  private:
