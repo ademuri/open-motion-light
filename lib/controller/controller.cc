@@ -38,7 +38,7 @@ bool Controller::Init() {
     return false;
   }
   // TODO: set this from config
-  vcnl4020_->SetLEDCurrent(80);
+  vcnl4020_->SetLEDCurrent(200);
 
   if (!power_controller_->Begin()) {
     return false;
@@ -133,6 +133,7 @@ void Controller::Step() {
         }
       } else if (power_mode_ == PowerMode::kOn) {
         vcnl4020_->SetPeriodicAmbient(false);
+        vcnl4020_->SetPeriodicProximity(true);
         battery_level_timer_.Reset();
       }
     }
@@ -297,7 +298,7 @@ void Controller::Step() {
   }
 
   if (motion_proximity_timeout_.Expired() &&
-      power_mode_ != PowerMode::kToggled) {
+      (power_mode_ != PowerMode::kToggled && power_mode_ != PowerMode::kOn)) {
     vcnl4020_->SetPeriodicProximity(false);
     motion_proximity_timeout_.Stop();
   }
