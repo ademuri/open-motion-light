@@ -27,6 +27,9 @@
 // #define DEBUG_VCNL4020_BRIGHTNESS
 // #define DEBUG_VCNL4020_PROXIMITY
 
+// When enabled, writes data to the serial port continuously
+// #define SERIAL_SPAM
+
 CountDownTimer vncl4020_timer{200};
 
 ArduinoVCNL4020 vcnl4020;
@@ -131,4 +134,8 @@ void loop() {
     Serial1.printf("proximity: %5u\n", vcnl4020.ReadProximity());
   }
 #endif  // ifdef DEBUG_VCNL4020_PROXIMITY
+
+#ifdef SERIAL_SPAM
+  Serial1.printf("%10u                                         \n", millis());
+#endif
 }
