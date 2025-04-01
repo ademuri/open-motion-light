@@ -179,7 +179,8 @@ void Controller::Step() {
   switch (usb_status_) {
     case USBStatus::kNoConnection:
     case USBStatus::kStandardUsb:
-      digitalWrite(kPinChargeHighCurrentEnable, false);
+      // Changed
+      digitalWrite(kPinChargeHighCurrentEnable, true);
       break;
 
     case USBStatus::kUSB1_5:
