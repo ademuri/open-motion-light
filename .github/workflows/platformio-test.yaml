@@ -17,13 +17,21 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        id: setup-python
+        with:
+          python-version: "3.11"
+      - name: Cache Python
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.setup-python.outputs.python-path }}
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements.txt') }}
       - name: Cache PlatformIO
         uses: actions/cache@v4
         with:
           path: ~/.platformio
           key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-      - name: Set up Python
-        uses: actions/setup-python@v3
       - name: Install PlatformIO
         id: install_platformio
         run: |
