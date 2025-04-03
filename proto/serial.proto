@@ -1,0 +1,12 @@
+edition = "2023";
+
+import "nanopb.proto";
+
+message SerialRequest { bool request_config = 1; }
+
+message SerialResponse { StatusPb status = 1; }
+
+message StatusPb {
+  string firmware_version = 1 [ (nanopb).max_size = 20 ];
+  float battery_voltage = 2;
+};

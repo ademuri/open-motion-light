@@ -2,6 +2,9 @@
 
 #include <types.h>
 
+#include <pb_encode.h>
+#include <pb_decode.h>
+
 #include "serial-port.h"
 
 class ArduinoSerialPort : public SerialPort {
@@ -11,4 +14,7 @@ class ArduinoSerialPort : public SerialPort {
   int peek() override;
 
   size_t write(uint8_t c) override;
+
+  pb_istream_s BuildPbIstream() override;
+  pb_ostream_s BuildPbOstream() override;
 };

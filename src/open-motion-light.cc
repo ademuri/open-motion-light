@@ -23,6 +23,7 @@
 #include "controller.h"
 #include "pins.h"
 #include "stm32-power-controller.h"
+#include "serial-manager.h"
 
 // These enable printing values for the VCNL4020 to the serial console.
 // #define DEBUG_VCNL4020_BRIGHTNESS
@@ -36,6 +37,7 @@ Stm32PowerController power_controller;
 Controller controller{&vcnl4020, &power_controller};
 
 ArduinoSerialPort serial_port;
+SerialManager serial_manager{&serial_port};
 
 #ifdef DEBUG_VCNL4020_PROXIMITY
 constexpr uint16_t proximity_threshold = 5;
