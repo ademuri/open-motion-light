@@ -18,6 +18,7 @@
 #include <edge-filter.h>
 
 #include "arduino-vcnl4020.h"
+#include "arduino-serial-port.h"
 #include "clock.h"
 #include "controller.h"
 #include "pins.h"
@@ -33,6 +34,8 @@ ArduinoVCNL4020 vcnl4020;
 
 Stm32PowerController power_controller;
 Controller controller{&vcnl4020, &power_controller};
+
+ArduinoSerialPort serial_port;
 
 #ifdef DEBUG_VCNL4020_PROXIMITY
 constexpr uint16_t proximity_threshold = 5;
