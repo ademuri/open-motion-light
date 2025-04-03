@@ -14,15 +14,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
-      - name: Cache PlatformIO
+      - name: Cache PlatformIO and pip
         uses: actions/cache@v4
         with:
-          path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/platformio.ini') }}
+          path: |-
+            ~/.platformio
+            ~/.cache/pip
+          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') }}
           restore-keys: |
-            ${{ runner.os }}-platformio-
+            ${{ runner.os }}-platformio-pip-
 
       - name: Install PlatformIO
         id: install_platformio
@@ -41,15 +42,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
       - name: Restore PlatformIO cache
         uses: actions/cache@v4
         with:
-          path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/platformio.ini') }}
+          path: |-
+            ~/.platformio
+            ~/.cache/pip
+          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') }}
           restore-keys: |
-            ${{ runner.os }}-platformio-
+            ${{ runner.os }}-platformio-pip-
 
       - name: Install PlatformIO
         id: install_platformio
@@ -71,15 +73,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
       - name: Restore PlatformIO cache
         uses: actions/cache@v4
         with:
-          path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/platformio.ini') }}
+          path: |-
+            ~/.platformio
+            ~/.cache/pip
+          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') }}
           restore-keys: |
-            ${{ runner.os }}-platformio-
+            ${{ runner.os }}-platformio-pip-
 
       - name: Install PlatformIO
         id: install_platformio
