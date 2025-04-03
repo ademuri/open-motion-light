@@ -31,6 +31,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade platformio
 
+      - name: Install PlatformIO packages
+        run: platformio pkg install
+
   build:
     needs: common
     if: needs.common.outputs.platformio_installed == 'success'
