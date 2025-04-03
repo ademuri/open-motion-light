@@ -83,4 +83,4 @@ static constexpr int AVREF = PC15 + 1;
 
 static constexpr uint32_t kPinMax = PC15 + 2;
 
-#endif // ifndef ARDUINO
+#endif  // ifndef ARDUINO

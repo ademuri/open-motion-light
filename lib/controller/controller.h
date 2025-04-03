@@ -66,7 +66,7 @@ enum class USBStatus {
 
 class Controller {
  public:
-  Controller(VCNL4020* vcnl4020, PowerController* power_controller)
+  Controller(VCNL4020 *vcnl4020, PowerController *power_controller)
       : vcnl4020_(vcnl4020), power_controller_(power_controller) {}
 
   // Initializes this object. Returns whether this was successful.
@@ -191,8 +191,8 @@ class Controller {
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};
 
-  VCNL4020* const vcnl4020_;
-  PowerController* const power_controller_;
+  VCNL4020 *const vcnl4020_;
+  PowerController *const power_controller_;
 
   int32_t prev_proximity_ = 0;
 

@@ -1,5 +1,7 @@
 #include "serial-manager.h"
 
+#include <iterator>
+
 #include "serial.pb.h"
 
 void SerialManager::Step() {
@@ -10,7 +12,7 @@ void SerialManager::Step() {
   static SerialResponse response;
 
   static constexpr size_t kFirmwareVersionMaxLength =
-      sizeof(StatusPb::firmware_version) / sizeof(char);
+      std::size(response.status.firmware_version);
 
   if (serial_port_->available()) {
     pb_decode_ex(&istream, &SerialRequest_msg, &request, PB_ENCODE_DELIMITED);

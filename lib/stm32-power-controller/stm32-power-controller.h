@@ -16,18 +16,18 @@
 
 #pragma once
 
-#include <types.h>
 #include <STM32LowPower.h>
+#include <types.h>
 
 #include "power-controller.h"
 
 class Stm32PowerController : public PowerController {
-  public:
+ public:
   bool Begin() override;
   void AttachInterruptWakeup(uint32_t pin, uint32_t mode) override;
   void Sleep(uint32_t millis) override;
   void Stop() override;
 
-  private:
+ private:
   STM32LowPower impl_;
 };

@@ -45,11 +45,11 @@ void Stm32PowerController::Sleep(uint32_t ms) {
   // When in stop mode, the SysTick interrupt doesn't fire to update Arduino's
   // `millis()` value. So, keep track of the elapsed time using the RTC, and
   // update the value manually on wakeup.
-  STM32RTC& rtc = STM32RTC::getInstance();
+  STM32RTC &rtc = STM32RTC::getInstance();
   rtc_seconds_at_sleep = rtc.getEpoch(&rtc_subseconds_at_sleep);
 
-  // Puts the processor into STM32 Stop mode. Power consumption is ~15.5uA (as of
-  // 2025-02-14, with hardware v1.2)
+  // Puts the processor into STM32 Stop mode. Power consumption is ~15.5uA (as
+  // of 2025-02-14, with hardware v1.2)
   impl_.deepSleep(ms);
 
   uint32_t seconds;

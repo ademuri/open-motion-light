@@ -1,9 +1,8 @@
 #pragma once
 
-#include <types.h>
-
-#include <pb_encode.h>
 #include <pb_decode.h>
+#include <pb_encode.h>
+#include <types.h>
 
 #include "serial-port.h"
 

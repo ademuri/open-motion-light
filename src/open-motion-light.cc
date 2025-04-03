@@ -17,13 +17,13 @@
 #include <arduino-timer.h>
 #include <edge-filter.h>
 
-#include "arduino-vcnl4020.h"
 #include "arduino-serial-port.h"
+#include "arduino-vcnl4020.h"
 #include "clock.h"
 #include "controller.h"
 #include "pins.h"
-#include "stm32-power-controller.h"
 #include "serial-manager.h"
+#include "stm32-power-controller.h"
 
 // These enable printing values for the VCNL4020 to the serial console.
 // #define DEBUG_VCNL4020_BRIGHTNESS
@@ -41,7 +41,8 @@ SerialManager serial_manager{&serial_port};
 
 #ifdef DEBUG_VCNL4020_PROXIMITY
 constexpr uint16_t proximity_threshold = 5;
-EdgeFilter proximity_edge_filter([]() { return vcnl4020.ReadProximity(); }, /*alpha=*/ 255);
+EdgeFilter proximity_edge_filter([]() { return vcnl4020.ReadProximity(); },
+                                 /*alpha=*/255);
 #endif  // DEBUG_VCNL4020_PROXIMITY
 
 void setup() {

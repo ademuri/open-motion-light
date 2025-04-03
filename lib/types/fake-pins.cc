@@ -18,4 +18,4 @@
 
 const uint16_t *const VREFINT_CAL_ADDR = &kFakeVrefintCal;
 
-#endif // ifndef ARDUINO
+#endif  // ifndef ARDUINO
