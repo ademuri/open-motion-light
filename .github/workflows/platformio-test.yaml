@@ -25,8 +25,8 @@ jobs:
       - name: Cache Python
         uses: actions/cache@v4
         with:
-          path: ${{ steps.setup-python.outputs.python-path }}
-          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements.txt') }}
+          path: /opt/hostedtoolcache/Python/3.11.1/x64
+          key: ${{ runner.os }}-python-3.11-${{ hashFiles('**/requirements.txt') }}
       - name: Cache PlatformIO
         uses: actions/cache@v4
         with:
