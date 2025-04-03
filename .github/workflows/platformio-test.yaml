@@ -5,8 +5,6 @@ on: [push]
 jobs:
   common:
     runs-on: ubuntu-latest
-    outputs:
-      platformio_installed: ${{ steps.install_platformio.outcome }}
     steps:
       - uses: actions/checkout@v4
 
@@ -21,8 +19,9 @@ jobs:
           path: |-
             ~/.platformio
             ~/.cache/pip
-          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') }}
+          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-${{ github.run_id }}
           restore-keys: |
+            ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-
             ${{ runner.os }}-platformio-pip-
 
       - name: Install PlatformIO
@@ -32,7 +31,17 @@ jobs:
           pip install --upgrade platformio
 
       - name: Install PlatformIO packages
-        run: platformio pkg install
+        run: |-
+          platformio pkg install
+          platformio pkg list > pio-packages
+
+      - name: Update cache key with resolved package versions
+        id: dep-key
+        run: echo "dep_hash=$(sha256sum pio-packages | cut -d ' ' -f 1)" >> $GITHUB_OUTPUT
+
+    outputs:
+      platformio_installed: ${{ steps.install_platformio.outcome }}
+      dep_hash: ${{ steps.dep-key.outputs.dep_hash }}
 
   build:
     needs: common
@@ -52,8 +61,9 @@ jobs:
           path: |-
             ~/.platformio
             ~/.cache/pip
-          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') }}
+          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-${{ github.run_id }}
           restore-keys: |
+            ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-
             ${{ runner.os }}-platformio-pip-
 
       - name: Install PlatformIO
@@ -83,8 +93,9 @@ jobs:
           path: |-
             ~/.platformio
             ~/.cache/pip
-          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') }}
+          key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-${{ github.run_id }}
           restore-keys: |
+            ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-
             ${{ runner.os }}-platformio-pip-
 
       - name: Install PlatformIO
