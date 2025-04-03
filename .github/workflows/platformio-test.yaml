@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       platformio_installed: ${{ steps.install_platformio.outcome }}
-      platformio_path: ${{ steps.get_platformio_path.outputs.platformio_path }}
+      platformio_bin_dir: ${{ steps.get_platformio_path.outputs.platformio_bin_dir }}
     steps:
       - uses: actions/checkout@v4
       - name: Cache pip
@@ -32,17 +32,19 @@ jobs:
       - name: Get PlatformIO Path
         id: get_platformio_path
         run: |
-          echo "platformio_path=$(which platformio)" >> $GITHUB_OUTPUT
+          PLATFORMIO_BIN_DIR=$(dirname $(which platformio))
+          echo "platformio_bin_dir=${PLATFORMIO_BIN_DIR?}" >> ${GITHUB_OUTPUT?}
+
   build:
     needs: common
     if: needs.common.outputs.platformio_installed == 'success'
     runs-on: ubuntu-latest
     env:
-      PLATFORMIO_PATH: ${{ needs.common.outputs.platformio_path }}
+      PLATFORMIO_BIN_DIR: ${{ needs.common.outputs.platformio_bin_dir }}
     steps:
       - uses: actions/checkout@v4
       - name: Add PlatformIO to PATH
-        run: echo "$PLATFORMIO_PATH" >> $GITHUB_PATH
+        run: echo "${PLATFORMIO_BIN_DIR?}" >> ${GITHUB_PATH?}
       - name: Build
         run: platformio run -e default
 
@@ -51,10 +53,10 @@ jobs:
     if: needs.common.outputs.platformio_installed == 'success'
     runs-on: ubuntu-latest
     env:
-      PLATFORMIO_PATH: ${{ needs.common.outputs.platformio_path }}
+      PLATFORMIO_BIN_DIR: ${{ needs.common.outputs.platformio_bin_dir }}
     steps:
       - uses: actions/checkout@v4
       - name: Add PlatformIO to PATH
-        run: echo "$PLATFORMIO_PATH" >> $GITHUB_PATH
+        run: echo "${PLATFORMIO_BIN_DIR?}" >> ${GITHUB_PATH?}
       - name: Test
         run: platformio test -e native
