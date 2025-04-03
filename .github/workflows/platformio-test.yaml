@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       platformio_installed: ${{ steps.install_platformio.outcome }}
+      platformio_path: ${{ steps.get_platformio_path.outputs.platformio_path }}
     steps:
       - uses: actions/checkout@v4
       - name: Cache pip
@@ -28,13 +29,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install --upgrade platformio
-
+      - name: Get PlatformIO Path
+        id: get_platformio_path
+        run: |
+          echo "platformio_path=$(which platformio)" >> $GITHUB_OUTPUT
   build:
     needs: common
     if: needs.common.outputs.platformio_installed == 'success'
     runs-on: ubuntu-latest
+    env:
+      PLATFORMIO_PATH: ${{ needs.common.outputs.platformio_path }}
     steps:
       - uses: actions/checkout@v4
+      - name: Add PlatformIO to PATH
+        run: echo "$PLATFORMIO_PATH" >> $GITHUB_PATH
       - name: Build
         run: platformio run -e default
 
@@ -42,7 +50,11 @@ jobs:
     needs: common
     if: needs.common.outputs.platformio_installed == 'success'
     runs-on: ubuntu-latest
+    env:
+      PLATFORMIO_PATH: ${{ needs.common.outputs.platformio_path }}
     steps:
       - uses: actions/checkout@v4
+      - name: Add PlatformIO to PATH
+        run: echo "$PLATFORMIO_PATH" >> $GITHUB_PATH
       - name: Test
         run: platformio test -e native
