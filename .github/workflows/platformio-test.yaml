@@ -75,7 +75,7 @@ jobs:
           pip install --upgrade platformio
 
       - name: Build
-        run: platformio run -e default
+        run: platformio run -e default || platformio run -e default
 
   test:
     needs: common
