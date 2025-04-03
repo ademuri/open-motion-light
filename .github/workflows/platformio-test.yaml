@@ -19,6 +19,7 @@ jobs:
           path: |-
             ~/.platformio
             ~/.cache/pip
+            .pio
           key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-
@@ -61,6 +62,7 @@ jobs:
           path: |-
             ~/.platformio
             ~/.cache/pip
+            .pio
           key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-
@@ -93,6 +95,7 @@ jobs:
           path: |-
             ~/.platformio
             ~/.cache/pip
+            .pio
           key: ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-platformio-pip-${{ hashFiles('**/platformio.ini') || github.sha }}-
