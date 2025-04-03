@@ -16,10 +16,12 @@ src \
 -o -iname *.cc \
 )
 
+STYLE=--style=google
+
 if [ $1 = "check" ]; then
-    clang-format --dry-run --Werror ${FILES?}
+    clang-format ${STYLE?} --dry-run --Werror ${FILES?}
 elif [ $1 = "format" ]; then
-    clang-format --style=google -i ${FILES?}
+    clang-format ${STYLE?} -i ${FILES?}
 elif [ $1 = "tidy" ]; then
     clang-tidy ${FILES?}
 else
