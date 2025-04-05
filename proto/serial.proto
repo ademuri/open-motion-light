@@ -2,11 +2,11 @@ syntax = "proto3";
 
 import "nanopb.proto";
 
-message SerialRequest { bool request_config = 1; }
+message SerialRequest { optional bool request_config = 1; }
 
-message SerialResponse { StatusPb status = 1; }
+message SerialResponse { optional StatusPb status = 1; }
 
 message StatusPb {
-  string firmware_version = 1 [ (nanopb).max_size = 20 ];
-  uint32 battery_voltage_millivolts = 2;
+  optional string firmware_version = 1 [ (nanopb).max_size = 20 ];
+  optional uint32 battery_voltage_millivolts = 2;
 };
