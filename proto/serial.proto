@@ -37,7 +37,10 @@ message ConfigPb {
   uint32 proximity_threshold = 6;
 }
 
-message SerialResponse { optional StatusPb status = 1; }
+message SerialResponse {
+  optional StatusPb status = 1;
+  optional ConfigPb config = 2;
+}
 
 message StatusPb {
   optional string firmware_version = 1;
