@@ -4,6 +4,7 @@
 
 #include "controller.h"
 #include "serial-port.h"
+#include "serial.pb.h"
 
 class SerialManager {
  public:

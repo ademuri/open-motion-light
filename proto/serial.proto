@@ -1,12 +1,45 @@
 syntax = "proto3";
 
-import "nanopb.proto";
+message SerialRequest {
+  optional bool request_config = 1;
+  optional ConfigPb config = 2;
+}
 
-message SerialRequest { optional bool request_config = 1; }
+enum BrightnessMode {
+  BRIGHTNESS_MODE_UNSPECIFIED = 0;
+  BRIGHTNESS_MODE_DISABLED = 1;
+  BRIGHTNESS_MODE_ON_WHEN_BELOW = 2;
+}
+
+enum ProximityMode {
+  PROXIMITY_MODE_UNSPECIFIED = 0;
+  PROXIMITY_MODE_DISABLED = 1;
+  PROXIMITY_MODE_TOGGLE = 2;
+}
+
+message ConfigPb {
+  // Version of this config data. Since this struct is read directly from flash,
+  // updates need to only add fields to this struct, or risk breaking "parsing".
+  // This version will allow for breaking changes, if needed.
+  uint32 version = 1;
+
+  BrightnessMode brightnessMode =2;
+
+  // This is units of 1/4 lux - a value of 4000 corresponds to 1000 lux.
+  uint32 autoBrightnessThreshold = 3;
+
+  ProximityMode proximity_mode = 4;
+
+  // Turn off the light if it's been on for this long in proximity toggle mode.
+  uint32 proximity_toggle_timeout_seconds = 5;
+
+  // The proximity sensor must change by this much to toggle the mode.
+  uint32 proximity_threshold = 6;
+}
 
 message SerialResponse { optional StatusPb status = 1; }
 
 message StatusPb {
-  optional string firmware_version = 1 [ (nanopb).max_size = 20 ];
+  optional string firmware_version = 1;
   optional uint32 battery_voltage_millivolts = 2;
 };

@@ -23,6 +23,7 @@
 #include "pins.h"
 #include "test-lib.h"
 #include "types.h"
+#include "pb.h"
 
 // Returns an analog value which approximates the millivolt reading. Note: due
 // to precision limits, this is NOT exact.
@@ -68,7 +69,7 @@ class ControllerTest : public LightTest {
 
     controller.TestSetConfig({
       version : 1,
-      brightnessMode : BrightnessMode::kOnWhenBelow,
+      brightnessMode : BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW,
     });
 
     // This yields a voltage of 3000 / 0.85 = 3529mV.
@@ -753,7 +754,7 @@ TEST_F(ControllerTest, Sleeps) {
 }
 
 TEST_F(ControllerTest, EnablesLightSensorPeriodicMeasurements) {
-  controller.TestSetConfig({brightnessMode : BrightnessMode::kOnWhenBelow});
+  controller.TestSetConfig({brightnessMode : BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW});
   ASSERT_TRUE(controller.Init());
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOff);
@@ -781,7 +782,7 @@ TEST_F(ControllerTest, EnablesLightSensorPeriodicMeasurements) {
 
 TEST_F(ControllerTest,
        DisablesLightSensorPeriodicMeasurementsWhenBrightnessModeDisabled) {
-  controller.TestSetConfig({brightnessMode : BrightnessMode::kOnWhenBelow});
+  controller.TestSetConfig({brightnessMode : BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW});
   ASSERT_TRUE(controller.Init());
   controller.Step();
   ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOff);
@@ -793,7 +794,7 @@ TEST_F(ControllerTest,
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
   EXPECT_EQ(vcnl4020.GetPeriodicAmbient(), true);
 
-  controller.TestSetConfig({brightnessMode : BrightnessMode::kDisabled});
+  controller.TestSetConfig({brightnessMode : BrightnessMode::BRIGHTNESS_MODE_DISABLED});
   advanceMillis(20);
   controller.Step();
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
@@ -802,7 +803,7 @@ TEST_F(ControllerTest,
 
 TEST_F(ControllerTest, UsesAmbientLightForAutoModeBrightnessModeOnWhenBelow) {
   controller.TestSetConfig({
-    brightnessMode : BrightnessMode::kOnWhenBelow,
+    brightnessMode : BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW,
     autoBrightnessThreshold : 100
   });
   setDigitalRead(kPinPowerAuto, false);
@@ -851,7 +852,7 @@ TEST_F(ControllerTest, UsesAmbientLightForAutoModeBrightnessModeOnWhenBelow) {
 
 TEST_F(ControllerTest, RetriggersCorrectlyWithBrightnessInAutoMode) {
   controller.TestSetConfig({
-    brightnessMode : BrightnessMode::kOnWhenBelow,
+    brightnessMode : BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW,
     autoBrightnessThreshold : 100
   });
   setDigitalRead(kPinPowerAuto, false);
@@ -899,7 +900,7 @@ TEST_F(ControllerTest, RetriggersCorrectlyWithBrightnessInAutoMode) {
 }
 
 TEST_F(ControllerTest, IgnoresAmbientLightForAutoModeBrightnessDisabled) {
-  controller.TestSetConfig({brightnessMode : BrightnessMode::kDisabled});
+  controller.TestSetConfig({brightnessMode : BrightnessMode::BRIGHTNESS_MODE_DISABLED});
   setDigitalRead(kPinPowerAuto, false);
   vcnl4020.SetAmbient(0xFFFF);
   ASSERT_TRUE(controller.Init());
@@ -938,7 +939,7 @@ TEST_F(ControllerTest, IgnoresAmbientLightForAutoModeBrightnessDisabled) {
 
 TEST_F(ControllerTest, EnablesProxSensorForProximityToggleMode) {
   controller.TestSetConfig({
-    proximity_mode : ProximityMode::kToggle,
+    proximity_mode : ProximityMode::PROXIMITY_MODE_TOGGLE,
   });
   ASSERT_TRUE(controller.Init());
   controller.Step();
@@ -969,7 +970,7 @@ TEST_F(ControllerTest, EnablesProxSensorForProximityToggleMode) {
 
 TEST_F(ControllerTest, TogglesLedInProximityModeToggle) {
   controller.TestSetConfig({
-    proximity_mode : ProximityMode::kToggle,
+    proximity_mode : ProximityMode::PROXIMITY_MODE_TOGGLE,
     proximity_threshold : 5,
   });
   ASSERT_TRUE(controller.Init());

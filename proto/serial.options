@@ -1,0 +1,4 @@
+BrightnessMode    long_names:false
+ProximityMode    long_names:false
+
+StatusPb.firmware_version   max_size:20

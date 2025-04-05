@@ -15,6 +15,7 @@
 #include "controller.h"
 
 #include "pins.h"
+#include "serial.pb.h"
 
 // Useful for debugging, to display other values on the battery LEDs.
 constexpr bool kShowBatteryStatus = true;
@@ -121,13 +122,14 @@ void Controller::Step() {
       } else if (power_mode_ == PowerMode::kAuto) {
         if (previous_power_mode == PowerMode::kToggled) {
         } else {
-          vcnl4020_->SetPeriodicAmbient(config_.brightnessMode !=
-                                        BrightnessMode::kDisabled);
+          vcnl4020_->SetPeriodicAmbient(
+              config_.brightnessMode !=
+              BrightnessMode::BRIGHTNESS_MODE_DISABLED);
           auto_triggered = true;
           motion_timer_.Reset();
           battery_level_timer_.Reset();
           motion_proximity_timeout_.Reset();
-          if (config_.proximity_mode == ProximityMode::kToggle) {
+          if (config_.proximity_mode == ProximityMode::PROXIMITY_MODE_TOGGLE) {
             vcnl4020_->SetPeriodicProximity(true);
           }
         }
@@ -139,7 +141,7 @@ void Controller::Step() {
   }
 
   if ((power_mode_ == PowerMode::kAuto || power_mode_ == PowerMode::kToggled) &&
-      config_.proximity_mode == ProximityMode::kToggle &&
+      config_.proximity_mode == ProximityMode::PROXIMITY_MODE_TOGGLE &&
       vcnl4020_->ProximityReady()) {
     int32_t proximity = vcnl4020_->ReadProximity();
 
@@ -244,7 +246,7 @@ void Controller::Step() {
   if (motion_detected && !prev_motion_detected) {
     motion_timer_.Reset();
     motion_proximity_timeout_.Reset();
-    if (config_.proximity_mode == ProximityMode::kToggle) {
+    if (config_.proximity_mode == ProximityMode::PROXIMITY_MODE_TOGGLE) {
       vcnl4020_->SetPeriodicProximity(true);
     }
   }
@@ -277,7 +279,7 @@ void Controller::Step() {
   } else if (power_mode_ == PowerMode::kAuto) {
     if (motion_detected || auto_triggered) {
       if (!led_on_ &&
-          (config_.brightnessMode == BrightnessMode::kDisabled ||
+          (config_.brightnessMode == BrightnessMode::BRIGHTNESS_MODE_DISABLED ||
            auto_triggered || led_on_brightness_timeout_.Active() ||
            vcnl4020_->ReadAmbient() < config_.autoBrightnessThreshold)) {
         analogWrite(kPinWhiteLed, GetLedDutyCycle());
@@ -348,7 +350,7 @@ void Controller::Step() {
   }
 
   const bool proximity_lockout =
-      config_.proximity_mode != ProximityMode::kDisabled &&
+      config_.proximity_mode != ProximityMode::PROXIMITY_MODE_DISABLED &&
       motion_proximity_timeout_.Active();
   if (!led_on_ && power_status_ != PowerStatus::kCharging &&
       !sleep_lockout_timer.Active() && !proximity_lockout &&

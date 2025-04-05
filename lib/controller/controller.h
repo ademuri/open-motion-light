@@ -24,8 +24,9 @@
 #include <exponential-moving-average-filter.h>
 #include <median-filter.h>
 
-#include "config.h"
+#include "pb.h"  // Needed to trigger inclusion of the Nanopb-generated files
 #include "power-controller.h"
+#include "serial.pb.h"
 #include "vcnl4020.h"
 
 enum class PowerMode {
@@ -62,6 +63,15 @@ enum class USBStatus {
   // 3A is available. This device shouldn't draw more than about 1.5A, so we
   // don't need to distinguish this from the 1.5A case.
   kUSB3_0,
+};
+
+static constexpr ConfigPb kDefaultConfig = ConfigPb{
+  version : 1,
+  brightnessMode : BrightnessMode::BRIGHTNESS_MODE_DISABLED,
+  autoBrightnessThreshold : 4 * 30,
+  proximity_mode : ProximityMode::PROXIMITY_MODE_DISABLED,
+  proximity_toggle_timeout_seconds : 10 * 60,
+  proximity_threshold : 300,
 };
 
 class Controller {
@@ -115,7 +125,7 @@ class Controller {
   uint32_t GetSleepInterval() const { return 15 * 60 * 1000; }
 
   // Used for testing.
-  void TestSetConfig(Config config) { config_ = config; }
+  void TestSetConfig(ConfigPb config) { config_ = config; }
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
@@ -196,5 +206,6 @@ class Controller {
 
   int32_t prev_proximity_ = 0;
 
-  Config config_;
+  // Config config_;
+  ConfigPb config_ = kDefaultConfig;
 };
