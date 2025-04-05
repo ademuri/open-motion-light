@@ -5,6 +5,11 @@ message SerialRequest {
   optional ConfigPb config = 2;
 }
 
+message SerialResponse {
+  optional StatusPb status = 1;
+  optional ConfigPb config = 2;
+}
+
 enum BrightnessMode {
   BRIGHTNESS_MODE_UNSPECIFIED = 0;
   BRIGHTNESS_MODE_DISABLED = 1;
@@ -35,11 +40,6 @@ message ConfigPb {
 
   // The proximity sensor must change by this much to toggle the mode.
   uint32 proximity_threshold = 6;
-}
-
-message SerialResponse {
-  optional StatusPb status = 1;
-  optional ConfigPb config = 2;
 }
 
 message StatusPb {
