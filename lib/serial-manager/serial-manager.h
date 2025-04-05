@@ -2,15 +2,18 @@
 
 #include <types.h>
 
+#include "controller.h"
 #include "serial-port.h"
 
 class SerialManager {
  public:
-  SerialManager(SerialPort *serial_port) : serial_port_(serial_port) {}
+  SerialManager(SerialPort *serial_port, Controller *controller)
+      : serial_port_(serial_port), controller_(controller) {}
 
   // Runs one iteration.
   void Step();
 
  private:
   SerialPort *const serial_port_;
+  Controller const *const controller_;
 };

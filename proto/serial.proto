@@ -8,5 +8,5 @@ message SerialResponse { StatusPb status = 1; }
 
 message StatusPb {
   string firmware_version = 1 [ (nanopb).max_size = 20 ];
-  float battery_voltage = 2;
+  uint32 battery_voltage_millivolts = 2;
 };

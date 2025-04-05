@@ -74,12 +74,12 @@ class Controller {
 
   void Step();
 
-  PowerMode GetPowerMode() { return power_mode_; }
-  PowerStatus GetPowerStatus() { return power_status_; }
-  USBStatus GetUSBStatus() { return usb_status_; }
+  PowerMode GetPowerMode() const { return power_mode_; }
+  PowerStatus GetPowerStatus() const { return power_status_; }
+  USBStatus GetUSBStatus() const { return usb_status_; }
 
   // Returns the battery voltage, filtered for stability.
-  uint16_t GetFilteredBatteryMillivolts() {
+  uint16_t GetFilteredBatteryMillivolts() const {
     return battery_average_filter_.GetFilteredValue();
   }
 
@@ -98,21 +98,21 @@ class Controller {
 
   // How long the light should be on for after motion is detected. Visible for
   // testing.
-  uint32_t GetMotionTimeoutSeconds() { return 10; }
+  uint32_t GetMotionTimeoutSeconds() const { return 10; }
 
   // The brightness of the white LEDs when they're on.
   // Note: with a 20kHz output duty cycle, minimum value is 3.
-  uint32_t GetLedDutyCycle() { return 255; }
+  uint32_t GetLedDutyCycle() const { return 255; }
 
   // This is considered to be the "empty" point for the battery. Below this
   // voltage, the device goes into a lower-power mode to minimize battery drain.
-  uint32_t GetLowBatteryCutoffMillivolts() { return 3000; }
+  uint32_t GetLowBatteryCutoffMillivolts() const { return 3000; }
 
   // Once the battery is low, it must exceed this voltage before the device will
   // turn on again.
-  uint32_t GetLowBatteryHysteresisThresholdMillivolts() { return 3200; }
+  uint32_t GetLowBatteryHysteresisThresholdMillivolts() const { return 3200; }
 
-  uint32_t GetSleepInterval() { return 15 * 60 * 1000; }
+  uint32_t GetSleepInterval() const { return 15 * 60 * 1000; }
 
   // Used for testing.
   void TestSetConfig(Config config) { config_ = config; }

@@ -37,7 +37,7 @@ Stm32PowerController power_controller;
 Controller controller{&vcnl4020, &power_controller};
 
 ArduinoSerialPort serial_port;
-SerialManager serial_manager{&serial_port};
+SerialManager serial_manager{&serial_port, &controller};
 
 #ifdef DEBUG_VCNL4020_PROXIMITY
 constexpr uint16_t proximity_threshold = 5;
@@ -47,7 +47,7 @@ EdgeFilter proximity_edge_filter([]() { return vcnl4020.ReadProximity(); },
 
 void setup() {
   Serial1.begin(115200);
-  Serial1.println("Booting...");
+  // Serial1.println("Booting...");
 
   // USB pins
   pinMode(kPinCc1, INPUT_ANALOG);
@@ -115,6 +115,7 @@ void setup() {
 
 void loop() {
   controller.Step();
+  serial_manager.Step();
 
 #ifdef DEBUG_VCNL4020_BRIGHTNESS
   if (vncl4020_timer.Expired()) {
