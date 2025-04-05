@@ -16,6 +16,11 @@ void SerialManager::Step() {
     // TODO: check return value
     pb_decode_ex(&istream, &SerialRequest_msg, &request, PB_ENCODE_DELIMITED);
 
+    if (request.has_config) {
+      controller_->SetConfig(&request.config);
+      controller_->Blink();
+    }
+
     SerialResponse response;
     response.status.battery_voltage_millivolts =
         controller_->GetFilteredBatteryMillivolts();

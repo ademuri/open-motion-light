@@ -124,8 +124,8 @@ class Controller {
 
   uint32_t GetSleepInterval() const { return 15 * 60 * 1000; }
 
-  ConfigPb const* GetConfig() const { return &config_; };
-  void SetConfig(ConfigPb config) { config_ = config; }
+  ConfigPb const *GetConfig() const { return &config_; };
+  void SetConfig(ConfigPb const *const config) { config_ = *config; }
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;

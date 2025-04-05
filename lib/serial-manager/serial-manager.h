@@ -16,5 +16,5 @@ class SerialManager {
 
  private:
   SerialPort *const serial_port_;
-  Controller const *const controller_;
+  Controller *const controller_;
 };
