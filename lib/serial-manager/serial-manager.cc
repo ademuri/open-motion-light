@@ -20,10 +20,10 @@ void SerialManager::Step() {
 
     SerialResponse response;
     // TODO: include config when the option in the request is set
-    response.status.battery_voltage_millivolts = controller_->GetFilteredBatteryMillivolts();
+    response.status.battery_voltage_millivolts =
+        controller_->GetFilteredBatteryMillivolts();
     response.status.has_battery_voltage_millivolts = true;
-    snprintf(response.status.firmware_version, 20,
-             "123456");
+    snprintf(response.status.firmware_version, 20, FIRMWARE_VERSION);
     response.status.has_firmware_version = true;
     pb_encode_ex(&ostream, &SerialResponse_msg, &response, PB_DECODE_DELIMITED);
   }
