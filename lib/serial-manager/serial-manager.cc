@@ -17,15 +17,15 @@ void SerialManager::Step() {
     pb_decode_ex(&istream, &SerialRequest_msg, &request, PB_ENCODE_DELIMITED);
 
     if (request.has_config) {
-      controller_->SetConfig(&request.config);
-      controller_->Blink();
+      controller_->SetConfig(request.config);
     }
 
     SerialResponse response;
     response.status.battery_voltage_millivolts =
         controller_->GetFilteredBatteryMillivolts();
     response.status.has_battery_voltage_millivolts = true;
-    snprintf(response.status.firmware_version, 20, FIRMWARE_VERSION);
+    snprintf(response.status.firmware_version, kFirmwareVersionMaxLength,
+             FIRMWARE_VERSION);
     response.status.has_firmware_version = true;
 
     if (request.request_config) {
