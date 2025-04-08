@@ -14,6 +14,7 @@
 
 #include "controller.h"
 
+#include "config-storage.h"
 #include "pins.h"
 #include "serial.pb.h"
 
@@ -51,6 +52,8 @@ bool Controller::Init() {
   power_controller_->AttachInterruptWakeup(kPinMotionSensor, RISING);
   power_controller_->AttachInterruptWakeup(kPinPowerOn, CHANGE);
   power_controller_->AttachInterruptWakeup(kPin5vDetect, RISING);
+
+  ConfigStorage::TryLoadConfig(&config_);
 
   return true;
 }

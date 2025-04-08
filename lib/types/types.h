@@ -19,6 +19,7 @@
 #ifdef ARDUINO
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <stm32l0xx_ll_adc.h>
 
 #else  // ifdef ARDUINO
@@ -27,6 +28,7 @@
 
 #include <cstdint>
 
+#include "fake-eeprom.h"
 #include "fake-pins.h"
 
 // From cores/arduino/wiring_constants.h
