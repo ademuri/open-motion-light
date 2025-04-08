@@ -3,6 +3,7 @@
 #include <iterator>
 
 #include "serial.pb.h"
+#include "config-storage.h"
 
 void SerialManager::Step() {
   static pb_istream_s istream = serial_port_->BuildPbIstream();
@@ -18,6 +19,7 @@ void SerialManager::Step() {
 
     if (request.has_config) {
       controller_->SetConfig(request.config);
+      ConfigStorage::SaveConfig(&request.config);
     }
 
     SerialResponse response;

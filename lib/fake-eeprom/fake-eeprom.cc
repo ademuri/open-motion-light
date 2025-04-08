@@ -29,7 +29,6 @@ std::ostream& operator<<(std::ostream& os, const EEPROMClass eeprom) {
 
   os << "EEPROM{ 0x" << std::hex << magicByte0 << ", 0x" << magicByte1 << ", 0x"
      << configVersion;
-    //  << configVersion << ", 0x" << firstByte << "}";
 
   for (size_t i = 0; i < 25; ++i) {
     uint16_t val = eeprom.read(3 * sizeof(magicByte0) + i);
