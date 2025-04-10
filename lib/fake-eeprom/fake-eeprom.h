@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gtest/gtest.h>
+
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -8,10 +10,12 @@ class EEPROMClass {
  public:
   uint8_t read(int idx) const;
   void write(int idx, uint8_t val);
-  
-  template<typename T> T &get(int idx, T &t) const;
-  template<typename T> const T &put(int idx, const T &t);
-  
+
+  template <typename T>
+  T& get(int idx, T& t) const;
+  template <typename T>
+  const T& put(int idx, const T& t);
+
   // Specific to tests, not part of the Arduino API
   void reset();
 
@@ -21,7 +25,7 @@ class EEPROMClass {
 };
 
 template <typename T>
-T& EEPROMClass::get(int idx, T& t) const{
+T& EEPROMClass::get(int idx, T& t) const {
   EXPECT_GE(idx, 0);
   EXPECT_LT(idx, kSize - sizeof(T));
 
