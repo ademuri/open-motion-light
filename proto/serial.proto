@@ -28,7 +28,7 @@ message ConfigPb {
   // This version will allow for breaking changes, if needed.
   uint32 version = 1;
 
-  BrightnessMode brightnessMode =2;
+  BrightnessMode brightnessMode = 2;
 
   // This is units of 1/4 lux - a value of 4000 corresponds to 1000 lux.
   uint32 autoBrightnessThreshold = 3;
@@ -46,6 +46,15 @@ message ConfigPb {
 
   // Duty cycle for the main LEDs. 255 is max, 0 is off.
   uint32 led_duty_cycle = 8;
+
+  // Low battery cutoff voltage, in millivolts. This is considered to be the
+  // "empty" point for the battery. Below this voltage, the device goes into a
+  // lower-power mode to minimize battery drain
+  uint32 low_battery_cutoff_millivolts = 9;
+
+  // Hysteresis voltage, in millivolts. Once the battery is low, it must exceed
+  // this voltage before the device will turn on again.
+  uint32 low_battery_hysteresis_threshold_millivolts = 10;
 }
 
 message StatusPb {

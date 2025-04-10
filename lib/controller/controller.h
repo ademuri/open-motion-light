@@ -74,6 +74,8 @@ static constexpr ConfigPb kDefaultConfig = ConfigPb{
   proximity_threshold : 300,
   motion_timeout_seconds : 10,
   led_duty_cycle : 255,
+  low_battery_cutoff_millivolts : 3000,
+  low_battery_hysteresis_threshold_millivolts : 3200,
 };
 
 class Controller {
@@ -120,11 +122,15 @@ class Controller {
 
   // This is considered to be the "empty" point for the battery. Below this
   // voltage, the device goes into a lower-power mode to minimize battery drain.
-  uint32_t GetLowBatteryCutoffMillivolts() const { return 3000; }
+  uint32_t GetLowBatteryCutoffMillivolts() const {
+    return config_.low_battery_cutoff_millivolts;
+  }
 
   // Once the battery is low, it must exceed this voltage before the device will
   // turn on again.
-  uint32_t GetLowBatteryHysteresisThresholdMillivolts() const { return 3200; }
+  uint32_t GetLowBatteryHysteresisThresholdMillivolts() const {
+    return config_.low_battery_hysteresis_threshold_millivolts;
+  }
 
   uint32_t GetSleepInterval() const { return 15 * 60 * 1000; }
 
