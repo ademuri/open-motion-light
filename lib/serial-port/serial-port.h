@@ -6,12 +6,12 @@
 
 #include <cstddef>
 
-// Class which wraps a serial port, i.e. `Serial` on Arduino.
-class SerialPort
-#ifdef ARDUINO
-    : public Stream
+#ifndef ARDUINO
+#include "fake-stream.h"
 #endif  // ARDUINO
-{
+
+// Class which wraps a serial port, i.e. `Serial` on Arduino.
+class SerialPort : public Stream {
  public:
   // From Stream
   virtual int available() override = 0;
