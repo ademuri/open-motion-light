@@ -72,6 +72,8 @@ static constexpr ConfigPb kDefaultConfig = ConfigPb{
   proximity_mode : ProximityMode::PROXIMITY_MODE_DISABLED,
   proximity_toggle_timeout_seconds : 10 * 60,
   proximity_threshold : 300,
+  motion_timeout_seconds : 10,
+  led_duty_cycle : 255,
 };
 
 class Controller {
@@ -108,11 +110,13 @@ class Controller {
 
   // How long the light should be on for after motion is detected. Visible for
   // testing.
-  uint32_t GetMotionTimeoutSeconds() const { return 10; }
+  uint32_t GetMotionTimeoutSeconds() const {
+    return config_.motion_timeout_seconds;
+  }
 
   // The brightness of the white LEDs when they're on.
   // Note: with a 20kHz output duty cycle, minimum value is 3.
-  uint32_t GetLedDutyCycle() const { return 255; }
+  uint32_t GetLedDutyCycle() const { return config_.led_duty_cycle; }
 
   // This is considered to be the "empty" point for the battery. Below this
   // voltage, the device goes into a lower-power mode to minimize battery drain.

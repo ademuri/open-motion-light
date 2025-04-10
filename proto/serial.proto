@@ -40,6 +40,12 @@ message ConfigPb {
 
   // The proximity sensor must change by this much to toggle the mode.
   uint32 proximity_threshold = 6;
+
+  // How long the light is on for when triggered, in seconds.
+  uint32 motion_timeout_seconds = 7;
+
+  // Duty cycle for the main LEDs. 255 is max, 0 is off.
+  uint32 led_duty_cycle = 8;
 }
 
 message StatusPb {

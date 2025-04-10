@@ -67,11 +67,6 @@ class ControllerTest : public LightTest {
     // Set to 0 so that the light will always trigger in auto mode.
     vcnl4020.SetAmbient(0);
 
-    controller.SetConfig({
-      version : 1,
-      brightnessMode : BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW,
-    });
-
     // This yields a voltage of 3000 / 0.85 = 3529mV.
     setAnalogRead(AVREF, kFakeVrefintCal * 0.85 / 4);
     ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3529);
