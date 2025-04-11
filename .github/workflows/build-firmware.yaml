@@ -36,7 +36,7 @@ jobs:
           pip install --upgrade platformio
 
       - name: Build firmware
-        run: platformio run -e default
+        run: platformio run -e default || platformio run -e default
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
