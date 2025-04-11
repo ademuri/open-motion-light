@@ -3,8 +3,7 @@
 #include "serial.pb.h"
 
 class ConfigStorage {
-  public:
-
+ public:
   // Tries to load the config from storage (EEPROM). Returns whether the load
   // was successfull.
   static bool TryLoadConfig(ConfigPb *config);

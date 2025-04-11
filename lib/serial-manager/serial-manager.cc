@@ -13,7 +13,8 @@ void SerialManager::Step() {
 
     SerialRequest request;
     // TODO: check return value
-    bool success = pb_decode_ex(&istream, &SerialRequest_msg, &request, PB_ENCODE_DELIMITED);
+    bool success = pb_decode_ex(&istream, &SerialRequest_msg, &request,
+                                PB_ENCODE_DELIMITED);
 
     if (success && request.has_config) {
       controller_->SetConfig(request.config);
