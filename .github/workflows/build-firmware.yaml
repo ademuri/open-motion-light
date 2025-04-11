@@ -3,7 +3,7 @@ name: Build Firmware
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   build:
@@ -38,10 +38,9 @@ jobs:
       - name: Build firmware
         run: platformio run -e default || platformio run -e default
 
-      - name: Upload firmware artifact
-        uses: actions/upload-artifact@v4
+      - name: Create release
+        uses: softprops/action-gh-release@v2
         with:
-          name: firmware-${{ github.ref_name }} # e.g., firmware-v1.0.0 or firmware-main
-          path: |
+          fail_on_unmatched_files: True
+          files: |
             .pio/build/default/firmware.bin
-          if-no-files-found: error
