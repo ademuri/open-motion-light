@@ -65,6 +65,8 @@ enum class USBStatus {
   kUSB3_0,
 };
 
+// Defaults if the config hasn't been programmed. Keep in sync with the UI
+// defaults in open-motion-light-manager:src/components/DeviceConfig/index.tsx
 static constexpr ConfigPb kDefaultConfig = ConfigPb{
   version : 1,
   brightnessMode : BrightnessMode::BRIGHTNESS_MODE_DISABLED,
