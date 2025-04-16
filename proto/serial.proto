@@ -58,6 +58,17 @@ message ConfigPb {
 }
 
 message StatusPb {
+  // Firmware version string, e.g. `v1.0.0`.
   optional string firmware_version = 1;
+
+  // Current state of the battery, in millivolts. Since the battery is charged
+  // while USB is connected, this is not an accurate reflection of the state of
+  // charge.
   optional uint32 battery_voltage_millivolts = 2;
+
+  // Raw proximity sensor value.
+  optional uint32 proximity_value = 3;
+
+  // Raw ambient light sensor value, in 1/4 Lux.
+  optional uint32 ambient_light_value = 4;
 };

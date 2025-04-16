@@ -28,6 +28,12 @@ void SerialManager::Step() {
     snprintf(response.status.firmware_version, kFirmwareVersionMaxLength,
              FIRMWARE_VERSION);
     response.status.has_firmware_version = true;
+
+    response.status.proximity_value = controller_->ReadProximity();
+    response.status.has_proximity_value = true;
+    response.status.ambient_light_value = controller_->ReadAmbientLight();
+    response.status.has_ambient_light_value = true;
+
     response.has_status = true;
 
     if (success && request.request_config) {
