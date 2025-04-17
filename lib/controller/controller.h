@@ -197,6 +197,7 @@ class Controller {
 
   PowerStatus power_status_ = PowerStatus::kBattery;
   USBStatus usb_status_ = USBStatus::kNoConnection;
+  USBStatus prev_usb_status_ = USBStatus::kNoConnection;
 
   CountUpTimer motion_timer_;
 

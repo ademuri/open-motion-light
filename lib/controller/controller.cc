@@ -192,6 +192,18 @@ void Controller::Step() {
       break;
   }
 
+  if (prev_usb_status_ != usb_status_) {
+    if (usb_status_ == USBStatus::kNoConnection) {
+      vcnl4020_->SetPeriodicAmbient(false);
+      vcnl4020_->SetPeriodicProximity(false);
+    } else {
+      vcnl4020_->SetPeriodicAmbient(true);
+      vcnl4020_->SetPeriodicProximity(true);
+    }
+  }
+
+  prev_usb_status_ = usb_status_;
+
   {
     const bool charging_value = !digitalRead(kPinBatteryCharge);
     const bool done_value = !digitalRead(kPinBatteryDone);
@@ -302,7 +314,8 @@ void Controller::Step() {
   }
 
   if (motion_proximity_timeout_.Expired() &&
-      power_mode_ != PowerMode::kToggled) {
+      power_mode_ != PowerMode::kToggled &&
+      usb_status_ == USBStatus::kNoConnection) {
     vcnl4020_->SetPeriodicProximity(false);
     motion_proximity_timeout_.Stop();
   }
