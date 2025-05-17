@@ -19,29 +19,52 @@ void Ramper::Step() {
     return;
   }
 
-  if (max_change_ == 0 || period_ms_ == 0) {
-    actual_ = target_;
-    return;
-  }
-
   const uint32_t now = millis();
-
-  if (now - last_update_ms_ < period_ms_) {
-    return;
-  }
-
   const int16_t difference = target_ - actual_;
-  const int16_t abs_difference = std::abs(difference);
 
-  if (abs_difference < max_change_) {
-    actual_ = target_;
-  } else {
-    if (difference > 0) {
-      actual_ += max_change_;
-    } else {
-      actual_ -= max_change_;
+  if (difference > 0) {  // Target is higher, we need to increase actual_
+    // If limit is zero OR period is zero for increase, snap immediately.
+    // This also handles the default uninitialized state.
+    if (max_increase_ == 0 || period_increase_ms_ == 0) {
+      actual_ = target_;
+      last_update_ms_ = now;
+      return;
     }
-  }
 
-  last_update_ms_ = now;
+    if (now - last_update_ms_ < period_increase_ms_) {
+      return;
+    }
+
+    // Enough time has passed for an increase step
+    if (difference <
+        max_increase_) {  // Remaining difference is less than one step
+      actual_ = target_;
+    } else {
+      actual_ += max_increase_;
+    }
+    last_update_ms_ = now;  // Update time after a successful step
+  } else {  // difference < 0 (or 0, but caught by initial check). Target is
+            // lower, we need to decrease actual_
+    // If limit is zero OR period is zero for decrease, snap immediately.
+    // This also handles the default uninitialized state.
+    if (max_decrease_ == 0 || period_decrease_ms_ == 0) {
+      actual_ = target_;
+      last_update_ms_ = now;
+      return;
+    }
+
+    if (now - last_update_ms_ < period_decrease_ms_) {
+      return;
+    }
+
+    // Enough time has passed for a decrease step
+    // difference is negative, max_decrease_ is positive magnitude (abs value)
+    if (-difference <
+        max_decrease_) {  // Absolute remaining difference is less than one step
+      actual_ = target_;
+    } else {
+      actual_ -= max_decrease_;
+    }
+    last_update_ms_ = now;  // Update time after a successful step
+  }
 }

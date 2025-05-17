@@ -15,6 +15,7 @@
 #pragma once
 
 #include <types.h>
+#include <cmath> // For std::abs
 
 // Rate-limits changes to the held value (actual).
 // TODO: template the type of actual and extract this into a library
@@ -24,19 +25,29 @@ class Ramper {
   int16_t GetTarget() const { return target_; }
   int16_t GetActual() const { return actual_; }
 
-  // Allow this much change over this period. Change will be quantized to happen
-  // every `period_ms`.
-  void SetMaxChange(int16_t value, uint32_t period_ms) {
-    max_change_ = value;
-    period_ms_ = period_ms;
+  // Allow this much increase over this period. `value` is the magnitude of
+  // change. Change will be quantized to happen every `period_ms`.
+  void SetMaxIncrease(int16_t value, uint32_t increase_period_ms) {
+    max_increase_ = std::abs(value);
+    period_increase_ms_ = increase_period_ms;
+  }
+
+  // Allow this much decrease over this period. `value` is the magnitude of
+  // change. Change will be quantized to happen every `period_ms`.
+  void SetMaxDecrease(int16_t value, uint32_t decrease_period_ms) {
+    max_decrease_ = std::abs(value);
+    period_decrease_ms_ = decrease_period_ms;
   }
 
   void Step();
 
  private:
   // Config
-  int16_t max_change_ = 0;
-  uint32_t period_ms_ = 0;
+  int16_t max_increase_ = 0;
+  uint32_t period_increase_ms_ = 0;
+
+  int16_t max_decrease_ = 0;
+  uint32_t period_decrease_ms_ = 0;
 
   // Internal state
   int16_t target_ = 0;
