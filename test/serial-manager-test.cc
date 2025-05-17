@@ -37,6 +37,7 @@ class SerialManagerTest : public ::testing::Test {
       proximity_toggle_timeout_seconds : 10 * 60,
       proximity_threshold : 300,
     });
+    vcnl4020.Begin();
   }
 
   FakeSerialPort serial_port;
