@@ -172,4 +172,54 @@ TEST(Ramper, HandlesZeroStepLimit) {
   EXPECT_EQ(ramper.GetActual(), 50);
 }
 
+TEST(Ramper, IncreaseMultipleChangesBelowThreshold) {
+  setMillis(0);
+  Ramper ramper;
+
+  ramper.SetMaxIncrease(10, 10);
+  ramper.SetMaxDecrease(10, 10);
+
+  ramper.SetTarget(5);
+  advanceMillis(10);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), 5);
+
+  ramper.SetTarget(10);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), 5);
+
+  advanceMillis(9);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), 5);
+
+  advanceMillis(1);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), 10);
+}
+
+TEST(Ramper, DecreaseMultipleChangesBelowThreshold) {
+  setMillis(0);
+  Ramper ramper;
+
+  ramper.SetMaxIncrease(10, 10);
+  ramper.SetMaxDecrease(10, 10);
+
+  ramper.SetTarget(-5);
+  advanceMillis(10);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), -5);
+
+  ramper.SetTarget(-10);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), -5);
+
+  advanceMillis(9);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), -5);
+
+  advanceMillis(1);
+  ramper.Step();
+  EXPECT_EQ(ramper.GetActual(), -10);
+}
+
 };  // namespace

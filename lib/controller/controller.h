@@ -26,6 +26,7 @@
 
 #include "pb.h"  // Needed to trigger inclusion of the Nanopb-generated files
 #include "power-controller.h"
+#include "ramper.h"
 #include "serial.pb.h"
 #include "vcnl4020.h"
 
@@ -216,6 +217,8 @@ class Controller {
 
   VCNL4020 *const vcnl4020_;
   PowerController *const power_controller_;
+
+  Ramper led_ramper_;
 
   int32_t prev_proximity_ = 0;
 

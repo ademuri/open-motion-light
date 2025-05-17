@@ -15,7 +15,8 @@
 #pragma once
 
 #include <types.h>
-#include <cmath> // For std::abs
+
+#include <cmath>
 
 // Rate-limits changes to the held value (actual).
 // TODO: template the type of actual and extract this into a library
@@ -23,6 +24,7 @@ class Ramper {
  public:
   void SetTarget(int16_t target) { target_ = target; }
   int16_t GetTarget() const { return target_; }
+  void SetActual(int16_t actual) { actual_ = actual; }
   int16_t GetActual() const { return actual_; }
 
   // Allow this much increase over this period. `value` is the magnitude of

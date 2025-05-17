@@ -54,6 +54,13 @@ bool Controller::Init() {
   power_controller_->AttachInterruptWakeup(kPin5vDetect, RISING);
 
   ConfigStorage::TryLoadConfig(&config_);
+  if (config_.ramp_up_time_ms != 0) {
+    led_ramper_.SetMaxIncrease(GetLedDutyCycle() / config_.ramp_up_time_ms, 1);
+  }
+  if (config_.ramp_down_time_ms != 0) {
+    led_ramper_.SetMaxDecrease(GetLedDutyCycle() / config_.ramp_down_time_ms,
+                               1);
+  }
 
   return true;
 }
@@ -241,6 +248,7 @@ void Controller::Step() {
   if (power_status_ == PowerStatus::kLowBatteryCutoff) {
     if (led_on_) {
       analogWrite(kPinWhiteLed, 0);
+      led_ramper_.SetActual(0);
       led_on_ = false;
     }
     analogWrite(kPinBatteryLed1, 0);
@@ -274,22 +282,20 @@ void Controller::Step() {
   if (power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
     if (led_on_) {
       analogWrite(kPinWhiteLed, 0);
+      led_ramper_.SetActual(0);
       led_on_ = false;
     }
   } else if (power_mode_ == PowerMode::kOff) {
     if (led_on_) {
-      analogWrite(kPinWhiteLed, 0);
-      led_on_ = false;
+      led_ramper_.SetTarget(0);
     }
   } else if (usb_status_ != USBStatus::kNoConnection) {
     if (led_on_) {
-      analogWrite(kPinWhiteLed, 0);
-      led_on_ = false;
+      led_ramper_.SetTarget(0);
     }
   } else if (power_mode_ == PowerMode::kOn) {
     if (!led_on_) {
-      analogWrite(kPinWhiteLed, GetLedDutyCycle());
-      led_on_ = true;
+      led_ramper_.SetTarget(GetLedDutyCycle());
     }
   } else if (power_mode_ == PowerMode::kAuto) {
     if (motion_detected || auto_triggered) {
@@ -297,15 +303,14 @@ void Controller::Step() {
           (config_.brightnessMode == BrightnessMode::BRIGHTNESS_MODE_DISABLED ||
            auto_triggered || led_on_brightness_timeout_.Active() ||
            vcnl4020_->ReadAmbient() < config_.autoBrightnessThreshold)) {
-        analogWrite(kPinWhiteLed, GetLedDutyCycle());
+        led_ramper_.SetTarget(GetLedDutyCycle());
         led_change_motion_timeout_.Reset();
-        led_on_ = true;
       }
       motion_timer_.Reset();
     } else if (motion_timer_.Running() &&
                motion_timer_.Get() > GetMotionTimeoutSeconds() * 1000) {
       if (led_on_) {
-        analogWrite(kPinWhiteLed, 0);
+        led_ramper_.SetTarget(0);
         led_change_motion_timeout_.Reset();
       }
       led_on_ = false;
@@ -364,6 +369,13 @@ void Controller::Step() {
       analogWrite(kPinBatteryLed3, 0);
     }
   }
+
+  int16_t prev_actual = led_ramper_.GetActual();
+  led_ramper_.Step();
+  if (led_ramper_.GetActual() != prev_actual) {
+    analogWrite(kPinWhiteLed, led_ramper_.GetActual());
+  }
+  led_on_ = led_ramper_.GetActual() > 0;
 
   const bool proximity_lockout =
       config_.proximity_mode != ProximityMode::PROXIMITY_MODE_DISABLED &&
