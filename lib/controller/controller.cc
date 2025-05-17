@@ -54,24 +54,7 @@ bool Controller::Init() {
   power_controller_->AttachInterruptWakeup(kPin5vDetect, RISING);
 
   ConfigStorage::TryLoadConfig(&config_);
-  if (config_.ramp_up_time_ms != 0) {
-    if (config_.ramp_up_time_ms < GetLedDutyCycle()) {
-      led_ramper_.SetMaxIncrease(GetLedDutyCycle() / config_.ramp_up_time_ms,
-                                 1);
-    } else {
-      led_ramper_.SetMaxIncrease(1,
-                                 config_.ramp_up_time_ms / GetLedDutyCycle());
-    }
-  }
-  if (config_.ramp_down_time_ms != 0) {
-    if (config_.ramp_down_time_ms < GetLedDutyCycle()) {
-      led_ramper_.SetMaxDecrease(GetLedDutyCycle() / config_.ramp_down_time_ms,
-                                 1);
-    } else {
-      led_ramper_.SetMaxDecrease(1,
-                                 config_.ramp_down_time_ms / GetLedDutyCycle());
-    }
-  }
+  ConfigUpdated();
 
   return true;
 }
@@ -109,6 +92,31 @@ uint16_t Controller::ReadRawBatteryMillivolts() {
   return ((vrefint_cal * kReferenceSupplyMillivolts) /
           (kAdcMaxCount / kAdcConfiguredMaxCount)) /
          vrefint_raw;
+}
+void Controller::SetConfig(const ConfigPb &config) {
+  config_ = config;
+  ConfigUpdated();
+}
+
+void Controller::ConfigUpdated() {
+  if (config_.ramp_up_time_ms != 0) {
+    if (config_.ramp_up_time_ms < GetLedDutyCycle()) {
+      led_ramper_.SetMaxIncrease(GetLedDutyCycle() / config_.ramp_up_time_ms,
+                                 1);
+    } else {
+      led_ramper_.SetMaxIncrease(1,
+                                 config_.ramp_up_time_ms / GetLedDutyCycle());
+    }
+  }
+  if (config_.ramp_down_time_ms != 0) {
+    if (config_.ramp_down_time_ms < GetLedDutyCycle()) {
+      led_ramper_.SetMaxDecrease(GetLedDutyCycle() / config_.ramp_down_time_ms,
+                                 1);
+    } else {
+      led_ramper_.SetMaxDecrease(1,
+                                 config_.ramp_down_time_ms / GetLedDutyCycle());
+    }
+  }
 }
 
 uint16_t Controller::ReadAnalogVoltageMillivolts(

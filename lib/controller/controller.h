@@ -138,7 +138,7 @@ class Controller {
   uint32_t GetSleepInterval() const { return 15 * 60 * 1000; }
 
   ConfigPb const *GetConfig() const { return &config_; };
-  void SetConfig(const ConfigPb &config) { config_ = config; }
+  void SetConfig(const ConfigPb &config);
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
@@ -185,6 +185,9 @@ class Controller {
   static inline constexpr uint16_t kBatteryVoltage0 = 3150;
 
  private:
+  // Handles an updated config.
+  void ConfigUpdated();
+
   // Reads the state of the power mode switch.
   static PowerMode ReadPowerMode();
 
