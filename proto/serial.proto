@@ -55,6 +55,12 @@ message ConfigPb {
   // Hysteresis voltage, in millivolts. Once the battery is low, it must exceed
   // this voltage before the device will turn on again.
   uint32 low_battery_hysteresis_threshold_millivolts = 10;
+
+  // When turning on, the light will take this long to fade in.
+  uint32 ramp_up_time_ms = 11;
+
+  // When turning off, the light will take this long to fade out.
+  uint32 ramp_down_time_ms = 12;
 }
 
 message StatusPb {
