@@ -55,11 +55,22 @@ bool Controller::Init() {
 
   ConfigStorage::TryLoadConfig(&config_);
   if (config_.ramp_up_time_ms != 0) {
-    led_ramper_.SetMaxIncrease(GetLedDutyCycle() / config_.ramp_up_time_ms, 1);
+    if (config_.ramp_up_time_ms < GetLedDutyCycle()) {
+      led_ramper_.SetMaxIncrease(GetLedDutyCycle() / config_.ramp_up_time_ms,
+                                 1);
+    } else {
+      led_ramper_.SetMaxIncrease(1,
+                                 config_.ramp_up_time_ms / GetLedDutyCycle());
+    }
   }
   if (config_.ramp_down_time_ms != 0) {
-    led_ramper_.SetMaxDecrease(GetLedDutyCycle() / config_.ramp_down_time_ms,
-                               1);
+    if (config_.ramp_down_time_ms < GetLedDutyCycle()) {
+      led_ramper_.SetMaxDecrease(GetLedDutyCycle() / config_.ramp_down_time_ms,
+                                 1);
+    } else {
+      led_ramper_.SetMaxDecrease(1,
+                                 config_.ramp_down_time_ms / GetLedDutyCycle());
+    }
   }
 
   return true;
