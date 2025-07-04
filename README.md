@@ -2,6 +2,10 @@
 
 A battery-powered motion sensor light.
 
+Status: in development (as of July 2025). The current hardware revision, v1.2, mostly works, but has a few small issues. I'm hoping that the next revision will be the "final" version before starting small-scale production for sale.
+
+Ordering and programming one of these units is a relatively complicated project. I don't recommend it unless you're looking for a learning experience, or have completed similar projects before.
+
 ## Programming
 
 To easily update the firmware on your unit, and to configure the settings, go to the management page: https://ademuri.github.io/open-motion-light-manager/. This uses the WebSerial browser API, which is only supported in Chromium-based browsers (e.g. Chrome and Edge).
