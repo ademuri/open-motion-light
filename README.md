@@ -51,3 +51,22 @@ This design requires PCBA Type 'Standard', since it needs assembly on both sides
 Signal rise time is ~85ns, which is about 10MHz. No overshoot or ringing visible on a 50MHz scope.
 
 At 3.5v, with main LED full on the board draws ~340mA. This increases to ~390mA at 3.2v, and ~440mA at 3.0v.
+
+### Hardware v1.3 calculations
+
+#### PIR sensitivity adjust
+
+The `SENS` pin is used to adjust the sensitivity of the motion sensor. 0V is maximum sensitivity, and 1/4 _ VDD is minimum. In this revision, the PIR is powered by a 3.0V LDO, so the minimum sensitivity will be at 1/4 _ 3.0V = 0.75V.
+
+The PIR `SENS` pin has an equivalent 120kΩ pulldown (measured on two devices, pretty consistent, at least at the same temperature). I added a 1MΩ pulldown resistor to improve stability across PIR devices and temperatures. This pulldown likely comes from the PIR's internal ADC.
+
+To allow adjusting sensitivity in software, three resistors are connected to the pulldown via MCU pins. These form a variable voltage divider. They're sized at 1MΩ and 2MΩ. This means that the possible resistance and voltage divider output values (at 3.4V battery level) are:
+
+| Resistance | Output Voltage | Percent |
+| ---------- | -------------- | ------- |
+| 2 MΩ       | 173 mV         | 23%     |
+| 1 MΩ       | 329 mV         | 44%     |
+| 667 kΩ     | 470 mV         | 63%     |
+| 400 kΩ     | 718 mV         | 96%     |
+
+There could be moderate variation in the PIR's equivalent pulldown between devices and at different temperatures. The sensitivity adjustment is pretty coarse anyway, so this is acceptable. If this does prove to be an issue, we could use a low-power voltage buffer, such as `TLV8541DBVR`, which consumes 500nA.
