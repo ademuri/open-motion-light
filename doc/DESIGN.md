@@ -61,3 +61,7 @@ The design uses a tactile switch for the reset button. This shouldn't strictly b
 #### White LEDs
 
 As with the above parts, the white LEDs (`HL-AM-2835H421W-S1-08-HR3` from HONGLITRONIC) are not available from Western distributors. However, they are a common size (2835 metric) with common specs (~3.2V forward voltage, 60mA rated current), and [drop-in alternatives](https://www.digikey.com/en/products/detail/ams-osram-usa-inc/GW-JTLMS1-CM-G7H2-XX58-1-60-R33/13680961) are easily available from Western distributors.
+
+#### PIR sensor
+
+The design uses a PIR sensor, `XYC-PIR224S-S1` from NewOpto. This part is not available from Western distributors, and I couldn't find it from Asian distributors other than LCSC. If we limit this to only complete modules with a digital interface, then the cheapest Western-available part is the [ZiLOG `ZDP323`](https://www.mouser.com/ProductDetail/ZiLOG/ZDP323B1). As of writing, it is $2.57 each at qty 100, versus $0.47 each at qty 100 for the NewOpto. From what I can tell, using an analog sensor and implementing the supporting circuitry needed would be pretty complex, and not significantly cheaper anyway. So, we'll stick with the NewOpto for now, and revisit if it becomes a problem.
