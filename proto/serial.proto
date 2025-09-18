@@ -1,13 +1,13 @@
 syntax = "proto3";
 
 message SerialRequest {
-  optional bool request_config = 1;
-  optional ConfigPb config = 2;
+  bool request_config = 1;
+  ConfigPb config = 2;
 }
 
 message SerialResponse {
-  optional StatusPb status = 1;
-  optional ConfigPb config = 2;
+  StatusPb status = 1;
+  ConfigPb config = 2;
 }
 
 enum BrightnessMode {
@@ -22,11 +22,21 @@ enum ProximityMode {
   PROXIMITY_MODE_TOGGLE = 2;
 }
 
+// Roughly follows semantic versioning
+// TODO: more precisely define what these mean.
+message HardwareVersion {
+  uint32_t major = 1;
+  uint32_t minor = 2;
+  uint32_t subrevision = 3;
+}
+
 message ConfigPb {
   // Version of this config data. Since this struct is read directly from flash,
   // updates need to only add fields to this struct, or risk breaking "parsing".
   // This version will allow for breaking changes, if needed.
   uint32 version = 1;
+
+  HardwareVersion HardwareVersion = 13;
 
   BrightnessMode brightnessMode = 2;
 
