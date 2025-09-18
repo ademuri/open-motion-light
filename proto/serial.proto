@@ -25,9 +25,9 @@ enum ProximityMode {
 // Roughly follows semantic versioning
 // TODO: more precisely define what these mean.
 message HardwareVersion {
-  uint32_t major = 1;
-  uint32_t minor = 2;
-  uint32_t subrevision = 3;
+  uint32 major = 1;
+  uint32 minor = 2;
+  uint32 subrevision = 3;
 }
 
 message ConfigPb {
@@ -36,7 +36,7 @@ message ConfigPb {
   // This version will allow for breaking changes, if needed.
   uint32 version = 1;
 
-  HardwareVersion HardwareVersion = 13;
+  HardwareVersion hardwareVersion = 13;
 
   BrightnessMode brightnessMode = 2;
 
