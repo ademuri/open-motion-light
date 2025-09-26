@@ -1,13 +1,14 @@
 syntax = "proto3";
 
+// Note: `optional` is needed for nanopb to generate `has_foo` functions.
 message SerialRequest {
-  bool request_config = 1;
-  ConfigPb config = 2;
+  optional bool request_config = 1;
+  optional ConfigPb config = 2;
 }
 
 message SerialResponse {
-  StatusPb status = 1;
-  ConfigPb config = 2;
+  optional StatusPb status = 1;
+  optional ConfigPb config = 2;
 }
 
 enum BrightnessMode {
