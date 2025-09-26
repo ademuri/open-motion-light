@@ -8908,7 +8908,7 @@
 				)
 			)
 		)
-		(property "Value" "MPL2016S4R7MHT"
+		(property "Value" "22uH"
 			(at 374.65 60.706 0)
 			(effects
 				(font
@@ -8916,7 +8916,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Homebrew:L0806"
+		(property "Footprint" "Inductor_SMD:L_Sunlord_SWPA4030S"
 			(at 374.65 55.88 0)
 			(effects
 				(font
@@ -8925,7 +8925,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://lcsc.com/product-detail/Inductors-SMD_4-7uH-20_C98335.html"
+		(property "Datasheet" "https://jlcpcb.com/partdetail/Sunlord-SWPA4030S220MT/C83472"
 			(at 374.65 53.34 0)
 			(effects
 				(font
@@ -8934,7 +8934,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "SWPA4030S220MT"
 			(at 374.65 63.5 0)
 			(effects
 				(font
@@ -8943,7 +8943,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C98335"
+		(property "LCSC Part" "C83472"
 			(at 374.65 50.8 0)
 			(effects
 				(font
@@ -9282,7 +9282,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder"
 			(at 52.578 113.03 90)
 			(effects
 				(font
@@ -10604,7 +10604,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C7250"
+		(property "LCSC" "C22935"
 			(at 142.24 247.65 0)
 			(effects
 				(font
@@ -10903,7 +10903,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C7250"
+		(property "LCSC" "C22935"
 			(at 148.59 255.27 0)
 			(effects
 				(font
@@ -11030,7 +11030,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SON:Texas_DSG0008A_WSON-8-1EP_2x2mm_P0.5mm_EP0.9x1.6mm_ThermalVias"
+		(property "Footprint" "Homebrew:Texas_DSG0008A_WSON-8-1EP_2x2mm_P0.5mm_EP0.9x1.6mm_ThermalVias"
 			(at 85.09 102.87 0)
 			(effects
 				(font
@@ -14645,7 +14645,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C7250"
+		(property "LCSC" "C22935"
 			(at 149.86 243.84 0)
 			(effects
 				(font
@@ -17573,7 +17573,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm"
+		(property "Footprint" "Homebrew:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm_ThermalVias"
 			(at 374.65 103.886 0)
 			(effects
 				(font

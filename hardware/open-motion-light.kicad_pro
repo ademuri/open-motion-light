@@ -38,8 +38,8 @@
         "other_text_upright": false,
         "pads": {
           "drill": 0.0,
-          "height": 3.45,
-          "width": 3.45
+          "height": 1.6,
+          "width": 0.9
         },
         "silk_line_width": 0.16,
         "silk_text_italic": false,
@@ -129,7 +129,7 @@
         "min_copper_edge_clearance": 0.3,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
-        "min_hole_to_hole": 0.254,
+        "min_hole_to_hole": 0.2,
         "min_microvia_diameter": 0.2,
         "min_microvia_drill": 0.1,
         "min_resolved_spokes": 2,
@@ -400,16 +400,7 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [
-      [
-        "pin_to_pin|1079500|927100|6c0d0536-7623-473f-b58a-9d76cb101dc3|078d4eb8-cc6f-492f-8e9a-5e2210f7157d|/f39d6745-1b59-458d-9712-dda63c04ccc8|/f39d6745-1b59-458d-9712-dda63c04ccc8|/f39d6745-1b59-458d-9712-dda63c04ccc8",
-        ""
-      ],
-      [
-        "pin_to_pin|787400|914400|078d4eb8-cc6f-492f-8e9a-5e2210f7157d|4240030e-2d3d-469d-a8fa-2053ac27fcfb|/f39d6745-1b59-458d-9712-dda63c04ccc8|/f39d6745-1b59-458d-9712-dda63c04ccc8|/f39d6745-1b59-458d-9712-dda63c04ccc8",
-        ""
-      ]
-    ],
+    "erc_exclusions": [],
     "meta": {
       "version": 0
     },

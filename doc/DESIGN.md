@@ -38,6 +38,22 @@ If we use [this Sunlord 10k 3950K thermistor](https://jlcpcb.com/partdetail/Sunl
 
 We can disable charging by pulling the TS pin below 40mV (minimum). We'll connect this to an MCU pin. Most of the pins have 50nA leakage, which is negligible relative to the 38μA bias current. If we ignore the resistance of the thermistor, then we need `.04V / 38μA = 1052Ω` at most. So, if we use a 1kΩ resistor, it'll be sufficient.
 
+### LED driver inductor selection
+
+[From the datasheet](https://www.ti.com/lit/ds/symlink/tps61165.pdf), inductor peak-to-peak ripple is:
+
+`I_P = 1 / (22uH * 1.2MHz * (1 / (19V + 0.4V - 3V) + 1 / 3V)) = 111mA`
+
+assuming a 22nH inductor, and 3.6V input voltage (worst case). The following calculations assume 80% efficiency - the datasheet doesn't list the efficiency for 3V in, 19V out. But, for 5V in, 24V out at 48mA, the efficiency is ~89%. And, for 3V in, 12V out at 48mA, the efficiency is ~88%. So, actual efficiency should be closer to these values.
+
+`I_out-max = 3V * (1.2A - 0.111A / 2) * 0.8 / 19V = 144.5 mA`
+
+We're setting the output current to `48 mA`, so we're well within a safe margin.
+
+`I_in-DC = 19V * .048A / (3V * 0.8) = 380 mA`
+
+The inductor needs to be rated for a saturation current of greater than `380mA + 111mA / 2 = 436mA`.
+
 ### Part availability and sourcing
 
 The previous revision used a few ICs from Chinese brands, which I couldn't find a source for other than LCSC. This presents moderate risk - if LCSC stops carrying them, then we'd need to use a different part, likely requiring a redesign.
