@@ -266,8 +266,8 @@ void Controller::Step() {
   prev_usb_status_ = usb_status_;
 
   {
-    const bool charging_value = !digitalRead(kPinBatteryCharge);
-    const bool done_value = !digitalRead(kPinBatteryDone);
+    const bool power_good_value = !digitalRead(kPinBatteryNPowerGood);
+    const bool stat_value = digitalRead(kPinBatteryStat);
     // TODO: possibly adjust the threshold based on estimated current
     // consumption when the white LEDs are on.
     static bool battery_low = false;
@@ -279,24 +279,23 @@ void Controller::Step() {
           GetFilteredBatteryMillivolts() < GetLowBatteryCutoffMillivolts();
     }
 
-    if (battery_low && charging_value && !done_value) {
+    if (battery_low && power_good_value && !stat_value) {
+      // Charger has good supply voltage, and is charging. We don't expect to
+      // see the case where the battery is low, power is good, but it's not
+      // charging - this is handled anyway by the next case.
       power_status_ = PowerStatus::kLowBatteryCutoffCharging;
     } else if (battery_low) {
       power_status_ = PowerStatus::kLowBatteryCutoff;
-    } else if (!charging_value && !done_value) {
-      if (usb_status_ == USBStatus::kNoConnection) {
-        power_status_ = PowerStatus::kBattery;
+    } else if (power_good_value) {
+      if (stat_value) {
+        power_status_ = PowerStatus::kCharged;
       } else {
-        power_status_ = PowerStatus::kChargeError;
+        power_status_ = PowerStatus::kCharging;
       }
-    } else if (charging_value && done_value) {
-      // This should't be possible, according to the CN3058E datasheet.
-      power_status_ = PowerStatus::kChargeError;
-    } else if (charging_value) {
-      power_status_ = PowerStatus::kCharging;
-    } else if (done_value) {
-      power_status_ = PowerStatus::kCharged;
+    } else {
+      power_status_ = PowerStatus::kBattery;
     }
+    // TODO: detect stat pin blinking at 1Hz, which indicates a fault
   }
 
   if (power_status_ == PowerStatus::kLowBatteryCutoff) {

@@ -91,8 +91,8 @@ void Stm32PowerController::Stop() {
   pinMode(kPinLightSensorInterrupt, INPUT_ANALOG);
   pinMode(kPinPowerAuto, INPUT_ANALOG);
   pinMode(kPinPowerOn, INPUT_ANALOG);
-  pinMode(kPinBatteryCharge, INPUT_ANALOG);
-  pinMode(kPinBatteryDone, INPUT_ANALOG);
+  pinMode(kPinBatteryNPowerGood, INPUT_ANALOG);
+  pinMode(kPinBatteryStat, INPUT_ANALOG);
 
   Serial1.end();
 

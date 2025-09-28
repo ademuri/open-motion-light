@@ -48,8 +48,8 @@ constexpr int kPinPowerAuto = PA4;
 constexpr int kPinPowerOn = PB0;
 
 // Battery management
-constexpr int kPinBatteryCharge = PC14;
-constexpr int kPinBatteryDone = PC15;
+constexpr int kPinBatteryNPowerGood = PC14;
+constexpr int kPinBatteryStat = PC15;
 constexpr int kPinChargeHighCurrentEnable = PB4;
 constexpr int kPin5vDetect = PA0;
 

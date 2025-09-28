@@ -58,8 +58,8 @@ class ControllerTest : public LightTest {
     LightTest::SetUp();
     setDigitalRead(kPinPowerAuto, true);
     setDigitalRead(kPinPowerOn, true);
-    setDigitalRead(kPinBatteryCharge, true);
-    setDigitalRead(kPinBatteryDone, true);
+    setDigitalRead(kPinBatteryNPowerGood, true);
+    setDigitalRead(kPinBatteryStat, false);
     setDigitalRead(kPinMotionSensor, false);
     setDigitalRead(kPin5vDetect, false);
     setAnalogRead(kPinCc1, 0);
@@ -321,8 +321,8 @@ TEST_F(ControllerTest, FiltersBatteryVoltage) {
 }
 
 TEST_F(ControllerTest, SetsPowerStatus) {
-  setDigitalRead(kPinBatteryCharge, true);
-  setDigitalRead(kPinBatteryDone, true);
+  setDigitalRead(kPinBatteryNPowerGood, true);
+  setDigitalRead(kPinBatteryStat, false);
   setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(0));
 
   ASSERT_TRUE(controller.Init());
@@ -330,27 +330,16 @@ TEST_F(ControllerTest, SetsPowerStatus) {
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
 
-  setDigitalRead(kPinBatteryCharge, false);
+  setDigitalRead(kPinBatteryNPowerGood, false);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kCharging);
 
-  setDigitalRead(kPinBatteryCharge, true);
-  setDigitalRead(kPinBatteryDone, false);
+  setDigitalRead(kPinBatteryStat, true);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kCharged);
 
-  setDigitalRead(kPinBatteryCharge, false);
-  controller.Step();
-  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kChargeError);
-
-  setDigitalRead(kPinBatteryCharge, true);
-  setDigitalRead(kPinBatteryDone, true);
-  controller.Step();
-  ASSERT_EQ(controller.GetPowerStatus(), PowerStatus::kBattery);
-
-  setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(1000));
-  controller.Step();
-  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kChargeError);
+  // TODO: add test coverage for charge error, once that functionality is
+  // implemented.
 }
 
 TEST_F(ControllerTest, UsesHysteresisForBatteryVoltage) {
@@ -399,8 +388,8 @@ TEST_F(ControllerTest, UsesHysteresisForBatteryVoltage) {
 }
 
 TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
-  setDigitalRead(kPinBatteryCharge, true);
-  setDigitalRead(kPinBatteryDone, true);
+  setDigitalRead(kPinBatteryNPowerGood, true);
+  setDigitalRead(kPinBatteryStat, false);
 
   setAnalogRead(AVREF, kFakeVrefintCal * 1.5 / 4);
   ASSERT_EQ(controller.ReadRawBatteryMillivolts(), 2000);
@@ -411,16 +400,12 @@ TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
   ASSERT_EQ(controller.GetFilteredBatteryMillivolts(), 2000);
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
 
-  setDigitalRead(kPinBatteryCharge, false);
+  setDigitalRead(kPinBatteryNPowerGood, false);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(),
             PowerStatus::kLowBatteryCutoffCharging);
 
-  setDigitalRead(kPinBatteryDone, false);
-  controller.Step();
-  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
-
-  setDigitalRead(kPinBatteryCharge, true);
+  setDigitalRead(kPinBatteryStat, true);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
 }
@@ -455,8 +440,8 @@ TEST_F(ControllerTest, DoesntTurnOnLedWhenBatteryLow) {
   EXPECT_EQ(getAnalogWrite(kPinBatteryLed3), 0);
 
   setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(1800));
-  setDigitalRead(kPinBatteryCharge, false);
-  setDigitalRead(kPinBatteryDone, true);
+  setDigitalRead(kPinBatteryNPowerGood, false);
+  setDigitalRead(kPinBatteryStat, false);
   controller.Step();
   ASSERT_EQ(controller.GetUSBStatus(), USBStatus::kUSB3_0);
   ASSERT_EQ(controller.GetPowerStatus(),
@@ -661,8 +646,8 @@ std::array<uint32_t, 3> GetBatteryLeds() {
 }
 
 TEST_F(ControllerTest, DisplaysBatteryVoltage) {
-  setDigitalRead(kPinBatteryCharge, true);
-  setDigitalRead(kPinBatteryDone, true);
+  setDigitalRead(kPinBatteryNPowerGood, true);
+  setDigitalRead(kPinBatteryStat, false);
 
   setAnalogRead(AVREF,
                 (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /

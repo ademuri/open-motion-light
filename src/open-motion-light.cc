@@ -69,8 +69,8 @@ void setup() {
   pinMode(kPinPowerOn, INPUT);
 
   // Battery management
-  pinMode(kPinBatteryCharge, INPUT);
-  pinMode(kPinBatteryDone, INPUT);
+  pinMode(kPinBatteryNPowerGood, INPUT);
+  pinMode(kPinBatteryStat, INPUT);
   pinMode(kPinChargeHighCurrentEnable, OUTPUT);
   pinMode(kPin5vDetect, INPUT_PULLDOWN);
 
