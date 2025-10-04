@@ -20,7 +20,8 @@
 
 #include "temperature-sensor.h"
 
-// Implementation of the temperature sensor HAL using the STM32L051's internal temperature sensor.
+// Implementation of the temperature sensor HAL using the STM32L051's internal
+// temperature sensor.
 class InternalTemperatureSensor : public TemperatureSensor {
  public:
   bool Begin() override;
