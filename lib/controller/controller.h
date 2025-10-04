@@ -28,6 +28,7 @@
 #include "power-controller.h"
 #include "ramper.h"
 #include "serial.pb.h"
+#include "temperature-sensor.h"
 #include "vcnl4020.h"
 
 enum class PowerMode {
@@ -85,8 +86,11 @@ static constexpr ConfigPb kDefaultConfig = ConfigPb{
 
 class Controller {
  public:
-  Controller(VCNL4020 *vcnl4020, PowerController *power_controller)
-      : vcnl4020_(vcnl4020), power_controller_(power_controller) {}
+  Controller(TemperatureSensor* temperature_sensor, VCNL4020* vcnl4020,
+             PowerController* power_controller)
+      : temperature_sensor_(temperature_sensor),
+        vcnl4020_(vcnl4020),
+        power_controller_(power_controller) {}
 
   // Initializes this object. Returns whether this was successful.
   bool Init();
@@ -139,8 +143,8 @@ class Controller {
 
   uint32_t GetSleepInterval() const { return 15 * 60 * 1000; }
 
-  ConfigPb const *GetConfig() const { return &config_; };
-  void SetConfig(const ConfigPb &config);
+  ConfigPb const* GetConfig() const { return &config_; };
+  void SetConfig(const ConfigPb& config);
 
   // Tuning constants - visible for testing
   static constexpr uint8_t kBatteryFilterAlpha = 64;
@@ -220,8 +224,9 @@ class Controller {
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};
 
-  VCNL4020 *const vcnl4020_;
-  PowerController *const power_controller_;
+  VCNL4020* const vcnl4020_;
+  PowerController* const power_controller_;
+  TemperatureSensor* const temperature_sensor_;
 
   Ramper led_ramper_;
 

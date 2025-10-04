@@ -19,6 +19,7 @@
 #include <limits>
 
 #include "fake-power-controller.h"
+#include "fake-temperature-sensor.h"
 #include "fake-vcnl4020.h"
 #include "pb.h"
 #include "pins.h"
@@ -72,9 +73,10 @@ class ControllerTest : public LightTest {
     ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3529);
   }
 
+  FakeTemperatureSensor temperature_sensor;
   FakeVCNL4020 vcnl4020;
   FakePowerController power_controller;
-  Controller controller{&vcnl4020, &power_controller};
+  Controller controller{&temperature_sensor, &vcnl4020, &power_controller};
 };
 
 TEST_F(ControllerTest, Initializes) { EXPECT_TRUE(controller.Init()); }

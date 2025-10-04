@@ -21,6 +21,7 @@
 #include "arduino-vcnl4020.h"
 #include "clock.h"
 #include "controller.h"
+#include "internal-temperature-sensor.h"
 #include "pins.h"
 #include "serial-manager.h"
 #include "stm32-power-controller.h"
@@ -31,10 +32,10 @@
 
 CountDownTimer vncl4020_timer{200};
 
+InternalTemperatureSensor temperature_sensor;
 ArduinoVCNL4020 vcnl4020;
-
 Stm32PowerController power_controller;
-Controller controller{&vcnl4020, &power_controller};
+Controller controller{&temperature_sensor, &vcnl4020, &power_controller};
 
 ArduinoSerialPort serial_port;
 SerialManager serial_manager{&serial_port, &controller};

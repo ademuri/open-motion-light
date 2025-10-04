@@ -20,6 +20,7 @@
 #include "controller.h"
 #include "fake-power-controller.h"
 #include "fake-serial-port.h"
+#include "fake-temperature-sensor.h"
 #include "fake-vcnl4020.h"
 #include "types.h"
 
@@ -40,10 +41,12 @@ class SerialManagerTest : public ::testing::Test {
     vcnl4020.Begin();
   }
 
-  FakeSerialPort serial_port;
-  FakeVCNL4020 vcnl4020;
   FakePowerController power_controller;
-  Controller controller{&vcnl4020, &power_controller};
+  FakeSerialPort serial_port;
+  FakeTemperatureSensor temperature_sensor;
+  FakeVCNL4020 vcnl4020;
+
+  Controller controller{&temperature_sensor, &vcnl4020, &power_controller};
   SerialManager serial_manager{&serial_port, &controller};
 };
 
@@ -73,8 +76,7 @@ TEST_F(SerialManagerTest, RoundTripConfig) {
   ASSERT_TRUE(ConfigStorage::TryLoadConfig(&storedConfig));
   EXPECT_EQ(storedConfig.version, 1);
   EXPECT_EQ(storedConfig.proximity_threshold, 182);
-  EXPECT_EQ(storedConfig.proximity_mode,
-            ProximityMode::PROXIMITY_MODE_TOGGLE);
+  EXPECT_EQ(storedConfig.proximity_mode, ProximityMode::PROXIMITY_MODE_TOGGLE);
   EXPECT_EQ(storedConfig.brightnessMode,
             BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW);
   EXPECT_EQ(storedConfig.autoBrightnessThreshold, 123);
