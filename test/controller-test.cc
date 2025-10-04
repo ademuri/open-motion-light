@@ -1053,3 +1053,36 @@ TEST_F(ControllerTest, HandlesMillisRollover) {
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
 }
+
+TEST_F(ControllerTest, SetsSensitivityPins) {
+  ConfigPb config = *controller.GetConfig();
+
+  // UNSPECIFIED should be the same as ONE
+  config.motion_sensitivity =
+      MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_UNSPECIFIED;
+  controller.SetConfig(config);
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityLow));
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh1));
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh2));
+
+  config.motion_sensitivity =
+      MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_ONE;
+  controller.SetConfig(config);
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityLow));
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh1));
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh2));
+
+  config.motion_sensitivity =
+      MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_TWO;
+  controller.SetConfig(config);
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityLow));
+  EXPECT_TRUE(getDigitalWrite(kPinSensitivityHigh1));
+  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh2));
+
+  config.motion_sensitivity =
+      MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE;
+  controller.SetConfig(config);
+  EXPECT_TRUE(getDigitalWrite(kPinSensitivityLow));
+  EXPECT_TRUE(getDigitalWrite(kPinSensitivityHigh1));
+  EXPECT_TRUE(getDigitalWrite(kPinSensitivityHigh2));
+}
