@@ -79,7 +79,8 @@ static constexpr ConfigPb kDefaultConfig = ConfigPb{
   led_duty_cycle : 255,
   low_battery_cutoff_millivolts : 3000,
   low_battery_hysteresis_threshold_millivolts : 3200,
-  motion_sensitivity: MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_ONE,
+  motion_sensitivity :
+      MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_ONE,
 };
 
 class Controller {

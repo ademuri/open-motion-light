@@ -40,7 +40,6 @@ constexpr uint32_t RISING = 4;
 constexpr uint32_t INPUT_ANALOG = 0xC;
 constexpr uint32_t OUTPUT = 0x3;
 
-
 int digitalRead(uint32_t ulPin);
 void setDigitalRead(uint32_t ulPin, bool value);
 
