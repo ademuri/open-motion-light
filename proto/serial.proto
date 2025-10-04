@@ -98,4 +98,7 @@ message StatusPb {
 
   // Raw ambient light sensor value, in 1/4 Lux.
   optional uint32 ambient_light_value = 4;
+
+  // Temperature of the MCU, in degrees Celsius.
+  optional int32 temperature_celsius = 5;
 };
