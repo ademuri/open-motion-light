@@ -44,7 +44,7 @@ message ConfigPb {
   // This version will allow for breaking changes, if needed.
   uint32 version = 1;
 
-  HardwareVersion hardwareVersion = 13;
+  optional HardwareVersion hardwareVersion = 13;
 
   BrightnessMode brightnessMode = 2;
 
