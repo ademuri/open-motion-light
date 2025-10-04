@@ -21,6 +21,25 @@
 // Useful for debugging, to display other values on the battery LEDs.
 constexpr bool kShowBatteryStatus = true;
 
+void SetSensitivityPins(const ConfigPb& config) {
+  digitalWrite(
+      kPinSensitivityLow,
+      config.motion_sensitivity ==
+          MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE);
+
+  digitalWrite(
+      kPinSensitivityHigh1,
+      config.motion_sensitivity ==
+              MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_TWO ||
+          config.motion_sensitivity ==
+              MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE);
+
+  digitalWrite(
+      kPinSensitivityHigh2,
+      config.motion_sensitivity ==
+          MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE);
+}
+
 bool Controller::Init() {
   // For some reason, this causes the LEDs to flash (likely something to do with
   // the STM32 Arduino implementation).
@@ -93,7 +112,8 @@ uint16_t Controller::ReadRawBatteryMillivolts() {
           (kAdcMaxCount / kAdcConfiguredMaxCount)) /
          vrefint_raw;
 }
-void Controller::SetConfig(const ConfigPb &config) {
+
+void Controller::SetConfig(const ConfigPb& config) {
   config_ = config;
   ConfigUpdated();
 }
@@ -117,6 +137,7 @@ void Controller::ConfigUpdated() {
                                  config_.ramp_down_time_ms / GetLedDutyCycle());
     }
   }
+  SetSensitivityPins(config_);
 }
 
 uint16_t Controller::ReadAnalogVoltageMillivolts(

@@ -34,6 +34,11 @@ constexpr int kPinWhiteLed = PA5;
 constexpr int kPinMotionSensor = PA11;
 constexpr int kPinLightSensorInterrupt = PA8;
 
+// Sensitivity adjust pins for the PIR sensor. These form a voltage divider.
+constexpr int kPinSensitivityLow = PA13;
+constexpr int kPinSensitivityHigh1 = PA14;
+constexpr int kPinSensitivityHigh2 = PA15;
+
 // I2C - used for light sensor
 constexpr int kPinScl = PB6;
 constexpr int kPinSda = PB7;
