@@ -5,5 +5,5 @@ bool InternalTemperatureSensor::Begin() {
 }
 
 int16_t InternalTemperatureSensor::ReadTemperature() {
-  return 0;
+  return 1;
 }

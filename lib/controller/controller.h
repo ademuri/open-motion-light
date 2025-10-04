@@ -116,6 +116,9 @@ class Controller {
   uint16_t ReadProximity() { return vcnl4020_->ReadProximity(); }
   uint16_t ReadAmbientLight() { return vcnl4020_->ReadAmbient(); }
 
+  // Reads the MCU temperature, in degrees Celsius.
+  int16_t ReadTemperature() { return temperature_sensor_->ReadTemperature(); }
+
   // Configuration values. TODO: store these in EEPROM and add an interface for
   // changing them.
 

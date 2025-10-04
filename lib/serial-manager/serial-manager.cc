@@ -33,6 +33,8 @@ void SerialManager::Step() {
     response.status.has_proximity_value = true;
     response.status.ambient_light_value = controller_->ReadAmbientLight();
     response.status.has_ambient_light_value = true;
+    response.status.temperature_celsius = controller_->ReadTemperature();
+    response.status.has_temperature_celsius = true;
 
     response.has_status = true;
 
