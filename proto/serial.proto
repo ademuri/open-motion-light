@@ -23,6 +23,13 @@ enum ProximityMode {
   PROXIMITY_MODE_TOGGLE = 2;
 }
 
+enum MotionSensitivity {
+  MOTION_SENSITIVITY_UNSPECIFIED = 0;
+  MOTION_SENSITIVITY_ONE = 1; // 0
+  MOTION_SENSITIVITY_TWO = 2; // 1M
+  MOTION_SENSITIVITY_THREE = 3; // 2M + 1M + 1M
+}
+
 // Roughly follows semantic versioning
 // TODO: more precisely define what these mean.
 message HardwareVersion {
@@ -72,6 +79,9 @@ message ConfigPb {
 
   // When turning off, the light will take this long to fade out.
   uint32 ramp_down_time_ms = 12;
+
+  // Used to configure the sensitivity of the motion sensor.
+  MotionSensitivity motion_sensitivity = 14;
 }
 
 message StatusPb {
