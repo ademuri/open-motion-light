@@ -37,6 +37,9 @@ constexpr uint32_t HIGH = 1;
 constexpr uint32_t CHANGE = 2;
 constexpr uint32_t FALLING = 3;
 constexpr uint32_t RISING = 4;
+constexpr uint32_t INPUT_ANALOG = 0xC;
+constexpr uint32_t OUTPUT = 0x3;
+
 
 int digitalRead(uint32_t ulPin);
 void setDigitalRead(uint32_t ulPin, bool value);
@@ -46,6 +49,9 @@ bool getDigitalWrite(uint32_t ulPin);
 
 void analogWrite(uint32_t ulPin, uint32_t ulValue);
 uint32_t getAnalogWrite(uint32_t ulPin);
+
+void pinMode(uint32_t pin, uint32_t mode);
+uint32_t getPinMode(uint32_t pin);
 
 uint32_t analogRead(uint32_t ulPin);
 void setAnalogRead(uint32_t ulPin, uint32_t value);

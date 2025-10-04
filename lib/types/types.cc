@@ -24,6 +24,7 @@ static std::array<bool, kPinMax> digital_read_data;
 static std::array<bool, kPinMax> digital_write_data;
 static std::array<uint32_t, kPinMax> analog_write_data;
 static std::array<uint32_t, kPinMax> analog_read_data;
+static std::array<uint32_t, kPinMax> pin_mode_data;
 
 static uint32_t millis_ = 0;
 
@@ -55,6 +56,16 @@ void analogWrite(uint32_t ulPin, uint32_t ulValue) {
 uint32_t getAnalogWrite(uint32_t ulPin) {
   EXPECT_LT(ulPin, kPinMax);
   return analog_write_data[ulPin];
+}
+
+void pinMode(uint32_t pin, uint32_t mode) {
+  ASSERT_LT(pin, kPinMax);
+  pin_mode_data[pin] = mode;
+}
+
+uint32_t getPinMode(uint32_t pin) {
+  EXPECT_LT(pin, kPinMax);
+  return pin_mode_data[pin];
 }
 
 uint32_t analogRead(uint32_t ulPin) {

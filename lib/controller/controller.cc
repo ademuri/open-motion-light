@@ -22,25 +22,39 @@
 constexpr bool kShowBatteryStatus = true;
 
 void SetSensitivityPins(const ConfigPb& config) {
-  digitalWrite(
-      kPinSensitivityLow,
-      config.motion_sensitivity ==
-          MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE);
+  // To "disconnect" a pin from the voltage divider, we set it to a
+  // high-impedance state.
+  pinMode(kPinSensitivityLow, INPUT_ANALOG);
+  pinMode(kPinSensitivityHigh1, INPUT_ANALOG);
+  pinMode(kPinSensitivityHigh2, INPUT_ANALOG);
 
-  digitalWrite(
-      kPinSensitivityHigh1,
-      config.motion_sensitivity ==
-              MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_TWO ||
-          config.motion_sensitivity ==
-              MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE);
+  switch (config.motion_sensitivity) {
+    case MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_UNSPECIFIED:
+    case MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_ONE:
+      // All pins are high-impedance, so the voltage on the SENS pin is pulled
+      // low by its internal pulldown resistor. This is the highest sensitivity.
+      break;
 
-  digitalWrite(
-      kPinSensitivityHigh2,
-      config.motion_sensitivity ==
-          MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE);
+    case MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_TWO:
+      pinMode(kPinSensitivityHigh1, OUTPUT);
+      digitalWrite(kPinSensitivityHigh1, HIGH);
+      break;
+
+    case MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE:
+      pinMode(kPinSensitivityLow, OUTPUT);
+      digitalWrite(kPinSensitivityLow, HIGH);
+      pinMode(kPinSensitivityHigh1, OUTPUT);
+      digitalWrite(kPinSensitivityHigh1, HIGH);
+      pinMode(kPinSensitivityHigh2, OUTPUT);
+      digitalWrite(kPinSensitivityHigh2, HIGH);
+      break;
+  }
 }
 
 bool Controller::Init() {
+  pinMode(kPinSensitivityLow, INPUT_ANALOG);
+  pinMode(kPinSensitivityHigh1, INPUT_ANALOG);
+  pinMode(kPinSensitivityHigh2, INPUT_ANALOG);
   // For some reason, this causes the LEDs to flash (likely something to do with
   // the STM32 Arduino implementation).
   // analogWrite(kPinWhiteLed, 0);

@@ -1061,28 +1061,32 @@ TEST_F(ControllerTest, SetsSensitivityPins) {
   config.motion_sensitivity =
       MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_UNSPECIFIED;
   controller.SetConfig(config);
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityLow));
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh1));
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh2));
+  EXPECT_EQ(getPinMode(kPinSensitivityLow), INPUT_ANALOG);
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh1), INPUT_ANALOG);
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh2), INPUT_ANALOG);
 
   config.motion_sensitivity =
       MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_ONE;
   controller.SetConfig(config);
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityLow));
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh1));
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh2));
+  EXPECT_EQ(getPinMode(kPinSensitivityLow), INPUT_ANALOG);
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh1), INPUT_ANALOG);
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh2), INPUT_ANALOG);
 
   config.motion_sensitivity =
       MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_TWO;
   controller.SetConfig(config);
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityLow));
+  EXPECT_EQ(getPinMode(kPinSensitivityLow), INPUT_ANALOG);
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh1), OUTPUT);
   EXPECT_TRUE(getDigitalWrite(kPinSensitivityHigh1));
-  EXPECT_FALSE(getDigitalWrite(kPinSensitivityHigh2));
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh2), INPUT_ANALOG);
 
   config.motion_sensitivity =
       MotionSensitivity::MotionSensitivity_MOTION_SENSITIVITY_THREE;
   controller.SetConfig(config);
+  EXPECT_EQ(getPinMode(kPinSensitivityLow), OUTPUT);
   EXPECT_TRUE(getDigitalWrite(kPinSensitivityLow));
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh1), OUTPUT);
   EXPECT_TRUE(getDigitalWrite(kPinSensitivityHigh1));
+  EXPECT_EQ(getPinMode(kPinSensitivityHigh2), OUTPUT);
   EXPECT_TRUE(getDigitalWrite(kPinSensitivityHigh2));
 }
