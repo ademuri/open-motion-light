@@ -193,6 +193,8 @@ class Controller {
   static inline constexpr uint16_t kBatteryVoltage1 = 3350;
   static inline constexpr uint16_t kBatteryVoltage0 = 3150;
 
+  static constexpr uint16_t kSleepLockoutMs = 1000;
+
  private:
   // Handles an updated config.
   void ConfigUpdated();
@@ -206,7 +208,7 @@ class Controller {
 
   // After anything changes, wait this long before going to sleep. This prevents
   // missing mode changes if the switch bounces.
-  CountDownTimer sleep_lockout_timer{1000};
+  CountDownTimer sleep_lockout_timer{kSleepLockoutMs};
 
   PowerStatus power_status_ = PowerStatus::kBattery;
   USBStatus usb_status_ = USBStatus::kNoConnection;

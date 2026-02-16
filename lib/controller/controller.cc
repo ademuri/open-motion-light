@@ -93,6 +93,8 @@ bool Controller::Init() {
   ConfigStorage::TryLoadConfig(&config_);
   ConfigUpdated();
 
+  sleep_lockout_timer.Reset();
+
   return true;
 }
 

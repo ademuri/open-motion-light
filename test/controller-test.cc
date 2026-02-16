@@ -731,6 +731,8 @@ TEST_F(ControllerTest, Sleeps) {
 
   uint32_t sleep_interval = controller.GetSleepInterval();
   ASSERT_NE(sleep_interval, 0);
+
+  advanceMillis(Controller::kSleepLockoutMs + 1);
   controller.Step();
   EXPECT_EQ(power_controller.GetSleep(), sleep_interval);
 }
