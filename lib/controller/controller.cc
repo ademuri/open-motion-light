@@ -52,9 +52,7 @@ void SetSensitivityPins(const ConfigPb& config) {
 }
 
 bool Controller::Init() {
-  pinMode(kPinSensitivityLow, INPUT_ANALOG);
-  pinMode(kPinSensitivityHigh1, INPUT_ANALOG);
-  pinMode(kPinSensitivityHigh2, INPUT_ANALOG);
+  ConfigUpdated();
 
   // For some reason, this causes the LEDs to flash (likely something to do with
   // the STM32 Arduino implementation).
