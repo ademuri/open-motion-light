@@ -39,6 +39,7 @@ class SerialManagerTest : public ::testing::Test {
       proximity_threshold : 300,
     });
     vcnl4020.Begin();
+    serial_manager.Init();
   }
 
   FakePowerController power_controller;

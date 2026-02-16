@@ -75,6 +75,10 @@ bool Controller::Init() {
   // TODO: set this from config
   vcnl4020_->SetLEDCurrent(80);
 
+  if (!temperature_sensor_->Begin()) {
+    return false;
+  }
+
   if (!power_controller_->Begin()) {
     return false;
   }

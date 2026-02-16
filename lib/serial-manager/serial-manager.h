@@ -11,6 +11,9 @@ class SerialManager {
   SerialManager(SerialPort *serial_port, Controller *controller)
       : serial_port_(serial_port), controller_(controller) {}
 
+  // Initializes this instance.
+  void Init();
+
   // Runs one iteration.
   void Step();
 
