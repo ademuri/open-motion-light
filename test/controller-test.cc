@@ -737,6 +737,81 @@ TEST_F(ControllerTest, Sleeps) {
   EXPECT_EQ(power_controller.GetSleep(), sleep_interval);
 }
 
+TEST_F(ControllerTest, NoSleepWhenCharging) {
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  setDigitalRead(kPinBatteryNPowerGood, false);
+  controller.Step();
+
+  uint32_t sleep_interval = controller.GetSleepInterval();
+  ASSERT_NE(sleep_interval, 0);
+
+  advanceMillis(Controller::kSleepLockoutMs + 1);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  advanceMillis(Controller::kSleepLockoutMs * 5);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  setDigitalRead(kPinBatteryNPowerGood, true);
+  advanceMillis(Controller::kSleepLockoutMs + 1);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), sleep_interval);
+}
+
+TEST_F(ControllerTest, NoSleepWhenUsbConnected) {
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(1800));
+  controller.Step();
+
+  uint32_t sleep_interval = controller.GetSleepInterval();
+  ASSERT_NE(sleep_interval, 0);
+
+  advanceMillis(Controller::kSleepLockoutMs + 1);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  advanceMillis(Controller::kSleepLockoutMs * 5);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  setAnalogRead(kPinCc1, ComputeAnalogValueForMillivolts(0));
+  advanceMillis(Controller::kSleepLockoutMs + 1);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), sleep_interval);
+}
+
+TEST_F(ControllerTest, NoSleepWhen5vConnected) {
+  ASSERT_TRUE(controller.Init());
+  EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOff);
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  setDigitalRead(kPin5vDetect, true);
+  controller.Step();
+
+  uint32_t sleep_interval = controller.GetSleepInterval();
+  ASSERT_NE(sleep_interval, 0);
+
+  advanceMillis(Controller::kSleepLockoutMs + 1);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  advanceMillis(Controller::kSleepLockoutMs * 5);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), 0);
+
+  setDigitalRead(kPin5vDetect, false);
+  advanceMillis(Controller::kSleepLockoutMs + 1);
+  controller.Step();
+  EXPECT_EQ(power_controller.GetSleep(), sleep_interval);
+}
+
 TEST_F(ControllerTest, EnablesLightSensorPeriodicMeasurements) {
   controller.SetConfig(
       {brightnessMode : BrightnessMode::BRIGHTNESS_MODE_ON_WHEN_BELOW});

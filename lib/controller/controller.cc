@@ -55,6 +55,7 @@ bool Controller::Init() {
   pinMode(kPinSensitivityLow, INPUT_ANALOG);
   pinMode(kPinSensitivityHigh1, INPUT_ANALOG);
   pinMode(kPinSensitivityHigh2, INPUT_ANALOG);
+
   // For some reason, this causes the LEDs to flash (likely something to do with
   // the STM32 Arduino implementation).
   // analogWrite(kPinWhiteLed, 0);
@@ -400,10 +401,6 @@ void Controller::Step() {
                                        ? brightness
                                        : kBatteryLedPlaceholderBrightness);
       analogWrite(kPinBatteryLed3, brightness);
-    } else if (power_status_ == PowerStatus::kCharged) {
-      analogWrite(kPinBatteryLed1, kBatteryLedActiveBrightness);
-      analogWrite(kPinBatteryLed2, kBatteryLedActiveBrightness);
-      analogWrite(kPinBatteryLed3, kBatteryLedActiveBrightness);
     } else if (battery_level_timer_.Active()) {
       const uint16_t battery_millivolts =
           battery_average_filter_.GetFilteredValue();
@@ -422,6 +419,11 @@ void Controller::Step() {
       analogWrite(kPinBatteryLed1, brightness);
       analogWrite(kPinBatteryLed2, brightness);
       analogWrite(kPinBatteryLed3, brightness);
+    } else if (power_status_ == PowerStatus::kCharged ||
+               usb_status_ != USBStatus::kNoConnection) {
+      analogWrite(kPinBatteryLed1, kBatteryLedActiveBrightness);
+      analogWrite(kPinBatteryLed2, kBatteryLedActiveBrightness);
+      analogWrite(kPinBatteryLed3, kBatteryLedActiveBrightness);
     } else {
       analogWrite(kPinBatteryLed1, 0);
       analogWrite(kPinBatteryLed2, 0);
@@ -439,9 +441,16 @@ void Controller::Step() {
   const bool proximity_lockout =
       config_.proximity_mode != ProximityMode::PROXIMITY_MODE_DISABLED &&
       motion_proximity_timeout_.Active();
-  if (!led_on_ && power_status_ != PowerStatus::kCharging &&
-      !sleep_lockout_timer.Active() && !proximity_lockout &&
-      !battery_level_timer_.Active()) {
+
+  // Disable sleeping when USB is connected, as detected in several ways. Keep
+  // sleep enabled when in a low-power cutoff state and charging.
+  const bool usb_power = usb_status_ != USBStatus::kNoConnection ||
+                         power_status_ == PowerStatus::kCharging ||
+                         power_status_ == PowerStatus::kCharged ||
+                         digitalRead(kPin5vDetect);
+
+  if (!led_on_ && !usb_power && !sleep_lockout_timer.Active() &&
+      !proximity_lockout && !battery_level_timer_.Active()) {
     power_controller_->Sleep(GetSleepInterval());
   }
 }
