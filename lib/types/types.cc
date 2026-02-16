@@ -82,6 +82,8 @@ uint32_t millis() { return millis_; }
 
 void setMillis(uint32_t millis) { millis_ = millis; }
 
+void delay(uint32_t millis) { advanceMillis(millis); }
+
 void advanceMillis(uint32_t millis) { millis_ += millis; }
 
 #endif  // ifndef ARDUINO

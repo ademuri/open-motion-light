@@ -37,8 +37,14 @@ constexpr uint32_t HIGH = 1;
 constexpr uint32_t CHANGE = 2;
 constexpr uint32_t FALLING = 3;
 constexpr uint32_t RISING = 4;
-constexpr uint32_t INPUT_ANALOG = 0x4;
+
+constexpr uint32_t INPUT = 0x0;
 constexpr uint32_t OUTPUT = 0x1;
+constexpr uint32_t INPUT_PULLUP = 0x2;
+constexpr uint32_t INPUT_FLOATING = INPUT;
+constexpr uint32_t INPUT_PULLDOWN = 0x3;
+constexpr uint32_t INPUT_ANALOG = 0x4;
+constexpr uint32_t OUTPUT_OPEN_DRAIN = 0x5;
 
 int digitalRead(uint32_t ulPin);
 void setDigitalRead(uint32_t ulPin, bool value);
@@ -57,6 +63,8 @@ void setAnalogRead(uint32_t ulPin, uint32_t value);
 
 uint32_t millis();
 void setMillis(uint32_t millis);
+void delay(uint32_t millis);
+
 void advanceMillis(uint32_t millis);
 
 #endif  // ifdef ARDUINO
