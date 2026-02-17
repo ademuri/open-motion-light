@@ -49,10 +49,10 @@ constexpr uint32_t OUTPUT_OPEN_DRAIN = 0x5;
 int digitalRead(uint32_t ulPin);
 void setDigitalRead(uint32_t ulPin, bool value);
 
-void digitalWrite(uint32_t ulPin, uint32_t ulVal);
+void digitalWrite(uint32_t ulPin, uint32_t ulVal, bool checkPinMode = true);
 bool getDigitalWrite(uint32_t ulPin);
 
-void analogWrite(uint32_t ulPin, uint32_t ulValue);
+void analogWrite(uint32_t ulPin, uint32_t ulValue, bool checkPinMode = true);
 uint32_t getAnalogWrite(uint32_t ulPin);
 
 void pinMode(uint32_t pin, uint32_t mode);

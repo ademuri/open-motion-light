@@ -36,7 +36,9 @@ class LightTest : public ::testing::Test {
     setMillis(0);
     for (uint32_t pin = 0; pin < kPinMax; pin++) {
       setDigitalRead(pin, false);
-      analogWrite(pin, 0);
+      digitalWrite(pin, 0, /*checkPinMode=*/false);
+      analogWrite(pin, 0, /*checkPinMode=*/false);
+      setAnalogRead(pin, 0);
       pinMode(pin, 0);
     }
   }

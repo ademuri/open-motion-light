@@ -52,34 +52,7 @@ void SetSensitivityPins(const ConfigPb& config) {
 }
 
 bool Controller::Init() {
-  // USB pins
-  pinMode(kPinCc1, INPUT_ANALOG);
-  pinMode(kPinCc2, INPUT_ANALOG);
-
-  // UI pins
-  pinMode(kPinBatteryLed1, OUTPUT);
-  pinMode(kPinBatteryLed2, OUTPUT);
-  pinMode(kPinBatteryLed3, OUTPUT);
-  pinMode(kPinWhiteLed, OUTPUT);
-
-  // Sensors
-  pinMode(kPinMotionSensor, INPUT);
-  pinMode(kPinLightSensorInterrupt, INPUT);
-
-  // Power switch
-  pinMode(kPinPowerAuto, INPUT);
-  pinMode(kPinPowerOn, INPUT);
-
-  // Battery management
-  pinMode(kPinBatteryNPowerGood, INPUT);
-  pinMode(kPinBatteryStat, INPUT);
-  pinMode(kPinChargeHighCurrentEnable, OUTPUT);
-  pinMode(kPin5vDetect, INPUT_PULLDOWN);
-
-  // Indicate that the program has started.
-  digitalWrite(kPinBatteryLed3, true);
-  delay(100);
-  digitalWrite(kPinBatteryLed3, false);
+  InitPins();
 
   // For some reason, this causes the LEDs to flash (likely something to do with
   // the STM32 Arduino implementation).
@@ -122,6 +95,37 @@ bool Controller::Init() {
   sleep_lockout_timer.Reset();
 
   return true;
+}
+
+void Controller::InitPins() {
+  // USB pins
+  pinMode(kPinCc1, INPUT_ANALOG);
+  pinMode(kPinCc2, INPUT_ANALOG);
+
+  // UI pins
+  pinMode(kPinBatteryLed1, OUTPUT);
+  pinMode(kPinBatteryLed2, OUTPUT);
+  pinMode(kPinBatteryLed3, OUTPUT);
+  pinMode(kPinWhiteLed, OUTPUT);
+
+  // Sensors
+  pinMode(kPinMotionSensor, INPUT);
+  pinMode(kPinLightSensorInterrupt, INPUT);
+
+  // Power switch
+  pinMode(kPinPowerAuto, INPUT);
+  pinMode(kPinPowerOn, INPUT);
+
+  // Battery management
+  pinMode(kPinBatteryNPowerGood, INPUT);
+  pinMode(kPinBatteryStat, INPUT);
+  pinMode(kPinChargeHighCurrentEnable, OUTPUT);
+  pinMode(kPin5vDetect, INPUT_PULLDOWN);
+
+  // Indicate that the program has started.
+  digitalWrite(kPinBatteryLed3, true);
+  delay(100);
+  digitalWrite(kPinBatteryLed3, false);
 }
 
 PowerMode Controller::ReadPowerMode() {

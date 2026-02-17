@@ -95,6 +95,10 @@ class Controller {
   // Initializes this object. Returns whether this was successful.
   bool Init();
 
+  // Initializes just the pins. Visible for testing - normally this happens as
+  // part of Init.
+  void InitPins();
+
   void Step();
 
   PowerMode GetPowerMode() const { return power_mode_; }

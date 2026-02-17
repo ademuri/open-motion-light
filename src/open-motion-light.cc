@@ -46,6 +46,15 @@ EdgeFilter proximity_edge_filter([]() { return vcnl4020.ReadProximity(); },
                                  /*alpha=*/255);
 #endif  // DEBUG_VCNL4020_PROXIMITY
 
+static void ErrorFlash(uint32_t period) {
+  while (true) {
+    uint8_t brightness = (millis() / period) % 2;
+    analogWrite(kPinBatteryLed1, brightness);
+    analogWrite(kPinBatteryLed2, brightness);
+    analogWrite(kPinBatteryLed3, brightness);
+  }
+}
+
 void setup() {
   Serial1.begin(115200);
   // Serial1.println("Booting...");
@@ -61,13 +70,8 @@ void setup() {
   analogWriteFrequency(20 * 1000);
   analogWriteResolution(8);
 
-  if (!controller.Init()) {
-    while (true) {
-      uint8_t brightness = (millis() / 100) % 2;
-      analogWrite(kPinBatteryLed1, brightness);
-      analogWrite(kPinBatteryLed2, brightness);
-      analogWrite(kPinBatteryLed3, brightness);
-    }
+  if (!serial_manager.Init()) {
+    ErrorFlash(100);
   }
 
 #ifdef DEBUG_VCNL4020_BRIGHTNESS

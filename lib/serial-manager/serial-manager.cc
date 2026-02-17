@@ -3,7 +3,7 @@
 #include "config-storage.h"
 #include "serial.pb.h"
 
-void SerialManager::Init() { controller_->Init(); }
+bool SerialManager::Init() { return controller_->Init(); }
 
 void SerialManager::Step() {
   static constexpr size_t kFirmwareVersionMaxLength =

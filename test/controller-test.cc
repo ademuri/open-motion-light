@@ -56,6 +56,7 @@ class ControllerTest : public LightTest {
  protected:
   void SetUp() override {
     LightTest::SetUp();
+    controller.InitPins();
     setDigitalRead(kPinPowerAuto, true);
     setDigitalRead(kPinPowerOn, true);
     setDigitalRead(kPinBatteryNPowerGood, true);
@@ -623,6 +624,8 @@ TEST_F(ControllerTest, DoesntTurnOnWhenUSBConnected) {
 
 TEST_F(ControllerTest, ReadsAnalogVoltage) {
   const uint32_t pin = PA0;
+  pinMode(pin, INPUT_ANALOG);
+
   setAnalogRead(pin, Controller::kAdcConfiguredMaxCount);
   EXPECT_EQ(
       Controller::ReadAnalogVoltageMillivolts(pin, /*battery_millivolts=*/3000),
@@ -1083,6 +1086,9 @@ TEST_F(ControllerTest, TogglesLedInProximityModeToggle) {
 }
 
 TEST_F(ControllerTest, HandlesMillisRollover) {
+  pinMode(kPinPowerOn, OUTPUT);
+  pinMode(kPinPowerAuto, OUTPUT);
+
   setMillis(std::numeric_limits<uint32_t>::max() - 1000);
   setDigitalRead(kPinPowerAuto, true);
   setDigitalRead(kPinPowerOn, true);
@@ -1119,6 +1125,8 @@ TEST_F(ControllerTest, HandlesMillisRollover) {
 }
 
 TEST_F(ControllerTest, SetsSensitivityPins) {
+  ASSERT_TRUE(controller.Init());
+
   ConfigPb config = *controller.GetConfig();
 
   // UNSPECIFIED should be the same as ONE

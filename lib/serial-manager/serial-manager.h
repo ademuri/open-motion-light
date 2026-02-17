@@ -12,7 +12,7 @@ class SerialManager {
       : serial_port_(serial_port), controller_(controller) {}
 
   // Initializes this instance.
-  void Init();
+  bool Init();
 
   // Runs one iteration.
   void Step();
