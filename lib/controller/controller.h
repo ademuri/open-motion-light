@@ -123,9 +123,6 @@ class Controller {
   // Reads the MCU temperature, in degrees Celsius.
   int16_t ReadTemperature() { return temperature_sensor_->ReadTemperature(); }
 
-  // Configuration values. TODO: store these in EEPROM and add an interface for
-  // changing them.
-
   // How long the light should be on for after motion is detected. Visible for
   // testing.
   uint32_t GetMotionTimeoutSeconds() const {
