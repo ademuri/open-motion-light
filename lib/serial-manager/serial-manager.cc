@@ -14,7 +14,6 @@ void SerialManager::Step() {
     pb_ostream_s ostream = serial_port_->BuildPbOstream();
 
     SerialRequest request;
-    // TODO: check return value
     bool success = pb_decode_ex(&istream, &SerialRequest_msg, &request,
                                 PB_ENCODE_DELIMITED);
 
