@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <api/Common.h>
+
 #ifdef ARDUINO
 
 #include <Arduino.h>
@@ -31,42 +33,27 @@
 #include "fake-eeprom.h"
 #include "fake-pins.h"
 
-// From cores/arduino/api/Common.h
-typedef enum {
-  LOW = 0,
-  HIGH = 1,
-  CHANGE = 2,
-  FALLING = 3,
-  RISING = 4,
-} PinStatus;
-
-constexpr uint32_t INPUT = 0x0;
-constexpr uint32_t OUTPUT = 0x1;
-constexpr uint32_t INPUT_PULLUP = 0x2;
-constexpr uint32_t INPUT_FLOATING = INPUT;
-constexpr uint32_t INPUT_PULLDOWN = 0x3;
-constexpr uint32_t INPUT_ANALOG = 0x4;
-constexpr uint32_t OUTPUT_OPEN_DRAIN = 0x5;
-
-int digitalRead(uint32_t ulPin);
+PinStatus digitalRead(uint32_t ulPin);
 void setDigitalRead(uint32_t ulPin, bool value);
+void setDigitalRead(uint32_t ulPin, PinStatus value);
 
-void digitalWrite(uint32_t ulPin, uint32_t ulVal, bool checkPinMode = true);
+void digitalWrite(uint32_t ulPin, bool val);
+void digitalWrite(uint32_t ulPin, uint32_t ulVal, bool checkPinMode);
 bool getDigitalWrite(uint32_t ulPin);
 
-void analogWrite(uint32_t ulPin, uint32_t ulValue, bool checkPinMode = true);
+void analogWrite(uint32_t ulPin, uint32_t ulValue, bool checkPinMode);
 uint32_t getAnalogWrite(uint32_t ulPin);
 
 void pinMode(uint32_t pin, uint32_t mode);
 uint32_t getPinMode(uint32_t pin);
 
-uint32_t analogRead(uint32_t ulPin);
-void setAnalogRead(uint32_t ulPin, uint32_t value);
+int analogRead(uint32_t ulPin);
+void setAnalogRead(uint32_t ulPin, int value);
 
-uint32_t millis();
-void setMillis(uint32_t millis);
-void delay(uint32_t millis);
+unsigned long millis();
+void setMillis(unsigned long millis);
+void delay(unsigned long millis);
 
-void advanceMillis(uint32_t millis);
+void advanceMillis(unsigned long millis);
 
 #endif  // ifdef ARDUINO

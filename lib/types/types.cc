@@ -23,13 +23,13 @@
 #include <array>
 #include <vector>
 
-static std::array<bool, kPinMax> digital_read_data;
+static std::array<PinStatus, kPinMax> digital_read_data;
 static std::array<bool, kPinMax> digital_write_data;
 static std::array<uint32_t, kPinMax> analog_write_data;
-static std::array<uint32_t, kPinMax> analog_read_data;
+static std::array<int, kPinMax> analog_read_data;
 static std::array<uint32_t, kPinMax> pin_mode_data;
 
-static uint32_t millis_ = 0;
+static unsigned long millis_ = 0;
 
 MATCHER(PinModeForDigitalRead,
         negation ? " a pin mode that doesn't support digitalRead"
@@ -64,7 +64,7 @@ MATCHER(ValidPinMode, "") {
          valid_pin_modes.end();
 }
 
-int digitalRead(uint32_t ulPin) {
+PinStatus digitalRead(uint32_t ulPin) {
   EXPECT_LT(ulPin, kPinMax);
   EXPECT_THAT(pin_mode_data[ulPin], PinModeForDigitalRead())
       << "for pin " << ulPin;
@@ -73,9 +73,20 @@ int digitalRead(uint32_t ulPin) {
 
 void setDigitalRead(uint32_t ulPin, bool value) {
   ASSERT_LT(ulPin, kPinMax);
-  // EXPECT_THAT(pin_mode_data[ulPin], PinModeForDigitalRead()) << "for pin " <<
-  // ulPin;
+  digital_read_data[ulPin] = value ? HIGH : LOW;
+}
+
+void setDigitalRead(uint32_t ulPin, PinStatus value) {
+  ASSERT_LT(ulPin, kPinMax);
   digital_read_data[ulPin] = value;
+}
+
+void digitalWrite(uint32_t ulPin, PinStatus status) {
+  digitalWrite(ulPin, static_cast<uint32_t>(status), /*checkPinMode=*/true);
+}
+
+void digitalWrite(uint32_t ulPin, bool val) {
+  digitalWrite(ulPin, val ? HIGH : LOW);
 }
 
 void digitalWrite(uint32_t ulPin, uint32_t ulVal, bool checkPinMode) {
@@ -84,14 +95,16 @@ void digitalWrite(uint32_t ulPin, uint32_t ulVal, bool checkPinMode) {
     EXPECT_THAT(pin_mode_data[ulPin], PinModeForDigitalWrite())
         << "for pin " << ulPin;
   }
-  digital_write_data[ulPin] = ulVal;
+  digital_write_data[ulPin] = (ulVal != 0);
 }
 
 bool getDigitalWrite(uint32_t ulPin) {
   EXPECT_LT(ulPin, kPinMax);
-  // EXPECT_THAT(pin_mode_data[ulPin], PinModeForDigitalWrite()) << "for pin "
-  // << ulPin;
   return digital_write_data[ulPin];
+}
+
+void analogWrite(uint32_t ulPin, int value) {
+  analogWrite(ulPin, static_cast<uint32_t>(value), /*checkPinMode=*/true);
 }
 
 void analogWrite(uint32_t ulPin, uint32_t ulValue, bool checkPinMode) {
@@ -108,6 +121,10 @@ uint32_t getAnalogWrite(uint32_t ulPin) {
   return analog_write_data[ulPin];
 }
 
+void pinMode(uint32_t pin, PinMode mode) {
+  pinMode(pin, static_cast<uint32_t>(mode));
+}
+
 void pinMode(uint32_t pin, uint32_t mode) {
   ASSERT_LT(pin, kPinMax);
   EXPECT_THAT(mode, ValidPinMode()) << "for pin " << pin;
@@ -119,24 +136,24 @@ uint32_t getPinMode(uint32_t pin) {
   return pin_mode_data[pin];
 }
 
-uint32_t analogRead(uint32_t ulPin) {
+int analogRead(uint32_t ulPin) {
   EXPECT_LT(ulPin, kPinMax);
   EXPECT_THAT(pin_mode_data[ulPin], PinModeForAnalogRead())
       << "for pin " << ulPin;
   return analog_read_data[ulPin];
 }
 
-void setAnalogRead(uint32_t ulPin, uint32_t value) {
+void setAnalogRead(uint32_t ulPin, int value) {
   ASSERT_LT(ulPin, kPinMax);
   analog_read_data[ulPin] = value;
 }
 
-uint32_t millis() { return millis_; }
+unsigned long millis() { return millis_; }
 
-void setMillis(uint32_t millis) { millis_ = millis; }
+void setMillis(unsigned long millis) { millis_ = millis; }
 
-void delay(uint32_t millis) { advanceMillis(millis); }
+void delay(unsigned long millis) { advanceMillis(millis); }
 
-void advanceMillis(uint32_t millis) { millis_ += millis; }
+void advanceMillis(unsigned long millis) { millis_ += millis; }
 
 #endif  // ifndef ARDUINO
