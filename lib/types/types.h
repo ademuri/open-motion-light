@@ -31,12 +31,14 @@
 #include "fake-eeprom.h"
 #include "fake-pins.h"
 
-// From cores/arduino/wiring_constants.h
-constexpr uint32_t LOW = 0;
-constexpr uint32_t HIGH = 1;
-constexpr uint32_t CHANGE = 2;
-constexpr uint32_t FALLING = 3;
-constexpr uint32_t RISING = 4;
+// From cores/arduino/api/Common.h
+typedef enum {
+  LOW = 0,
+  HIGH = 1,
+  CHANGE = 2,
+  FALLING = 3,
+  RISING = 4,
+} PinStatus;
 
 constexpr uint32_t INPUT = 0x0;
 constexpr uint32_t OUTPUT = 0x1;

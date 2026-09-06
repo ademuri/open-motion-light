@@ -28,13 +28,13 @@ class FakePowerController : public PowerController {
     return true;
   }
 
-  void AttachInterruptWakeup(uint32_t pin, uint32_t mode) override {
+  void AttachInterruptWakeup(uint32_t pin, PinStatus mode) override {
     ASSERT_TRUE(initialized_);
     ASSERT_LT(pin, kPinMax);
     interrupts_[pin] = mode;
   }
 
-  uint32_t GetPinInterruptMode(uint32_t pin) {
+  PinStatus GetPinInterruptMode(uint32_t pin) {
     EXPECT_LT(pin, kPinMax);
     assert(pin < kPinMax);
     return interrupts_[pin];
@@ -52,5 +52,5 @@ class FakePowerController : public PowerController {
  private:
   bool initialized_ = false;
   uint32_t sleep_millis_ = 0;
-  std::array<uint32_t, kPinMax> interrupts_;
+  std::array<PinStatus, kPinMax> interrupts_;
 };

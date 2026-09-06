@@ -24,7 +24,7 @@ bool Stm32PowerController::Begin() {
   return true;
 };
 
-void Stm32PowerController::AttachInterruptWakeup(uint32_t pin, uint32_t mode) {
+void Stm32PowerController::AttachInterruptWakeup(uint32_t pin, PinStatus mode) {
   impl_.attachInterruptWakeup(pin, &WakeUpCallback, mode,
                               LP_Mode::SHUTDOWN_MODE);
 }
