@@ -6,10 +6,10 @@ class ConfigStorage {
  public:
   // Tries to load the config from storage (EEPROM). Returns whether the load
   // was successful.
-  static bool TryLoadConfig(ConfigPb *config);
+  static bool TryLoadConfig(ConfigPb* config);
 
   // Save the config to storage (EEPROM).
-  static bool SaveConfig(ConfigPb const *config);
+  static bool SaveConfig(ConfigPb const* config);
 
   // These are visible for testing:
 

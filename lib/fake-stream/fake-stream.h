@@ -12,7 +12,7 @@ class Stream : public Print {
   virtual int read() = 0;
   virtual int peek() = 0;
 
-  size_t readBytes(unsigned char *buffer, size_t length);
+  size_t readBytes(unsigned char* buffer, size_t length);
 };
 
 #endif  // ARDUINO

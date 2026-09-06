@@ -9,7 +9,7 @@
 constexpr size_t kEepromOffset = sizeof(uint32_t) * 3;
 constexpr size_t kEepromDataMaxSize = 2 * 1024 - kEepromOffset;
 
-bool nanopbOutputCallback(pb_ostream_t *stream, const uint8_t *buf,
+bool nanopbOutputCallback(pb_ostream_t* stream, const uint8_t* buf,
                           size_t count) {
   if (buf == nullptr) {
     return false;
@@ -19,7 +19,7 @@ bool nanopbOutputCallback(pb_ostream_t *stream, const uint8_t *buf,
     return false;
   }
 
-  size_t *bytes_written = static_cast<size_t *>(stream->state);
+  size_t* bytes_written = static_cast<size_t*>(stream->state);
 
   for (size_t i = 0; i < count; i++) {
     EEPROM.write(kEepromOffset + i + *bytes_written, buf[i]);
@@ -29,7 +29,7 @@ bool nanopbOutputCallback(pb_ostream_t *stream, const uint8_t *buf,
   return true;
 }
 
-bool nanopbInputCallback(pb_istream_t *stream, uint8_t *buf, size_t count) {
+bool nanopbInputCallback(pb_istream_t* stream, uint8_t* buf, size_t count) {
   if (buf == nullptr) {
     return false;
   }
@@ -38,7 +38,7 @@ bool nanopbInputCallback(pb_istream_t *stream, uint8_t *buf, size_t count) {
     return false;
   }
 
-  size_t *bytes_read = static_cast<size_t *>(stream->state);
+  size_t* bytes_read = static_cast<size_t*>(stream->state);
 
   for (size_t i = 0; i < count; i++) {
     buf[i] = EEPROM.read(kEepromOffset + i + *bytes_read);
@@ -49,7 +49,7 @@ bool nanopbInputCallback(pb_istream_t *stream, uint8_t *buf, size_t count) {
   return true;
 }
 
-bool ConfigStorage::TryLoadConfig(ConfigPb *const config) {
+bool ConfigStorage::TryLoadConfig(ConfigPb* const config) {
   uint32_t magicByte0;
   uint32_t magicByte1;
   EEPROM.get(0, magicByte0);
@@ -67,16 +67,16 @@ bool ConfigStorage::TryLoadConfig(ConfigPb *const config) {
 
   size_t bytes_read = 0;
   pb_istream_t eepromStream = {&nanopbInputCallback,
-                               static_cast<void *>(&bytes_read),
+                               static_cast<void*>(&bytes_read),
                                kEepromDataMaxSize};
   return pb_decode_ex(&eepromStream, &ConfigPb_msg, config,
                       PB_DECODE_DELIMITED);
 }
 
-bool ConfigStorage::SaveConfig(ConfigPb const *const config) {
+bool ConfigStorage::SaveConfig(ConfigPb const* const config) {
   size_t bytes_written = 0;
   pb_ostream_t eepromStream = {&nanopbOutputCallback,
-                               static_cast<void *>(&bytes_written),
+                               static_cast<void*>(&bytes_written),
                                kEepromDataMaxSize, /*bytes_written=*/0};
   bool result =
       pb_encode_ex(&eepromStream, &ConfigPb_msg, config, PB_ENCODE_DELIMITED);

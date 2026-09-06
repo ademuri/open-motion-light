@@ -8,7 +8,7 @@
 
 class SerialManager {
  public:
-  SerialManager(SerialPort *serial_port, Controller *controller)
+  SerialManager(SerialPort* serial_port, Controller* controller)
       : serial_port_(serial_port), controller_(controller) {}
 
   // Initializes this instance.
@@ -18,6 +18,6 @@ class SerialManager {
   void Step();
 
  private:
-  SerialPort *const serial_port_;
-  Controller *const controller_;
+  SerialPort* const serial_port_;
+  Controller* const controller_;
 };

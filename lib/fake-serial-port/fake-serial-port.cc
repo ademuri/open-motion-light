@@ -6,14 +6,14 @@
 
 #include "serial.pb.h"
 
-bool pb_print_write(pb_ostream_t *stream, const pb_byte_t *buf, size_t count) {
-  Print *p = reinterpret_cast<Print *>(stream->state);
+bool pb_print_write(pb_ostream_t* stream, const pb_byte_t* buf, size_t count) {
+  Print* p = reinterpret_cast<Print*>(stream->state);
   size_t written = p->write(buf, count);
   return written == count;
 };
 
-bool pb_stream_read(pb_istream_t *stream, pb_byte_t *buf, size_t count) {
-  Stream *s = reinterpret_cast<Stream *>(stream->state);
+bool pb_stream_read(pb_istream_t* stream, pb_byte_t* buf, size_t count) {
+  Stream* s = reinterpret_cast<Stream*>(stream->state);
   size_t written = s->readBytes(buf, count);
   return written == count;
 };
@@ -40,12 +40,12 @@ size_t FakeSerialPort::write(uint8_t c) {
 }
 
 pb_istream_s FakeSerialPort::BuildPbIstream() {
-  return {pb_stream_read, reinterpret_cast<void *>(this),
+  return {pb_stream_read, reinterpret_cast<void*>(this),
           input_buffer_bytes_written_};
 }
 
 pb_ostream_s FakeSerialPort::BuildPbOstream() {
-  return {pb_print_write, reinterpret_cast<void *>(this), kBufferMaxSize,
+  return {pb_print_write, reinterpret_cast<void*>(this), kBufferMaxSize,
           /*bytes_written=*/0};
 }
 
