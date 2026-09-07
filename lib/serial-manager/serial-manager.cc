@@ -13,16 +13,16 @@ void SerialManager::Step() {
     pb_istream_s istream = serial_port_->BuildPbIstream();
     pb_ostream_s ostream = serial_port_->BuildPbOstream();
 
-    SerialRequest request;
+    SerialRequest request = SerialRequest_init_default;
     bool success = pb_decode_ex(&istream, &SerialRequest_msg, &request,
-                                PB_ENCODE_DELIMITED);
+                                PB_DECODE_DELIMITED);
 
     if (success && request.has_config) {
       controller_->SetConfig(request.config);
       ConfigStorage::SaveConfig(&request.config);
     }
 
-    SerialResponse response;
+    SerialResponse response = SerialResponse_init_default;
     response.status.battery_voltage_millivolts =
         controller_->GetFilteredBatteryMillivolts();
     response.status.has_battery_voltage_millivolts = true;
@@ -45,6 +45,6 @@ void SerialManager::Step() {
     }
 
     // TODO: check return value
-    pb_encode_ex(&ostream, &SerialResponse_msg, &response, PB_DECODE_DELIMITED);
+    pb_encode_ex(&ostream, &SerialResponse_msg, &response, PB_ENCODE_DELIMITED);
   }
 }

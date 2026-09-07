@@ -55,6 +55,7 @@ TEST(ControllerTestFunctionsTest, ComputeAnalogValueForMillivolts) {
 class ControllerTest : public LightTest {
  protected:
   void SetUp() override {
+    setMillis(0);
     LightTest::SetUp();
     controller.InitPins();
     setDigitalRead(kPinPowerAuto, true);
@@ -338,9 +339,27 @@ TEST_F(ControllerTest, SetsPowerStatus) {
   setDigitalRead(kPinBatteryStat, true);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kCharged);
+}
 
-  // TODO: add test coverage for charge error, once that functionality is
-  // implemented.
+TEST_F(ControllerTest, SetsPowerStatusChargeError) {
+  // Set up charge in progress
+  setDigitalRead(kPinBatteryNPowerGood, false);
+  setDigitalRead(kPinBatteryStat, false);
+
+  ASSERT_TRUE(controller.Init());
+  controller.Step();
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kCharging);
+
+  bool on = true;
+  for (size_t t = 0; t < 50; t++) {
+    advanceMillis(50);
+    setDigitalRead(kPinBatteryStat, on);
+    controller.Step();
+    if (t % 10 == 0) {
+      on = !on;
+    }
+  }
+  EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kChargeError);
 }
 
 TEST_F(ControllerTest, UsesHysteresisForBatteryVoltage) {
@@ -407,6 +426,8 @@ TEST_F(ControllerTest, DetectsLowBatteryVoltage) {
             PowerStatus::kLowBatteryCutoffCharging);
 
   setDigitalRead(kPinBatteryStat, true);
+  controller.Step();
+  advanceMillis(100);
   controller.Step();
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
 }

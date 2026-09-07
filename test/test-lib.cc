@@ -47,6 +47,7 @@ static const std::map<PowerStatus, std::string> kPowerStatusMap = {
   {PowerStatus::kCharged, "charged"},
   {PowerStatus::kChargeError, "charge_error"},
   {PowerStatus::kLowBatteryCutoff, "low_battery_cutoff"},
+  {PowerStatus::kLowBatteryCutoffCharging, "low_battery_cutoff_charging"},
 };
 
 std::ostream& operator<<(std::ostream& os, const PowerStatus power_status) {

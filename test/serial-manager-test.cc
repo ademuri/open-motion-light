@@ -52,7 +52,7 @@ class SerialManagerTest : public ::testing::Test {
 };
 
 TEST_F(SerialManagerTest, RoundTripConfig) {
-  ConfigPb config;
+  ConfigPb config = ConfigPb_init_default;
   config.version = 1;
   config.proximity_threshold = 182;
   config.proximity_mode = ProximityMode::PROXIMITY_MODE_TOGGLE;
@@ -60,14 +60,14 @@ TEST_F(SerialManagerTest, RoundTripConfig) {
   config.autoBrightnessThreshold = 123;
   config.proximity_toggle_timeout_seconds = 1234;
 
-  SerialRequest request;
+  SerialRequest request = SerialRequest_init_default;
   request.has_config = true;
   request.config = config;
 
   serial_port.WritePb(SerialRequest_msg, request);
   serial_manager.Step();
 
-  SerialResponse response;
+  SerialResponse response = SerialResponse_init_default;
   serial_port.ReadPb(SerialResponse_msg, &response);
 
   EXPECT_FALSE(response.has_config);
@@ -121,11 +121,13 @@ TEST_F(SerialManagerTest, ReturnsStatus) {
   }
   EXPECT_GT(controller.GetFilteredBatteryMillivolts(), 3800);
 
-  SerialRequest request;
+  SerialRequest request = SerialRequest_init_default;
+  request.request_config = false;
+  request.has_request_config = true;
   serial_port.WritePb(SerialRequest_msg, request);
   serial_manager.Step();
 
-  SerialResponse response;
+  SerialResponse response = SerialResponse_init_default;
   serial_port.ReadPb(SerialResponse_msg, &response);
 
   EXPECT_FALSE(response.has_config);

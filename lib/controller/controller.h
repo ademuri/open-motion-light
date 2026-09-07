@@ -21,10 +21,13 @@
 // clang-format on
 
 #include <arduino-timer.h>
+#include <blink-filter.h>
+#include <debounce-filter.h>
 #include <exponential-moving-average-filter.h>
 #include <median-filter.h>
 
 #include "pb.h"  // Needed to trigger inclusion of the Nanopb-generated files
+#include "pins.h"
 #include "power-controller.h"
 #include "ramper.h"
 #include "serial.pb.h"
@@ -67,6 +70,12 @@ enum class USBStatus {
   kUSB3_0,
 };
 
+enum class ChargerStatStatus {
+  kComplete,
+  kInProgress,
+  kFault,
+};
+
 // Defaults if the config hasn't been programmed. Keep in sync with the UI
 // defaults in open-motion-light-manager:src/components/DeviceConfig/index.tsx
 static constexpr ConfigPb kDefaultConfig = ConfigPb{
@@ -104,6 +113,13 @@ class Controller {
   PowerMode GetPowerMode() const { return power_mode_; }
   PowerStatus GetPowerStatus() const { return power_status_; }
   USBStatus GetUSBStatus() const { return usb_status_; }
+
+  bool GetBatteryStat() const {
+    return battery_stat_blink_filter_.GetRawValue();
+  }
+  bool GetBatteryStatFilteredValue() const {
+    return battery_stat_blink_filter_.GetFilteredValue();
+  }
 
   // Returns the battery voltage, filtered for stability.
   uint16_t GetFilteredBatteryMillivolts() const {
@@ -203,6 +219,10 @@ class Controller {
   // Reads the state of the power mode switch.
   static PowerMode ReadPowerMode();
 
+#ifndef ARDUINO
+  void SetFiltersMillis();
+#endif
+
   PowerMode power_mode_ = PowerMode::kOff;
   // Used to debounce reading the power mode switch.
   CountDownTimer power_mode_read_timer_{10};
@@ -229,6 +249,14 @@ class Controller {
   ExponentialMovingAverageFilter<uint16_t> battery_average_filter_{
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};
+
+  DebounceFilter battery_stat_debouncer_{
+      filter_functions::ForDigitalRead<kPinBatteryStat>()};
+  BlinkFilter battery_stat_blink_filter_{
+      [&]() { return battery_stat_debouncer_.GetFilteredValue(); },
+      /*expectedPeriodMs=*/1000,
+      /*toleranceFraction=*/25,  // 10%
+      /*lookbackPeriods=*/3};
 
   VCNL4020* const vcnl4020_;
   PowerController* const power_controller_;

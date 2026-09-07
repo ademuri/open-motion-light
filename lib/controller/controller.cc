@@ -51,6 +51,15 @@ void SetSensitivityPins(const ConfigPb& config) {
   }
 }
 
+#ifndef ARDUINO
+void Controller::SetFiltersMillis() {
+  battery_median_filter_.SetMillis(millis());
+  battery_average_filter_.SetMillis(millis());
+  battery_stat_debouncer_.SetMillis(millis());
+  battery_stat_blink_filter_.SetMillis(millis());
+}
+#endif
+
 bool Controller::Init() {
   InitPins();
 
@@ -58,6 +67,10 @@ bool Controller::Init() {
   // the STM32 Arduino implementation).
   // analogWrite(kPinWhiteLed, 0);
   led_on_ = false;
+
+#ifndef ARDUINO
+  SetFiltersMillis();
+#endif
 
   // Initialize the battery filter
   for (uint32_t i = 0; i < kBatteryMedianFilterSize; i++) {
@@ -198,12 +211,13 @@ uint16_t Controller::ReadAnalogVoltageMillivolts(
 
 void Controller::Step() {
 #ifndef ARDUINO
-  battery_median_filter_.SetMillis(millis());
-  battery_average_filter_.SetMillis(millis());
+  SetFiltersMillis();
 #endif  // ifndef ARDUINO
 
   battery_median_filter_.Run();
   battery_average_filter_.Run();
+  battery_stat_debouncer_.Run();
+  battery_stat_blink_filter_.Run();
 
   const PowerMode previous_power_mode = power_mode_;
   bool auto_triggered = false;
@@ -303,7 +317,22 @@ void Controller::Step() {
 
   {
     const bool power_good_value = !digitalRead(kPinBatteryNPowerGood);
-    const bool stat_value = digitalRead(kPinBatteryStat);
+
+    // HIGH: Charge completed, charger in sleep mode or charge disabled (V_TS <
+    // V_TS_ENZ) LOW: Charge in progress (including automatic recharge) BLINK at
+    // 1Hz: Fault (VIN OVP, BAT OVP, BAT OCP, TS HOT, TS COLD, TMR_EXP, VSET pin
+    // short/open or ISET pin short)
+    const ChargerStatStatus stat_value =
+        battery_stat_blink_filter_.GetFilteredValue()
+            ? ChargerStatStatus::kFault
+            : (battery_stat_blink_filter_.GetRawValue()
+                   ? ChargerStatStatus::kComplete
+                   : ChargerStatStatus::kInProgress);
+    // const ChargerStatStatus stat_value =
+    // battery_stat_blink_filter_.GetRawValue()
+    //                ? ChargerStatStatus::kComplete
+    //                : ChargerStatStatus::kInProgress;
+
     // TODO: possibly adjust the threshold based on estimated current
     // consumption when the white LEDs are on.
     static bool battery_low = false;
@@ -315,7 +344,10 @@ void Controller::Step() {
           GetFilteredBatteryMillivolts() < GetLowBatteryCutoffMillivolts();
     }
 
-    if (battery_low && power_good_value && !stat_value) {
+    if (stat_value == ChargerStatStatus::kFault) {
+      power_status_ = PowerStatus::kChargeError;
+    } else if (battery_low && power_good_value &&
+               stat_value == ChargerStatStatus::kInProgress) {
       // Charger has good supply voltage, and is charging. We don't expect to
       // see the case where the battery is low, power is good, but it's not
       // charging - this is handled anyway by the next case.
@@ -323,7 +355,7 @@ void Controller::Step() {
     } else if (battery_low) {
       power_status_ = PowerStatus::kLowBatteryCutoff;
     } else if (power_good_value) {
-      if (stat_value) {
+      if (stat_value == ChargerStatStatus::kComplete) {
         power_status_ = PowerStatus::kCharged;
       } else {
         power_status_ = PowerStatus::kCharging;
@@ -331,7 +363,6 @@ void Controller::Step() {
     } else {
       power_status_ = PowerStatus::kBattery;
     }
-    // TODO: detect stat pin blinking at 1Hz, which indicates a fault
   }
 
   if (power_status_ == PowerStatus::kLowBatteryCutoff) {
