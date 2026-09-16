@@ -456,12 +456,15 @@ void Controller::Step() {
       const uint8_t brightness = (millis() / 500) % 2 == 0
                                      ? kBatteryLedActiveBrightness
                                      : kBatteryLedPlaceholderBrightness;
-      analogWrite(kPinBatteryLed1,
-                  num_leds > 2 ? brightness : kBatteryLedPlaceholderBrightness);
-      analogWrite(kPinBatteryLed2,
-                  num_leds > 1 ? brightness : kBatteryLedPlaceholderBrightness);
-      analogWrite(kPinBatteryLed3,
-                  num_leds > 0 ? brightness : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed1, num_leds >= 3
+                                       ? brightness
+                                       : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed2, num_leds >= 2
+                                       ? brightness
+                                       : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed3, num_leds >= 1
+                                       ? brightness
+                                       : kBatteryLedPlaceholderBrightness);
     } else if (battery_level_timer_.Active()) {
       const uint16_t num_leds = battery_quantization_filter_.GetFilteredValue();
       analogWrite(kPinBatteryLed1, num_leds >= 3

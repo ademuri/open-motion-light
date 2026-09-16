@@ -544,7 +544,7 @@ TEST_F(ControllerTest, TurnsOffLedWhenBatteryLow) {
   }
 
   ASSERT_LT(controller.GetFilteredBatteryMillivolts(),
-            Controller::kBatteryVoltage0);
+            Controller::kBatteryVoltage1);
   EXPECT_EQ(controller.GetPowerStatus(), PowerStatus::kLowBatteryCutoff);
   EXPECT_EQ(controller.GetPowerMode(), PowerMode::kOn);
   EXPECT_EQ(getAnalogWrite(kPinWhiteLed), 0);
@@ -768,35 +768,39 @@ INSTANTIATE_TEST_SUITE_P(
         BatteryDisplayParam{
             "Discharging",
             {
-                {Controller::kBatteryVoltage1 + 100,
+                {Controller::kBatteryVoltage3 + 100,
                  BatteryLeds(Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness)},
-                {Controller::kBatteryVoltage0 + 10,
+                {Controller::kBatteryVoltage2 + 10,
                  BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
                              Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness)},
-                {Controller::kBatteryVoltage0 - 50,
+                {Controller::kBatteryVoltage1 + 10,
                  BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
                              Controller::kBatteryLedPlaceholderBrightness,
                              Controller::kBatteryLedActiveBrightness)},
+                {Controller::kBatteryVoltage1 - 100,
+                 BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
+                             Controller::kBatteryLedPlaceholderBrightness,
+                             Controller::kBatteryLedPlaceholderBrightness)},
             }},
         BatteryDisplayParam{
             "HysteresisPreventsLevelChange",
             {
-                {Controller::kBatteryVoltage1 + 1,
+                {Controller::kBatteryVoltage3 + 1,
                  BatteryLeds(Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness)},
-                {Controller::kBatteryVoltage1 - 8,
+                {Controller::kBatteryVoltage3 - 8,
                  BatteryLeds(Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness)},
-                {Controller::kBatteryVoltage1 - 20,
+                {Controller::kBatteryVoltage3 - 20,
                  BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
                              Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness)},
-                {Controller::kBatteryVoltage1 - 8,
+                {Controller::kBatteryVoltage3 - 8,
                  BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
                              Controller::kBatteryLedActiveBrightness,
                              Controller::kBatteryLedActiveBrightness)},
@@ -844,20 +848,25 @@ INSTANTIATE_TEST_SUITE_P(
     BatteryLevels, ChargingBatteryDisplayTest,
     ::testing::Values(
         ChargingBatteryLedParam{"Full",
-                                Controller::kBatteryVoltage1 + 100,
+                                Controller::kBatteryVoltage3 + 10,
                                 {Controller::kBatteryLedActiveBrightness,
                                  Controller::kBatteryLedActiveBrightness,
                                  Controller::kBatteryLedActiveBrightness}},
         ChargingBatteryLedParam{"Medium",
-                                Controller::kBatteryVoltage1 - 100,
+                                Controller::kBatteryVoltage2 + 10,
                                 {Controller::kBatteryLedPlaceholderBrightness,
                                  Controller::kBatteryLedActiveBrightness,
                                  Controller::kBatteryLedActiveBrightness}},
         ChargingBatteryLedParam{"Low",
-                                Controller::kBatteryVoltage0 - 100,
+                                Controller::kBatteryVoltage1 + 10,
                                 {Controller::kBatteryLedPlaceholderBrightness,
                                  Controller::kBatteryLedPlaceholderBrightness,
-                                 Controller::kBatteryLedActiveBrightness}}),
+                                 Controller::kBatteryLedActiveBrightness}},
+        ChargingBatteryLedParam{"Empty",
+                                Controller::kBatteryVoltage1 - 10,
+                                {Controller::kBatteryLedPlaceholderBrightness,
+                                 Controller::kBatteryLedPlaceholderBrightness,
+                                 Controller::kBatteryLedPlaceholderBrightness}}),
     [](const ::testing::TestParamInfo<ChargingBatteryLedParam> &info) {
       return info.param.test_name;
     });

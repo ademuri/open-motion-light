@@ -208,8 +208,9 @@ class Controller {
 
   // Battery levels. This is non-linear, since LiFePO4 batteries have a ~cubic
   // discharge curve.
-  static inline constexpr uint16_t kBatteryVoltage1 = 3350;
-  static inline constexpr uint16_t kBatteryVoltage0 = 3150;
+  static inline constexpr uint16_t kBatteryVoltage3 = 3290;
+  static inline constexpr uint16_t kBatteryVoltage2 = 3245;
+  static inline constexpr uint16_t kBatteryVoltage1 = 3150;
 
   static constexpr uint16_t kSleepLockoutMs = 1000;
 
@@ -252,12 +253,12 @@ class Controller {
       kBatteryFilterAlpha};
 
   const std::vector<QuantizationBucket<uint16_t>> battery_quantization_buckets_{
-      {3150, 2}, {3350, 3}};
+      {kBatteryVoltage1, 1}, {kBatteryVoltage2, 2}, {kBatteryVoltage3, 3}};
   QuantizationFilter<uint16_t> battery_quantization_filter_{
       [this]() { return battery_average_filter_.GetFilteredValue(); },
       battery_quantization_buckets_,
       /*hysteresis_millivolts=*/10,
-      /*below_min_value=*/1};
+      /*below_min_value=*/0};
 
   DebounceFilter battery_stat_debouncer_{
       filter_functions::ForDigitalRead<kPinBatteryStat>()};
