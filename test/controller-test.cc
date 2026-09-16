@@ -74,7 +74,7 @@ TEST(ControllerTestFunctionsTest, ComputeAnalogValueForMillivolts) {
 }
 
 class ControllerTest : public LightTest {
- protected:
+protected:
   void SetUp() override {
     setMillis(0);
     LightTest::SetUp();
@@ -96,25 +96,26 @@ class ControllerTest : public LightTest {
     ASSERT_EQ(Controller::ReadRawBatteryMillivolts(), 3529);
   }
 
-BatteryLedRange GetBatteryLedsDuringTime(uint32_t millis, uint32_t step_millis) {
-  std::vector<std::array<uint32_t, 3>> led_values;
-  for (uint32_t t = 0; t < millis; t += step_millis) {
-    advanceMillis(step_millis);
-    controller.Step();
-    led_values.push_back(GetBatteryLeds());
+  BatteryLedRange GetBatteryLedsDuringTime(uint32_t millis,
+                                           uint32_t step_millis) {
+    std::vector<std::array<uint32_t, 3>> led_values;
+    for (uint32_t t = 0; t < millis; t += step_millis) {
+      advanceMillis(step_millis);
+      controller.Step();
+      led_values.push_back(GetBatteryLeds());
+    }
+
+    BatteryLedRange led_ranges;
+    for (const auto &leds : led_values) {
+      led_ranges.led1_min = std::min(led_ranges.led1_min, leds[0]);
+      led_ranges.led1_max = std::max(led_ranges.led1_max, leds[0]);
+      led_ranges.led2_min = std::min(led_ranges.led2_min, leds[1]);
+      led_ranges.led2_max = std::max(led_ranges.led2_max, leds[1]);
+      led_ranges.led3_min = std::min(led_ranges.led3_min, leds[2]);
+      led_ranges.led3_max = std::max(led_ranges.led3_max, leds[2]);
+    }
+    return led_ranges;
   }
-  
-  BatteryLedRange led_ranges;
-  for (const auto& leds : led_values) {
-    led_ranges.led1_min = std::min(led_ranges.led1_min, leds[0]);
-    led_ranges.led1_max = std::max(led_ranges.led1_max, leds[0]);
-    led_ranges.led2_min = std::min(led_ranges.led2_min, leds[1]);
-    led_ranges.led2_max = std::max(led_ranges.led2_max, leds[1]);
-    led_ranges.led3_min = std::min(led_ranges.led3_min, leds[2]);
-    led_ranges.led3_max = std::max(led_ranges.led3_max, leds[2]);
-  }
-  return led_ranges;
-}
 
   FakeTemperatureSensor temperature_sensor;
   FakeVCNL4020 vcnl4020;
@@ -699,74 +700,110 @@ TEST_F(ControllerTest, ReadsAnalogVoltage) {
       1500);
 }
 
-TEST_F(ControllerTest, DisplaysBatteryVoltage) {
+struct BatteryVoltageStep {
+  uint16_t battery_millivolts;
+  std::array<uint32_t, 3> expected_leds;
+};
+
+struct BatteryDisplayParam {
+  std::string test_name;
+  std::vector<BatteryVoltageStep> steps;
+};
+
+class BatteryDisplayTest
+    : public ControllerTest,
+      public ::testing::WithParamInterface<BatteryDisplayParam> {};
+
+TEST_P(BatteryDisplayTest, DisplaysBatteryVoltage) {
+  const auto &param = GetParam();
   setDigitalRead(kPinBatteryNPowerGood, true);
   setDigitalRead(kPinBatteryStat, false);
 
-  setAnalogRead(AVREF,
-                (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
-                    (Controller::kBatteryVoltage1 + 100) / 4);
-  ASSERT_GT(controller.ReadRawBatteryMillivolts(),
-            Controller::kBatteryVoltage1);
-  ASSERT_TRUE(controller.Init());
-  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(0, 0, 0));
+  for (size_t i = 0; i < param.steps.size(); ++i) {
+    const auto &step = param.steps[i];
+    SCOPED_TRACE(::testing::Message()
+                 << "Step " << i << " (" << step.battery_millivolts << " mV)");
+    setAnalogRead(AVREF,
+                  (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
+                      step.battery_millivolts / 4);
 
-  setDigitalRead(kPinPowerAuto, false);
-  controller.Step();
-  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
-  EXPECT_EQ(GetBatteryLeds(),
-            BatteryLeds(Controller::kBatteryLedActiveBrightness,
-                        Controller::kBatteryLedActiveBrightness,
-                        Controller::kBatteryLedActiveBrightness));
+    if (i == 0) {
+      ASSERT_TRUE(controller.Init());
+      EXPECT_EQ(GetBatteryLeds(), BatteryLeds(0, 0, 0));
 
-  advanceMillis(Controller::kBatteryLevelDisplayTimeSeconds * 1000 + 10);
-  controller.Step();
-  EXPECT_EQ(GetBatteryLeds(), BatteryLeds(0, 0, 0));
+      setDigitalRead(kPinPowerAuto, false);
+      controller.Step();
+      ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+    } else {
+      // Pump the battery voltage filters
+      for (uint32_t n = 0; n < 100; n++) {
+        advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
+        controller.Step();
+      }
 
-  // Medium voltage
-  setAnalogRead(AVREF,
-                (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
-                    (Controller::kBatteryVoltage0 + 10) / 4);
-  ASSERT_GT(controller.ReadRawBatteryMillivolts(),
-            Controller::kBatteryVoltage0);
-  ASSERT_LT(controller.ReadRawBatteryMillivolts(),
-            Controller::kBatteryVoltage1);
-  // Pump the battery voltage filters
-  for (uint32_t n = 0; n < 100; n++) {
-    advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
+      if (controller.GetPowerMode() == PowerMode::kAuto) {
+        setDigitalRead(kPinPowerAuto, true);
+        setDigitalRead(kPinPowerOn, false);
+        controller.Step();
+        ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOn);
+      } else {
+        setDigitalRead(kPinPowerAuto, false);
+        setDigitalRead(kPinPowerOn, true);
+        controller.Step();
+        ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
+      }
+    }
+
+    EXPECT_EQ(GetBatteryLeds(), step.expected_leds);
+
+    advanceMillis(Controller::kBatteryLevelDisplayTimeSeconds * 1000 + 10);
     controller.Step();
+    EXPECT_EQ(GetBatteryLeds(), BatteryLeds(0, 0, 0));
   }
-
-  setDigitalRead(kPinPowerAuto, true);
-  setDigitalRead(kPinPowerOn, false);
-  controller.Step();
-  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kOn);
-  EXPECT_EQ(GetBatteryLeds(),
-            BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
-                        Controller::kBatteryLedActiveBrightness,
-                        Controller::kBatteryLedActiveBrightness));
-
-  // Low voltage
-  setAnalogRead(AVREF,
-                (kFakeVrefintCal * Controller::kReferenceSupplyMillivolts) /
-                    (Controller::kBatteryVoltage0 - 10) / 4);
-  ASSERT_LT(controller.ReadRawBatteryMillivolts(),
-            Controller::kBatteryVoltage0);
-  // Pump the battery voltage filters
-  for (uint32_t n = 0; n < 100; n++) {
-    advanceMillis(Controller::kBatteryFilterRunIntervalMillis + 1);
-    controller.Step();
-  }
-
-  setDigitalRead(kPinPowerAuto, false);
-  setDigitalRead(kPinPowerOn, true);
-  controller.Step();
-  ASSERT_EQ(controller.GetPowerMode(), PowerMode::kAuto);
-  EXPECT_EQ(GetBatteryLeds(),
-            BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
-                        Controller::kBatteryLedPlaceholderBrightness,
-                        Controller::kBatteryLedActiveBrightness));
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    BatteryLevels, BatteryDisplayTest,
+    ::testing::Values(
+        BatteryDisplayParam{
+            "Discharging",
+            {
+                {Controller::kBatteryVoltage1 + 100,
+                 BatteryLeds(Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness)},
+                {Controller::kBatteryVoltage0 + 10,
+                 BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
+                             Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness)},
+                {Controller::kBatteryVoltage0 - 50,
+                 BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
+                             Controller::kBatteryLedPlaceholderBrightness,
+                             Controller::kBatteryLedActiveBrightness)},
+            }},
+        BatteryDisplayParam{
+            "HysteresisPreventsLevelChange",
+            {
+                {Controller::kBatteryVoltage1 + 1,
+                 BatteryLeds(Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness)},
+                {Controller::kBatteryVoltage1 - 8,
+                 BatteryLeds(Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness)},
+                {Controller::kBatteryVoltage1 - 20,
+                 BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
+                             Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness)},
+                {Controller::kBatteryVoltage1 - 8,
+                 BatteryLeds(Controller::kBatteryLedPlaceholderBrightness,
+                             Controller::kBatteryLedActiveBrightness,
+                             Controller::kBatteryLedActiveBrightness)},
+            }}),
+    [](const ::testing::TestParamInfo<BatteryDisplayParam> &info) {
+      return info.param.test_name;
+    });
 
 struct ChargingBatteryLedParam {
   std::string test_name;
@@ -779,7 +816,7 @@ class ChargingBatteryDisplayTest
       public ::testing::WithParamInterface<ChargingBatteryLedParam> {};
 
 TEST_P(ChargingBatteryDisplayTest, DisplaysBatteryVoltageWhenCharging) {
-  const auto& param = GetParam();
+  const auto &param = GetParam();
   setDigitalRead(kPinBatteryNPowerGood, false);
   setDigitalRead(kPinBatteryStat, false);
 
@@ -806,25 +843,24 @@ TEST_P(ChargingBatteryDisplayTest, DisplaysBatteryVoltageWhenCharging) {
 INSTANTIATE_TEST_SUITE_P(
     BatteryLevels, ChargingBatteryDisplayTest,
     ::testing::Values(
-        ChargingBatteryLedParam{
-            "Full", Controller::kBatteryVoltage1 + 100,
-            {Controller::kBatteryLedActiveBrightness,
-             Controller::kBatteryLedActiveBrightness,
-             Controller::kBatteryLedActiveBrightness}},
-        ChargingBatteryLedParam{
-            "Medium", Controller::kBatteryVoltage1 - 100,
-            {Controller::kBatteryLedPlaceholderBrightness,
-             Controller::kBatteryLedActiveBrightness,
-             Controller::kBatteryLedActiveBrightness}},
-        ChargingBatteryLedParam{
-            "Low", Controller::kBatteryVoltage0 - 100,
-            {Controller::kBatteryLedPlaceholderBrightness,
-             Controller::kBatteryLedPlaceholderBrightness,
-             Controller::kBatteryLedActiveBrightness}}),
-    [](const ::testing::TestParamInfo<ChargingBatteryLedParam>& info) {
+        ChargingBatteryLedParam{"Full",
+                                Controller::kBatteryVoltage1 + 100,
+                                {Controller::kBatteryLedActiveBrightness,
+                                 Controller::kBatteryLedActiveBrightness,
+                                 Controller::kBatteryLedActiveBrightness}},
+        ChargingBatteryLedParam{"Medium",
+                                Controller::kBatteryVoltage1 - 100,
+                                {Controller::kBatteryLedPlaceholderBrightness,
+                                 Controller::kBatteryLedActiveBrightness,
+                                 Controller::kBatteryLedActiveBrightness}},
+        ChargingBatteryLedParam{"Low",
+                                Controller::kBatteryVoltage0 - 100,
+                                {Controller::kBatteryLedPlaceholderBrightness,
+                                 Controller::kBatteryLedPlaceholderBrightness,
+                                 Controller::kBatteryLedActiveBrightness}}),
+    [](const ::testing::TestParamInfo<ChargingBatteryLedParam> &info) {
       return info.param.test_name;
     });
-
 
 TEST_F(ControllerTest, AmbientAndProximitySensorsWork) {
   ASSERT_TRUE(controller.Init());

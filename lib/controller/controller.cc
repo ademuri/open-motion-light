@@ -55,6 +55,7 @@ void SetSensitivityPins(const ConfigPb& config) {
 void Controller::SetFiltersMillis() {
   battery_median_filter_.SetMillis(millis());
   battery_average_filter_.SetMillis(millis());
+  battery_quantization_filter_.SetMillis(millis());
   battery_stat_debouncer_.SetMillis(millis());
   battery_stat_blink_filter_.SetMillis(millis());
 }
@@ -78,6 +79,7 @@ bool Controller::Init() {
   }
   battery_average_filter_.Initialize(battery_median_filter_.GetFilteredValue());
   battery_average_filter_.Run();
+  battery_quantization_filter_.Run();
   battery_median_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
   battery_average_filter_.SetMinRunInterval(kBatteryFilterRunIntervalMillis);
 
@@ -216,6 +218,7 @@ void Controller::Step() {
 
   battery_median_filter_.Run();
   battery_average_filter_.Run();
+  battery_quantization_filter_.Run();
   battery_stat_debouncer_.Run();
   battery_stat_blink_filter_.Run();
 
@@ -448,29 +451,28 @@ void Controller::Step() {
   if (kShowBatteryStatus) {
     if (power_status_ == PowerStatus::kCharging ||
         power_status_ == PowerStatus::kLowBatteryCutoffCharging) {
-      const uint16_t battery_millivolts =
-          battery_average_filter_.GetFilteredValue();
+      const uint16_t num_leds = battery_quantization_filter_.GetFilteredValue();
       // Slow blink
       const uint8_t brightness = (millis() / 500) % 2 == 0
                                      ? kBatteryLedActiveBrightness
                                      : kBatteryLedPlaceholderBrightness;
-      analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
-                                       ? brightness
-                                       : kBatteryLedPlaceholderBrightness);
-      analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
-                                       ? brightness
-                                       : kBatteryLedPlaceholderBrightness);
-      analogWrite(kPinBatteryLed3, brightness);
+      analogWrite(kPinBatteryLed1,
+                  num_leds > 2 ? brightness : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed2,
+                  num_leds > 1 ? brightness : kBatteryLedPlaceholderBrightness);
+      analogWrite(kPinBatteryLed3,
+                  num_leds > 0 ? brightness : kBatteryLedPlaceholderBrightness);
     } else if (battery_level_timer_.Active()) {
-      const uint16_t battery_millivolts =
-          battery_average_filter_.GetFilteredValue();
-      analogWrite(kPinBatteryLed1, battery_millivolts > kBatteryVoltage1
+      const uint16_t num_leds = battery_quantization_filter_.GetFilteredValue();
+      analogWrite(kPinBatteryLed1, num_leds >= 3
                                        ? kBatteryLedActiveBrightness
                                        : kBatteryLedPlaceholderBrightness);
-      analogWrite(kPinBatteryLed2, battery_millivolts > kBatteryVoltage0
+      analogWrite(kPinBatteryLed2, num_leds >= 2
                                        ? kBatteryLedActiveBrightness
                                        : kBatteryLedPlaceholderBrightness);
-      analogWrite(kPinBatteryLed3, kBatteryLedActiveBrightness);
+      analogWrite(kPinBatteryLed3, num_leds >= 1
+                                       ? kBatteryLedActiveBrightness
+                                       : kBatteryLedPlaceholderBrightness);
     } else if (power_status_ == PowerStatus::kChargeError) {
       // Fast blink
       const uint8_t brightness = (millis() / 100) % 2 == 0

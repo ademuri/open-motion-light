@@ -25,6 +25,7 @@
 #include <debounce-filter.h>
 #include <exponential-moving-average-filter.h>
 #include <median-filter.h>
+#include <quantization-filter.h>
 
 #include "pb.h"  // Needed to trigger inclusion of the Nanopb-generated files
 #include "pins.h"
@@ -249,6 +250,14 @@ class Controller {
   ExponentialMovingAverageFilter<uint16_t> battery_average_filter_{
       [this]() { return battery_median_filter_.GetFilteredValue(); },
       kBatteryFilterAlpha};
+
+  const std::vector<QuantizationBucket<uint16_t>> battery_quantization_buckets_{
+      {3150, 2}, {3350, 3}};
+  QuantizationFilter<uint16_t> battery_quantization_filter_{
+      [this]() { return battery_average_filter_.GetFilteredValue(); },
+      battery_quantization_buckets_,
+      /*hysteresis_millivolts=*/10,
+      /*below_min_value=*/1};
 
   DebounceFilter battery_stat_debouncer_{
       filter_functions::ForDigitalRead<kPinBatteryStat>()};
