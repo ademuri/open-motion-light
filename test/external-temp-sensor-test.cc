@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <cmath>
+#include <cstdint>
 #include <limits>
 
 #include "controller.h"
@@ -46,61 +46,61 @@ TEST_F(ExternalTempSensorTest, InitializesCustomPinOnBegin) {
 }
 
 TEST_F(ExternalTempSensorTest, CalculateResistanceHandlesInvalidInputs) {
-  EXPECT_FLOAT_EQ(ExternalTempSensor::CalculateResistance(0, 3200), 0.0f);
-  EXPECT_FLOAT_EQ(ExternalTempSensor::CalculateResistance(-10, 3200), 0.0f);
-  EXPECT_FLOAT_EQ(ExternalTempSensor::CalculateResistance(512, 0), 0.0f);
-  EXPECT_FLOAT_EQ(ExternalTempSensor::CalculateResistance(512, -3200), 0.0f);
+  EXPECT_EQ(ExternalTempSensor::CalculateResistance(0, 3200), 0u);
+  EXPECT_EQ(ExternalTempSensor::CalculateResistance(-10, 3200), 0u);
+  EXPECT_EQ(ExternalTempSensor::CalculateResistance(512, 0), 0u);
+  EXPECT_EQ(ExternalTempSensor::CalculateResistance(512, -3200), 0u);
 }
 
 TEST_F(ExternalTempSensorTest, CalculateResistanceNominalValues) {
   // At 25°C, R = 10,000 Ω.
   // With 38 µA bias current, V_pin = 38 µA * 10,000 Ω = 380 mV.
   // With battery = 3200 mV and 10-bit ADC (1024 counts):
-  // pin_value = (380 / 3200) * 1024 = 121.6 counts.
-  const float r_calculated =
-      ExternalTempSensor::CalculateResistance(121.6f, 3200);
-  EXPECT_NEAR(r_calculated, 10000.0f, 1.0f);
+  // pin_value = round((380 / 3200) * 1024) = 122 counts.
+  // Resistance: (122 * 3200 * 125 + 2432) / 4864 = 10,033 Ω.
+  EXPECT_EQ(ExternalTempSensor::CalculateResistance(122, 3200), 10033u);
 
   // Cold threshold: 1.04 V at 38 µA -> 27,368.4 Ω.
-  // pin_value = (1040 / 3200) * 1024 = 332.8 counts.
-  const float r_cold = ExternalTempSensor::CalculateResistance(332.8f, 3200);
-  EXPECT_NEAR(r_cold, 27368.4f, 1.0f);
+  // pin_value = round((1040 / 3200) * 1024) = 333 counts.
+  // Resistance: (333 * 3200 * 125 + 2432) / 4864 = 27,385 Ω.
+  EXPECT_EQ(ExternalTempSensor::CalculateResistance(333, 3200), 27385u);
 
   // Hot threshold: 188 mV at 38 µA -> 4,947.4 Ω.
-  // pin_value = (188 / 3200) * 1024 = 60.16 counts.
-  const float r_hot = ExternalTempSensor::CalculateResistance(60.16f, 3200);
-  EXPECT_NEAR(r_hot, 4947.4f, 1.0f);
+  // pin_value = round((188 / 3200) * 1024) = 60 counts.
+  // Resistance: (60 * 3200 * 125 + 2432) / 4864 = 4,934 Ω.
+  EXPECT_EQ(ExternalTempSensor::CalculateResistance(60, 3200), 4934u);
 }
 
-TEST_F(ExternalTempSensorTest, CalculateTemperatureCelsiusInvalidInputs) {
-  EXPECT_TRUE(
-      std::isnan(ExternalTempSensor::CalculateTemperatureCelsius(0.0f)));
-  EXPECT_TRUE(
-      std::isnan(ExternalTempSensor::CalculateTemperatureCelsius(-100.0f)));
+TEST_F(ExternalTempSensorTest, CalculateTemperatureCenticelsiusInvalidInputs) {
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCenticelsius(0),
+            std::numeric_limits<int32_t>::min());
+}
+
+TEST_F(ExternalTempSensorTest, CalculateTemperatureCenticelsiusKnownValues) {
+  // Nominal temperature: 10,000 Ω -> exactly 25.00 °C (2500 centicelsius).
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCenticelsius(10000), 2500);
+
+  // Cold threshold from DESIGN.md: 27,368 Ω -> 3.94 °C (394 centicelsius).
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCenticelsius(27368), 394);
+
+  // Hot threshold from DESIGN.md: 4,947 Ω -> 41.73 °C (4173 centicelsius).
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCenticelsius(4947), 4173);
+
+  // Freezing point (0°C): 33,620 Ω -> 0.00 °C (0 centicelsius).
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCenticelsius(33620), 0);
+
+  // 50°C: 3,588 Ω -> 50.00 °C (5000 centicelsius).
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCenticelsius(3588), 5000);
 }
 
 TEST_F(ExternalTempSensorTest, CalculateTemperatureCelsiusKnownValues) {
-  // Nominal temperature: 10,000 Ω -> exactly 25.0 °C.
-  EXPECT_NEAR(ExternalTempSensor::CalculateTemperatureCelsius(10000.0f), 25.0f,
-              0.01f);
-
-  // Cold threshold from DESIGN.md: 27,368 Ω -> ~3.94 °C.
-  EXPECT_NEAR(ExternalTempSensor::CalculateTemperatureCelsius(27368.0f), 3.94f,
-              0.1f);
-
-  // Hot threshold from DESIGN.md: 4,947 Ω -> ~41.73 °C.
-  EXPECT_NEAR(ExternalTempSensor::CalculateTemperatureCelsius(4947.0f), 41.73f,
-              0.1f);
-
-  // Freezing point (0°C):
-  // 1/T = 1/273.15, R = 10000 * exp(3950 * (1/273.15 - 1/298.15)) ~= 33620 Ω.
-  EXPECT_NEAR(ExternalTempSensor::CalculateTemperatureCelsius(33620.0f), 0.0f,
-              0.1f);
-
-  // 50°C:
-  // 1/T = 1/323.15, R = 10000 * exp(3950 * (1/323.15 - 1/298.15)) ~= 3588 Ω.
-  EXPECT_NEAR(ExternalTempSensor::CalculateTemperatureCelsius(3588.0f), 50.0f,
-              0.1f);
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCelsius(0),
+            std::numeric_limits<int16_t>::min());
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCelsius(10000), 25);
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCelsius(27368), 4);
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCelsius(4947), 42);
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCelsius(33620), 0);
+  EXPECT_EQ(ExternalTempSensor::CalculateTemperatureCelsius(3588), 50);
 }
 
 TEST_F(ExternalTempSensorTest, ReadTemperatureReturnsErrorWhenUninitialized) {

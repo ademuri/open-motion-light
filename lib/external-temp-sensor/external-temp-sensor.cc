@@ -16,7 +16,7 @@
 
 #include "external-temp-sensor.h"
 
-#include <cmath>
+#include <cstdint>
 #include <limits>
 
 ExternalTempSensor::ExternalTempSensor(
@@ -30,41 +30,123 @@ bool ExternalTempSensor::Begin() {
   return true;
 }
 
-float ExternalTempSensor::CalculateResistance(float pin_value,
-                                              float battery_mv) {
-  if (pin_value <= 0.0f || battery_mv <= 0.0f) {
-    return 0.0f;
+uint32_t ExternalTempSensor::CalculateResistance(int pin_value,
+                                                 int battery_mv) {
+  if (pin_value <= 0 || battery_mv <= 0) {
+    return 0;
   }
 
-  // The BQ25170DSGR bias current is 38uA.
-  // Voltage at pin (in mV) = (pin_value / kAdcMaxCount) * battery_mv
-  const float voltage_mv = (pin_value * battery_mv) / kAdcMaxCount;
-
-  // R = E / I
-  // R (Ohms) = (voltage_mv / 1000) / (kBiasCurrentMicroamps / 1e6)
-  //          = (voltage_mv * 1000) / kBiasCurrentMicroamps
-  return (voltage_mv * 1000.0f) / kBiasCurrentMicroamps;
+  // R = (pin_value / kAdcMaxCount) * battery_mv * 1000 / kBiasCurrentMicroamps
+  // R = (pin_value * battery_mv * 1000) / (1024 * 38)
+  //   = (pin_value * battery_mv * 125) / (128 * 38)
+  //   = (pin_value * battery_mv * 125) / 4864
+  // Round to nearest integer Ohm (+ 2432):
+  const int64_t product = static_cast<int64_t>(pin_value) * battery_mv * 125;
+  return static_cast<uint32_t>((product + 2432) / 4864);
 }
 
-float ExternalTempSensor::CalculateTemperatureCelsius(float resistance_ohm) {
-  if (resistance_ohm <= 0.0f) {
-    return std::numeric_limits<float>::quiet_NaN();
+int32_t ExternalTempSensor::FixedLnQ16(int32_t x_q16) {
+  if (x_q16 <= 0) {
+    return std::numeric_limits<int32_t>::min();
   }
 
-  // The Steinhart-Hart B-parameter equation:
+  // Find k such that x = m * 2^k where m is in [65536, 131071] (i.e. [1.0,
+  // 2.0)).
+  int32_t k = 0;
+  int32_t val = x_q16;
+  while (val >= 131072) {
+    val >>= 1;
+    k++;
+  }
+  while (val < 65536) {
+    val <<= 1;
+    k--;
+  }
+
+  // Let z = (m - 1) / (m + 1). In Q16:
+  // val represents m * 65536, and 1.0 is 65536.
+  const int64_t num = static_cast<int64_t>(val - 65536) << 16;
+  const int32_t den = val + 65536;
+  const int64_t z = num / den;  // z in Q16, z in [0, 1/3)
+
+  // Series expansion: ln(m) = 2 * (z + z^3/3 + z^5/5)
+  const int64_t z2 = (z * z) >> 16;
+  const int64_t term3 = ((z * z2) >> 16) / 3;
+  const int64_t z4 = (z2 * z2) >> 16;
+  const int64_t term5 = ((z * z4) >> 16) / 5;
+  const int32_t ln_m = static_cast<int32_t>(2 * (z + term3 + term5));
+
+  // ln(x) = k * ln(2) + ln(m)
+  // ln(2) in Q16 is round(ln(2) * 65536) = 45426.
+  constexpr int32_t kLn2Q16 = 45426;
+  return (k * kLn2Q16) + ln_m;
+}
+
+int32_t ExternalTempSensor::CalculateTemperatureCenticelsius(
+    uint32_t resistance_ohm) {
+  if (resistance_ohm == 0) {
+    return std::numeric_limits<int32_t>::min();
+  }
+
+  // Ratio (R / R0) in Q16:
+  // R0 = 10,000 Ohm.
+  // ratio_q16 = (R * 65536) / 10000 = (R * 4096) / 625.
+  const int64_t ratio_q16 = (static_cast<int64_t>(resistance_ohm) * 4096) / 625;
+  if (ratio_q16 > std::numeric_limits<int32_t>::max()) {
+    // Open circuit / near absolute zero resistance ratio.
+    return -kKelvinOffsetCentikelvin;
+  }
+
+  const int32_t ln_q16 = FixedLnQ16(static_cast<int32_t>(ratio_q16));
+  if (ln_q16 == std::numeric_limits<int32_t>::min()) {
+    return std::numeric_limits<int32_t>::min();
+  }
+
+  // Steinhart-Hart B-parameter equation:
   // 1 / T = 1 / T0 + (1 / B) * ln(R / R0)
-  // where T is the temperature in Kelvin, R is the resistance, and R0 and T0
-  // are the calibration values (10k Ohm at 25C).
-  const float steinhart = (1.0f / kNominalTemperatureKelvin) +
-                          (1.0f / kBetaCoefficient) *
-                              std::log(resistance_ohm / kNominalResistanceOhm);
+  // T = (B * T0) / (B + T0 * ln(R / R0))
+  // With T0 in centikelvin (29815 cK):
+  // num = B * T0_cK * 65536 = 3950 * 29815 * 65536 = 7,718,683,443,200
+  // den = B * 65536 + (T0_cK * ln_q16) / 100
+  constexpr int64_t kNumerator = static_cast<int64_t>(kBetaCoefficient) *
+                                 kNominalTemperatureCentikelvin * 65536;
+  const int64_t den =
+      (static_cast<int64_t>(kBetaCoefficient) * 65536) +
+      ((static_cast<int64_t>(kNominalTemperatureCentikelvin) * ln_q16 + 50) /
+       100);
 
-  if (steinhart <= 0.0f) {
-    return std::numeric_limits<float>::infinity();
+  if (den <= 0) {
+    return std::numeric_limits<int32_t>::max();
   }
 
-  const float temperature_kelvin = 1.0f / steinhart;
-  return temperature_kelvin - 273.15f;
+  const int64_t temp_ck = (kNumerator + (den / 2)) / den;
+  return static_cast<int32_t>(temp_ck - kKelvinOffsetCentikelvin);
+}
+
+int16_t ExternalTempSensor::CalculateTemperatureCelsius(
+    uint32_t resistance_ohm) {
+  const int32_t centicelsius = CalculateTemperatureCenticelsius(resistance_ohm);
+  if (centicelsius == std::numeric_limits<int32_t>::min()) {
+    return std::numeric_limits<int16_t>::min();
+  }
+  if (centicelsius == std::numeric_limits<int32_t>::max()) {
+    return std::numeric_limits<int16_t>::max();
+  }
+
+  int32_t rounded;
+  if (centicelsius >= 0) {
+    rounded = (centicelsius + 50) / 100;
+  } else {
+    rounded = (centicelsius - 50) / 100;
+  }
+
+  if (rounded > std::numeric_limits<int16_t>::max()) {
+    return std::numeric_limits<int16_t>::max();
+  }
+  if (rounded < std::numeric_limits<int16_t>::min()) {
+    return std::numeric_limits<int16_t>::min();
+  }
+  return static_cast<int16_t>(rounded);
 }
 
 int16_t ExternalTempSensor::ReadTemperature() {
@@ -81,21 +163,6 @@ int16_t ExternalTempSensor::ReadTemperature() {
     return std::numeric_limits<int16_t>::min();
   }
 
-  const float resistance_ohm = CalculateResistance(
-      static_cast<float>(pin_value), static_cast<float>(battery_mv));
-  const float temperature_celsius = CalculateTemperatureCelsius(resistance_ohm);
-
-  if (std::isnan(temperature_celsius) || std::isinf(temperature_celsius)) {
-    return std::numeric_limits<int16_t>::min();
-  }
-
-  const float rounded = std::round(temperature_celsius);
-  if (rounded > static_cast<float>(std::numeric_limits<int16_t>::max())) {
-    return std::numeric_limits<int16_t>::max();
-  }
-  if (rounded < static_cast<float>(std::numeric_limits<int16_t>::min())) {
-    return std::numeric_limits<int16_t>::min();
-  }
-
-  return static_cast<int16_t>(rounded);
+  const uint32_t resistance_ohm = CalculateResistance(pin_value, battery_mv);
+  return CalculateTemperatureCelsius(resistance_ohm);
 }
